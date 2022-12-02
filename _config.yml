@@ -15,10 +15,10 @@ title: "TIL"
 description: "Hi there! Welcome to my TIL blog."
 
 # The subpath of your site, e.g. /blog, for generating urls.
-# baseurl: ""
+baseurl: ""/tech-blog"
 
 # The base hostname & protocol of your site for where absolute urls are needed.
-url: "https://scriptor-jekyll.netlify.com"
+url: "https://clytaemnestra.github.io"
 
 # Favicon
 favicon: images/favicon.png
