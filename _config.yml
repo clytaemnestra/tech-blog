@@ -18,7 +18,7 @@ description: "Hi there! Welcome to my TIL blog."
 baseurl: ""/tech-blog"
 
 # The base hostname & protocol of your site for where absolute urls are needed.
-url: "https://clytaemnestra.github.io"
+url: "https://scriptor-jekyll.netlify.com"
 
 # Favicon
 favicon: images/favicon.png
