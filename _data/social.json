@@ -1,0 +1,14 @@
+{
+  "links": [
+    {
+      "title": "GitHub",
+      "icon": "fa-github",
+      "url": "https://github.com/clytaemnestra"
+    },
+    {
+      "title": "LinkedIn",
+      "icon": "fa-linkedin",
+      "url": "https://www.linkedin.com/in/mia-bajic/"
+    }
+  ]
+}
