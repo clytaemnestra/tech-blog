@@ -15,7 +15,7 @@ title: "TIL"
 description: "Hi there! Welcome to my TIL blog."
 
 # The subpath of your site, e.g. /blog, for generating urls.
-baseurl: "/tech-blog"
+baseurl: /tech-blog
 
 # The base hostname & protocol of your site for where absolute urls are needed.
 url: "https://scriptor-jekyll.netlify.com"
@@ -31,11 +31,11 @@ navigation:
   - text: Home
     url: /
   - text: About
-    url: tech-blog/about
+    url: /about
   # - text: Style Guide
   #   url: /style-guide/
   - text: Tags
-    url: tech-blog/tags
+    url: /tags
   # - text: Download
   #   url: https://github.com/JustGoodThemes/Scriptor-Jekyll-Theme
 
