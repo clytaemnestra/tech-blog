@@ -31,11 +31,11 @@ navigation:
   - text: Home
     url: /
   - text: About
-    url: tech-blog/about/
+    url: /about/
   # - text: Style Guide
   #   url: /style-guide/
   - text: Tags
-    url: tech-blog/tags/
+    url: /tags/
   # - text: Download
   #   url: https://github.com/JustGoodThemes/Scriptor-Jekyll-Theme
 
