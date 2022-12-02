@@ -40,15 +40,15 @@ navigation:
   #   url: https://github.com/JustGoodThemes/Scriptor-Jekyll-Theme
 
 # The shortname for your Disqus site to enable comments.
-disqus: justgoodthemes
+# disqus: justgoodthemes
 
 # Colors
-accent_color: '#2d72d9'
+accent_color: '#6B8EB7'
 
 # Site footer
 footer:
   # content: "&copy; Scriptor all rights reserved. Theme by [JustGoodThemes](https://www.justgoodthemes.com)."
-  has_social: true
+#   has_social: true
 
 # Plugins
 plugins:
