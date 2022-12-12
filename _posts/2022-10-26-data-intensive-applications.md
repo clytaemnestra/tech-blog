@@ -63,12 +63,14 @@ B-Tree
  * depth O(log n)
  * most databases can fit into a B-tree that is three or four levels deep (a four level tree of 4 KB pages with a branching factor of 500 can store up to 250 TB)
   
-    <img src="https://user-images.githubusercontent.com/38294198/194752603-a09d3bda-8b86-45f0-a1ea-72785543325f.png" width="400" />
+    <img src="https://user-images.githubusercontent.com/38294198/194752603-a09d3bda-8b86-45f0-a1ea-72785543325f.png" width="500" />
+
 <br>  
-  
+
+
 ### OLAP 
 
-<img src="https://user-images.githubusercontent.com/38294198/194752380-843302c0-7005-43fa-8685-595b941ce84e.png" width="400" />
+<img src="https://user-images.githubusercontent.com/38294198/194752380-843302c0-7005-43fa-8685-595b941ce84e.png" width="500" />
  
 Schemas for analytics:
 * star schema - consists of dimension tables and fact table (foreign key references to dimension tables)
@@ -81,7 +83,7 @@ Column-oriented storage
 * if each column is stored in a separate file, a query only needs to read and parse those columns that are used in that query, which can save a lot of work
 * as column values are often repearing, it's possible to compress it with bitmax indexes 
 
-<img src="https://user-images.githubusercontent.com/38294198/194752961-d531dfa9-4ccc-43d8-9eb1-d7cd4c62f4f5.png" width="400" />
+<img src="https://user-images.githubusercontent.com/38294198/194752961-d531dfa9-4ccc-43d8-9eb1-d7cd4c62f4f5.png" width="500" />
 
 <br>
 
@@ -362,7 +364,7 @@ Common problems which can occur in distributed system:
 * a node's slock may be significantly out of sync with other nodes (despite your best efforts to set up NTP), it may suddenly jump forward or back in time, and relying on it is dangerous because you most likely don't have a good measure of your clock's confidence interval
 * a process may pause for a substantial amount of time at any point in its execution (perhaps due to a stop-the-world garbage collector), be declared dead by other nodes, and then come back to life again without realizing that it was paused 
 
-* <br>
+<br>
 
 Two different kinds of clocks:
 * a time-of-day clock
