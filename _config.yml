@@ -25,9 +25,9 @@ url: clytaemnestra.github.io
 author:
   name: Mia Bajic # author name
   github: clytaemnestra # github username
-  linkedin: mia-bajic # linkedin username
+  # linkedin: mia-bajic # linkedin username
   email: miabajic.miabajic@gmail.com # email adress
-  avatar: images/author.jpg # change with your own avatar
+  avatar: images/author.png # change with your own avatar
 
 
 # Google Analytics id, e.g. "UA-NNNNNNNN-N"
