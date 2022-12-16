@@ -20,8 +20,15 @@ baseurl: /tech-blog
 # The base hostname & protocol of your site for where absolute urls are needed.
 url: clytaemnestra.github.io
 
-# Favicon
-favicon: images/favicon.png
+
+# Profile settings
+author:
+  name: Mia Bajic # author name
+  github: clytaemnestra # github username
+  linkedin: mia-bajic # linkedin username
+  email: miabajic.miabajic@gmail.com # email adress
+  avatar: images/author.jpg # change with your own avatar
+
 
 # Google Analytics id, e.g. "UA-NNNNNNNN-N"
 google_analytics: ""
@@ -30,8 +37,10 @@ google_analytics: ""
 navigation:
   - text: Home
     url: /
-  - text: About
-    url: /about
+  # - text: Archieve
+  #   url: /archieve
+  # - text: About 
+  #   url: /about
   # - text: Style Guide
   #   url: /style-guide/
   - text: Tags
@@ -48,14 +57,26 @@ accent_color: '#6B8EB7'
 # Site footer
 footer:
   # content: "&copy; Scriptor all rights reserved. Theme by [JustGoodThemes](https://www.justgoodthemes.com)."
-#   has_social: true
+  has_social: true
 
 # Plugins
 plugins:
   - jekyll-paginate
+  - jekyll-archives
+
+jekyll-archives:
+  enabled: []
+  layout: default
+  permalinks:
+    year: '/:year/'
+    month: '/:year/:month/'
+    day: '/:year/:month/:day/'
+    tag: '/tag/:name/'
+    category: '/category/:name/'
+
 
 # http://jekyllrb.com/docs/pagination/
-paginate: 3
+paginate: 10
 paginate_path: '/page:num/'
 
 

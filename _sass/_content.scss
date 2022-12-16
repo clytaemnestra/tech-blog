@@ -53,6 +53,23 @@
   }
 }
 
+.post-title-home {
+  @media only screen and (max-width: 600px) {
+    font-size: 1.875rem;
+    letter-spacing: normal;
+    line-height: 1.2;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    &:hover {
+      color: _palette(accent);
+    }
+  }
+}
+
+
 .read-more {
   font-weight: bold;
 }
