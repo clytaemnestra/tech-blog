@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "K8s In Action"
+title: "Notes from Books: K8s In Action"
 description: "Notes from Books: K8s In Action"
 date: 2022-01-19
 tags: [books, infrastructure]

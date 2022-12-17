@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Grokking Algorithms"
+title: "Notes from Books: Grokking Algorithms"
 description: "Notes from Books: Grokking Algorithms"
 date: 2022-08-11
 tags: [books, algorithms]
@@ -335,12 +335,14 @@ def quicksort(array):
     * remove the head u of Q 
     * mark and enqueue all (unvisited) neighbours of u
 
-![image](https://user-images.githubusercontent.com/38294198/178245559-f5dd169a-0efa-41aa-8e56-72decf862c3f.png)
-![image](https://user-images.githubusercontent.com/38294198/178245596-5a37a33b-918d-439b-a428-5068e86e8483.png)
-![image](https://user-images.githubusercontent.com/38294198/178245628-661d1909-d37e-4c81-8817-6bfacb7b834e.png)
-![image](https://user-images.githubusercontent.com/38294198/178245652-bff1417b-0795-4da7-bbb3-50607043ad4d.png)
-![image](https://user-images.githubusercontent.com/38294198/178245679-a88ececa-8ff6-471f-9b8a-c266a6e74466.png)
-![image](https://user-images.githubusercontent.com/38294198/178245713-deb054a1-c391-4760-9005-f8d37f056518.png)
+  
+<img src="https://user-images.githubusercontent.com/38294198/178245559-f5dd169a-0efa-41aa-8e56-72decf862c3f.png" width="500" />
+<img src="https://user-images.githubusercontent.com/38294198/178245559-f5dd169a-0efa-41aa-8e56-72decf862c3f.png" width="500" />
+<img src="https://user-images.githubusercontent.com/38294198/178245596-5a37a33b-918d-439b-a428-5068e86e8483.png" width="500" />
+<img src="https://user-images.githubusercontent.com/38294198/178245628-661d1909-d37e-4c81-8817-6bfacb7b834e.png" width="500" />
+<img src="https://user-images.githubusercontent.com/38294198/178245652-bff1417b-0795-4da7-bbb3-50607043ad4d.png" width="500" />
+<img src="https://user-images.githubusercontent.com/38294198/178245679-a88ececa-8ff6-471f-9b8a-c266a6e74466.png" width="500" />
+<img src="https://user-images.githubusercontent.com/38294198/178245713-deb054a1-c391-4760-9005-f8d37f056518.png" width="500" />
 
 
 ### Code

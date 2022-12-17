@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Clean Code"
+title: "Notes from Books: Clean Code"
 description: "Notes from Books: Clean Code"
 date: 2022-10-08
 tags: [books]

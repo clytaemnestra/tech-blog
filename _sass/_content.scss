@@ -74,6 +74,16 @@
   font-weight: bold;
 }
 
+.author-avatar {
+  background-size: cover;
+  border-radius: 100%;
+  display: block;
+  height: 90px;
+  float: left;
+  margin-right: 30px;
+  width: 90px;
+}
+
 /* Author profile */
 .author-box {
   border-top: 1px solid _palette(border);
@@ -81,12 +91,12 @@
 
   .author-avatar {
     background-size: cover;
-    border-radius: 50%;
+    border-radius: 100%;
     display: block;
-    height: 90px;
+    height: 80px;
     float: left;
     margin-right: 30px;
-    width: 90px;
+    width: 80px;
   }
 
   .author-avatar + .author-details {

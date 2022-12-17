@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Designing Data Intensive Applications"
+title: "Notes from Books: Designing Data Intensive Applications"
 description: "Notes from Books: Designing Data Intensive Applications"
 date: 2022-10-26
 tags: [books, system-design]
@@ -150,26 +150,28 @@ On a high level, systems that store and process data can be grouped into two bro
   
 <br>
 
-  ### Batch Processing 
-  The two main problems that distributed batch processing frameworks need to solve:
-  * partitioning
-    * in MapReduce mappers are partitioned according to input file blocks
-    * the output of mappers is repartitioned, sorted, and merged into a configurable number of reducer partitions
-    * the purpose of this process is to bring all the related data, e.g., all the records with the same key - together in the same place
-    * Post-MapReduce dataflow engineers try to avoid sorting unless it is required, but they otherwise take a broadly similar approach to partitioning
-  * fault tolerance
-    * MapReduce frequently writes to disk, which makes it easy to recover from an individual failed task without restarting the entire job, but slows down execution in the failure-free case
-    
-    How do partitioned algorithms work?
-    * sort-merge joins
-      * each of the inputs being joined goes through a mapper that extracts the join key
-      * by partitioning, sorting, and merging, all the records with the same key end up going to the same call of the reducer
-      * this function can then output the joined records
-    * broadcast hash joins
-      * one of the two join inputs is small, so it is not partitioned and it can be entirely loaded into a hash table
-      * thus, you can start a mapper for each partition of the large join input, load the hash table for the small input into each mapper, and then scan over the large input one record at a time, querying the hash table for each record
-    * partitioned hash joins
-      * if the two join inputs are partitioned in the same way (using the same key, same hash function, and same number of partitions), then the hash table approach can be used independently for each partition
+### Batch Processing 
+The two main problems that distributed batch processing frameworks need to solve:
+* partitioning
+  * in MapReduce mappers are partitioned according to input file blocks
+  * the output of mappers is repartitioned, sorted, and merged into a configurable number of reducer partitions
+  * the purpose of this process is to bring all the related data, e.g., all the records with the same key - together in the same place
+  * Post-MapReduce dataflow engineers try to avoid sorting unless it is required, but they otherwise take a broadly similar approach to partitioning
+* fault tolerance
+  * MapReduce frequently writes to disk, which makes it easy to recover from an individual failed task without restarting the entire job, but slows down execution in the failure-free case
+  
+<br> 
+
+How do partitioned algorithms work?
+* sort-merge joins
+  * each of the inputs being joined goes through a mapper that extracts the join key
+  * by partitioning, sorting, and merging, all the records with the same key end up going to the same call of the reducer
+  * this function can then output the joined records
+* broadcast hash joins
+  * one of the two join inputs is small, so it is not partitioned and it can be entirely loaded into a hash table
+  * thus, you can start a mapper for each partition of the large join input, load the hash table for the small input into each mapper, and then scan over the large input one record at a time, querying the hash table for each record
+* partitioned hash joins
+  * if the two join inputs are partitioned in the same way (using the same key, same hash function, and same number of partitions), then the hash table approach can be used independently for each partition
 
 Two common ways data is distributed accross multiple nodes:
 * replication - keeping a copy of the same data on several different nodes, potentially in different locations 
