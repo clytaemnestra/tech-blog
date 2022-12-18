@@ -6,7 +6,7 @@ date: 2022-01-05
 tags: [system-design]
 ---
 
-Today I learnt about reverse proxy servers.
+Today I learned about reverse proxy servers.
 
 <br> 
 
