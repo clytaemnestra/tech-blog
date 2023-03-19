@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "TIL: partial functions"
-description: "TIL: partial functions"
+title: "TIL: Partial Functions"
+description: "TIL: Partial Functions"
 date: 2023-03-19
 tags: [python]
 ---
