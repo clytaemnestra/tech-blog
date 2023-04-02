@@ -20,13 +20,6 @@ layout: default
     <div class="post-content">
       {{content}}
     </div><!-- .post-content -->
-    <div class="post-share">
-      <span>Share:</span>
-      <a target="_blank"
-        href="https://twitter.com/intent/tweet?text={{ page.title | uri_escape }}&amp;url={{ page.url | absolute_url }}" rel="noopener">Twitter</a>
-      <a target="_blank"
-        href="https://www.facebook.com/sharer/sharer.php?u={{ page.url | absolute_url }}&amp;t={{ page.title | uri_escape }}" rel="noopener">Facebook</a>
-    </div><!-- .share-post -->
     <div class="author-box">
       {% if site.data.author.image and site.data.author.image != "" %}
       <div class="author-avatar" style="background-image: url('{{ site.data.author.image }}')"><span class="screen-reader-text">{{ site.data.author.name }}'s Picture</span></div>
