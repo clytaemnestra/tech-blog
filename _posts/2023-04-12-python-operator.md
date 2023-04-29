@@ -2,7 +2,7 @@
 layout: post
 title: "TIL: Union Operator"
 description: "TIL: Union Operator"
-date: 2022-04-12
+date: 2023-04-12
 tags: [python]
 ---
 
