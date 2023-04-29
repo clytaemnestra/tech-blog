@@ -6,7 +6,7 @@ date: 2023-04-12
 tags: [python]
 ---
 
-Today I discovered the dictionaries union operator '|'. 
+Today I discovered the dictionaries union operator `|`. 
 
 ```python
 >>> dict1 = {"a": "a", "b": "b"}
