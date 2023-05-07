@@ -23,7 +23,7 @@ For a long time, I've struggled with creating a mental map of libraries `asyncio
 * its goal is maximizing the use of hardware resources 
 * Python `multiprocessing` library 
 
-<img src="../images/posts/concurrent-computing-graph.jpg">
+<img src="./images/posts/concurrent-computing-graph.jpg">
 
 
 ### Libraries
