@@ -17,7 +17,7 @@ There are few possible approaches seen in tools on the market:
 # OT
 ## Google Docs
 ### First Version - How not to do it
-- the underlying principle was comparison of document versions → the server tries to merge all versions and create a one which is propagated to other users
+- the underlying principle is comparison of document versions → the server tries to merge all versions and create a one which is propagated to other users
 - quite often it doesn’t work well, because merging algorithms don’t have enough of information about the context:
     - example:
         - initial sentence: The quick brown fox
@@ -26,7 +26,7 @@ There are few possible approaches seen in tools on the market:
         → the result should be The quick **brown dog,** but the server was mostly merging it into The quick **brown fox** dog or The quick **brown** dog or The quick **brown** dog **fox**
 
 ### Current version
-- the document is stored as sequence of operations and they are applied in order
+- the document is stored as a sequence of operations and they are applied in order
 - the main principle of collaboration in this version is Operational Transformation
     - each change is represented as an operation
     - to handle concurrent operations, the transform function which takes two operations and computes a new one is used
@@ -67,7 +67,7 @@ Tdd(Del[p1], Del[p2]) {
 
 ## Etherpad (collaborative online text editor)
 - also uses OT technique, but a slightly different one
-- it sends changes to the server as changeset in the format (p1 -> p2)[c_1, c_2, …], where
+- it sends changes to the server as a changeset in the format (p1 -> p2)[c_1, c_2, …], where
     - p1 — length of the document before the change
     - p2 — length of the document after the change
     - c_i — definition if the document:if c_i — number or range of numbers then it means indices of *retained* character, orif c_i — character or string then it means insertion
@@ -85,7 +85,7 @@ Tdd(Del[p1], Del[p2]) {
         - causality preservation - keeping correct order of operations
 - keeping correct order of operations including the cases of network lags - for this they use data structure Vector clock
 
-## Problems with OR
+## Problems with OT
 - error-prone implementation needs to account for each pair of operations
 - combinatorial complexity - the number of possible combinations grows quadratically with the number of operations
 - complex to implement
@@ -100,9 +100,9 @@ Tdd(Del[p1], Del[p2]) {
 
 # CRDT (conflict-free replicated data type)
 - example apps: Apple Notes, Riak, TomTom GPS, Teletype for Atom
-- the principle is to break data into small pieces, that don’t need to be transformed → only their position in the text change
+- the principle is to break data into small pieces that don’t need to be transformed → only their position in the text change
     - for example, each character is a single entity with its id and it has its own position in the document
-    - the position is represented mostly as path in a tree or as fractional number like in the example below
+    - the position is represented mostly as a path in a tree or as a fractional number like in the example below
     <img src="./images/posts/rtc3.png" alt="CRDT representation" style="max-width: 100%; max-height: 100%; display: block;">
 - supports collaboration on only two main types of data:
     - plain text
@@ -183,7 +183,7 @@ Tdd(Del[p1], Del[p2]) {
     - if text value is B and one user changes it to AB and another one to BC the end result will be either AB or BC, but not ABC
     - animation: https://cdn.sanity.io/files/599r6htc/localized/e8b3d7dd4745e9fec062586d91f3eba62c2052be.mp4
 - if an object is deleted by one user, it’s properties are not stored on the server but inside the undo buffer of the client that performed the delete
-- parent-child relationship is stored as link to the parent as a property on the child, which solves an issue when one object is moved by one user and its color is changed by another
+- parent-child relationship is stored as a link to the parent as a property on the child, which solves an issue when one object is moved by one user and its color is changed by another
 - if parent property updates would cause a cycle, servers reject the update
     - in this case objects are temporarily removed from the tree until the server rejects the client’s change and the object is reparented where it belongs
     - animation: https://cdn.sanity.io/files/599r6htc/localized/280f28f6e620d747f00ef024058310d07e151eff.mp4
