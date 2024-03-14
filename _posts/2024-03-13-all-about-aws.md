@@ -120,17 +120,16 @@ Use cases:
     * You don’t have a problem using only one networking mode (VPC)
     * Pay only for computing time, not underlying EC2 instances
 
-### EC2 
-
 ### EKS 
-* Run Kubernetes on AWS without needing to install, operate, and maintain your own Kubernetes control plane or nodes
-* EKS vs ECS:
-    * ECS - tye machine, that runs the containers, is an EC2 instance that has an ECS agent installed and it’s named a container instance
-    * EKS - the machine that runs the containers is called a worker node or Kubernetes node
-    * ECS container is called a task
-    * EKS container is called a pod
-    * ECS runs on AWS native technology
-    * EKS runs on Kubernetes
+EKS allows you to run Kubernetes on AWS without needing to install, operate, and maintain your own Kubernetes control plane or nodes
+
+EKS vs ECS:
+* ECS - tye machine, that runs the containers, is an EC2 instance that has an ECS agent installed and it’s named a container instance
+* EKS - the machine that runs the containers is called a worker node or Kubernetes node
+* ECS container is called a task
+* EKS container is called a pod
+* ECS runs on AWS native technology
+* EKS runs on Kubernetes
 
 Kubernetes objects:
 * Cluster
@@ -198,6 +197,9 @@ Kubernetes objects:
 * Control and data plane communication
     * Done through the API server to kubelet
 
+<img src="./images/posts/k8s.png" alt="Kubernetes architecture" style="max-width: 100%; max-height: 100%; display: block;">
+
+
 Permissions to configure when deploying a new EKS cluster:
 * Cluster IAM role
 * Node IAM role
@@ -228,29 +230,32 @@ Three common design metworking patterns:
 * Highly scalable, high-performance service
 * Schedules placement across managed clusters
 * Amazon ECR - registry
-* Components
-    * Tasks
-        * Atomic unit of deployment
-        * Made of one or more tightly coupled containers
-    * Services
-        * Abstraction of top of a task
-    * Task vs service?
-        * Task is for on-demand workloads, batch jobs or one-time jobs
-        * Service is for long-running containers
-* Task definition:
-    * Resources
-        * CPU
-        * memory
-        * networking
-    * Placement strategies: 
-        * Random
-        * Binpack
-            * Least amount CPU or memory
-            * Minimizes the number of instances used
-        * Spread
-            * Places tasks evenly
 * ECS supports service discovery
 * Blue-green deployments are used for deployment
+
+Components
+* Tasks
+    * Atomic unit of deployment
+    * Made of one or more tightly coupled containers
+* Services
+    * Abstraction of top of a task
+* Task vs service?
+    * Task is for on-demand workloads, batch jobs or one-time jobs
+    * Service is for long-running containers
+
+Task definition:
+* Resources
+    * CPU
+    * memory
+    * networking
+
+Placement strategies: 
+    * Random
+    * Binpack
+        * Least amount CPU or memory
+        * Minimizes the number of instances used
+    * Spread
+        * Places tasks evenly
 
 
 Which AWS services can you integrate ECS with?
@@ -280,7 +285,7 @@ Storage types:
 
 <img src="./images/posts/storage-types.png" alt="Storage types" style="max-width: 100%; max-height: 100%; display: block;">
 
-File storage
+### File storage
 * Tree-like hierarchy that consists of folders and subfolders
 * Ideal when is required centralized access to files that must be easily shared and managed by multiple host computers
     * Typically requires file locking and integration with existing file system communication protocols
@@ -295,7 +300,7 @@ Four categories of use cases for file storage:
     * Home directories
         * For users of businesses
 
-Block storage
+### Block storage
 * Treats files as a singular unit
 * Splits files into fixed-size chunks of data called blocks that have their own addresses
 * Each block is an individual piece of data storage
@@ -314,7 +319,7 @@ Block storage
 resources on a block storage volume by formatting the block storage
 volume and turning it into a VM file system
 
-Object storage
+### Object storage
 * Files stored as objects
 * Stored in a bucket using a flat structure - no folders, directories or hierarchies
 * Each object contains a unique identifier and optionally additional metadata
@@ -329,7 +334,7 @@ Object storage
 
 
 ### S3
-Standalone storage solution
+* Standalone storage solution
 * Data can be retrieved from anywhere on the web
 * Object storage service
     * Flat structure
@@ -397,61 +402,66 @@ Encrypt data in S3
 
 
 ### Amazon Elastic File System (EFS)
-* Set-and-forget file system that automatically grows and shrinks as files are added and
-removed
+* Set-and-forget file system that automatically grows and shrinks as files are added and removed
 * No need for provisioning or managing storage capacity or performance
 * Consistent performance to each compute instance - tens, hundreds, and thousands of
 compute instances can be connected at the same time
 
 ### Elastic Block Store (EBS)
-Block-level storage that can be attached to an Amazon EC2 instance - same as an
-external drive can be attached to a laptop
+* Block-level storage that can be attached to an Amazon EC2 instance - same as an external drive can be attached to a laptop
 * Also called EBS volume
-* Characteristics:
-    * Detachable
-        * EBS volume can be detached from one EC2 instance and attached to another one in the same Availability Zone
-    * Distinct
-        * External drive is separate from the computer
-        * If an accident occurs and the computer goes down, data is still on the drive
-    * Size-limited
-        * Limited to the size of the external drive
-        * Fixed limit how scalable it can be
-    * 1-to-1 connection
-        * Can be connected with one computer at a time
-        * Cannot be shared or attached to multiple instances
-* Volumes can be scaled in two ways:
-    * Increase volume size
-        * If it doesn’t increase above the maximum size limit
-        * Maximum volume size at the moment is 64 tebibytes (TIB)
-    * Attach multiple volumes
-        * EC2 has a one-to-many relationships with EBS volumes
-        * One instance can have multiple volumes, but volume can be attached only to one instance at the same time
 * Useful for quick data retrieval and long term data persistence
-* Use cases:
-    * Operating systems
-        * The root device for an instance launched from an AMI
-    * Databases
-        * Storage layer for databases running on EC2
-    * Enterprise applications
-    * Big data analytics engines size
-* Volume types:
-    * SSD
-        * Transactional workloads with frequent read/write operations with small I/O
-    * HDD
-        * Large streaming workloads that need high throughput performance
-* Key EBS benefits
-    * High availability
-        * When a volume is created, it is automatically replicated in its Availability Zone
-    * Data persistence
-    * Data encryption
-        * Supports, when activated by the user
-    * Flexibility
-        * Possible to modify volume type, size and input/output operations per second without stopping the instance
-    * Backups
-        * Supports to create backups
-* Snapshots
-    * Incremental Backups of data from EC2 instances
-    * Saving only blocks that have changed after the most recent snapshot
+
+Characteristics:
+* Detachable
+    * EBS volume can be detached from one EC2 instance and attached to another one in the same Availability Zone
+* Distinct
+    * External drive is separate from the computer
+    * If an accident occurs and the computer goes down, data is still on the drive
+* Size-limited
+    * Limited to the size of the external drive
+    * Fixed limit how scalable it can be
+* 1-to-1 connection
+    * Can be connected with one computer at a time
+    * Cannot be shared or attached to multiple instance
+    
+    
+Volumes can be scaled in two ways:
+* Increase volume size
+     * If it doesn’t increase above the maximum size limit
+    * Maximum volume size at the moment is 64 tebibytes (TIB)
+* Attach multiple volumes
+    * EC2 has a one-to-many relationships with EBS volumes
+    * One instance can have multiple volumes, but volume can be attached only to one instance at the same time
+
+Use cases:
+* Operating systems
+    * The root device for an instance launched from an AMI
+* Databases
+    * Storage layer for databases running on EC2
+* Enterprise applications
+* Big data analytics engines size
+
+Volume types:
+* SSD
+    * Transactional workloads with frequent read/write operations with small I/O
+* HDD
+    * Large streaming workloads that need high throughput performance
+
+Key EBS benefits
+* High availability
+    * When a volume is created, it is automatically replicated in its Availability Zone
+* Data persistence
+* Data encryption
+    * Supports, when activated by the user
+* Flexibility
+    * Possible to modify volume type, size and input/output operations per second without stopping the instance
+* Backups
+    * Supports to create backups
+
+Snapshots
+* Incremental Backups of data from EC2 instances
+* Saving only blocks that have changed after the most recent snapshot
 
 ### FSx
 * Fully managed service to launch, run and scale high-performance file systems in the cloud
@@ -495,8 +505,7 @@ external drive can be attached to a laptop
 ## Databases
 ### RDS 
 * Managed database service
-* Supports most of the popular RDBMSs such as Oracle, SQL Server, MySql,
-PostgreSQL, MariaDB, Aurora
+* Supports most of the popular RDBMSs such as Oracle, SQL Server, MySql, PostgreSQL, MariaDB, Aurora
 * Amazon RDS is built from compute & storage
     * Compute - database instance, which runs the DB engine
         * Instance can contain multiple databases with the same engine and each database can contain multiple tables
@@ -523,21 +532,22 @@ PostgreSQL, MariaDB, Aurora
     * When creating an instance, it’s necessary to select the VPC the database will live in and subnets designated for the DB
         * The subnets in a DB subnet group should be private, so they don’t have a
 route to the internet gateway - in that case the data inside the instance can be reached only by the application backend
-* Backup data
-    * Automated backups
-        * Turned on by default
-        * Backups the entire DB instance and transaction logs
-    * Manual snapshots
-        * Can be initiated at any time
-        * Exist until they’re manually deleted
 
-* Security
-    * IAM
-        * IAM policies to assign permissions that determine who can manage RDS resources
-    * Security groups
-        * Control which IP addresses or EC2 instances can connect to databases on a DB instance
-    * Encryption
-    * SSL or TLS connections with DB instances
+Data Backup
+* Automated backups
+    * Turned on by default
+    * Backups the entire DB instance and transaction logs
+* Manual snapshots
+    * Can be initiated at any time
+    * Exist until they’re manually deleted
+
+Security
+* IAM
+    * IAM policies to assign permissions that determine who can manage RDS resources
+* Security groups
+    * Control which IP addresses or EC2 instances can connect to databases on a DB instance
+* Encryption
+* SSL or TLS connections with DB instances
 
 ### DynamoDB 
 Core components:
@@ -663,8 +673,7 @@ DynamoDB streams
     * Fast, scalable and serverless time series service for IoT and operational applications
     * Easy to store and analyze trillions of events per day up to 1000 times faster and for as little as one-tenth of the cost of relational databases
 * Quantum Ledger Database (QLDB)
-    * Ledger database that provides a complete and cryptographically verifiable history
-of all changes made to the application data
+    * Ledger database that provides a complete and cryptographically verifiable history of all changes made to the application data
 
 ## Monitoring
 ### CloudWatch
@@ -680,8 +689,7 @@ of all changes made to the application data
 ## Load Balancing
 
 ### Elastic Load Balancing
-Distributes incoming application traffic across EC2 instances, containers, IP addresses,
-and Lambda functions. 
+Distributes incoming application traffic across EC2 instances, containers, IP addresses, and Lambda functions. 
 
 Three main components:
 * Rules
@@ -709,8 +717,7 @@ Types of load balancers:
 
 ## Troubleshooting & Optimization 
 Hot partition in DynamoDB
-* Refactor application to distribute read and write operations as evenly as possible across
-your table
+* Refactor application to distribute read and write operations as evenly as possible across your table
 * Implement error retries and exponential backoff
 
 Important DynamoDB Calculations
