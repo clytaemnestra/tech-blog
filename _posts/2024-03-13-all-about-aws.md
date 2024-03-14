@@ -811,3 +811,11 @@ Service for:
 * Real-time data from applications, can be triggered by Lambda - EventBridge
 * Coordinate multiple AWS services into serverless workflows - Step functions
     * Expressions that enable you to group objects - Clluster Query Language
+
+## Sources
+* [Tutorials Dojo](https://portal.tutorialsdojo.com) for practise exams
+* [AWS Technical Essentials](https://explore.skillbuilder.aws/learn/course/external/view/elearning/1851/aws-technical-essentials)
+* [AWS Introduction to Containers](https://explore.skillbuilder.aws/learn/course/external/view/elearning/106/introduction-to-containers?da=sec&sec=prep)
+* [AWS Introduction to Serverless Computing](https://explore.skillbuilder.aws/learn/course/external/view/elearning/37/introduction-to-serverless-development?da=sec&sec=prep)
+* [Amazon Elastic Container Service Primer](https://explore.skillbuilder.aws/learn/course/external/view/elearning/91/amazon-elastic-container-service-ecs-primer?da=sec&sec=prep)
+* [Amazon EKS Primer](https://explore.skillbuilder.aws/learn/course/external/view/elearning/57/amazon-elastic-kubernetes-service-eks-primer?da=sec&sec=prep)
