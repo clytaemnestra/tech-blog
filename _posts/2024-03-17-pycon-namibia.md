@@ -9,6 +9,8 @@ tags: [conferences]
 ## Motivation
 I've never visited Africa. Last year, [Honza Javorek](https://honzajavorek.cz/) mentioned he attended PyCon Namibia in the past and recommended that people should consider going. When [Karolina](https://cz.linkedin.com/in/karolina-surma-950452b7) mentioned in December that she was considering going there, I immediately decided that I was going as well — off to an adventure!
 
+<img src="./images/posts/pycon-na/packing.JPEG" alt="Packing" style="max-width: 100%; max-height: 100%; display: block;">
+
 Is there a better way to explore an African country than attending a conference and hanging out with the locals?
 
 ## Beer 
@@ -58,6 +60,7 @@ The next day was the day of my talk, which was an introduction to FastAPI. As th
 I believe conferences are not only about knowledge sharing, but about inspiring others. If that young girl, upon seeing a blue-haired, tattooed woman speaking on topics far beyond her current understanding, thought to herself, *I have no idea what she's talking about, but it sounds cool, and I want to try it*, I'd be super happy. 
 
 At the closing session, one of the students gave a lightning talk in which he thanked the organizers and me for showing him what programming is all about. It was the most heartwarming experience I've ever had. Working with kids can be incredibly rewarding.
+
 Karolina gave a fantastic lightning talk about PyLadies. I've never seen someone deliver a lightning talk with such passion for the topic. She discussed PyLadies' history and aimed to encourage girls to chase their dreams and get into programming.
 
 I also enjoyed a lightning talk by [Vince](https://vknight.org/), a British mathematician and computer scientist. He simulated the Monty Hall problem in Python and explained why switching your choice is statistically better. I wish I had such teachers when I was younger!
@@ -79,7 +82,7 @@ Namibians eat lots of meat!
 
 <img src="./images/posts/pycon-na/meat.png" alt="Meat" style="max-width: 100%; max-height: 100%; display: block;">
 
-Organizers did their best to accommodate our needs and prepare some vegan and vegetarian food for a few of us herbivores - kudos to organizers! One of the traditional veggie things they eat is spinach with sand! Yes, you read it well - there's sand in it. 
+Organizers did their best to accommodate our needs and prepare some vegan and vegetarian food for a few of us herbivores—kudos to organizers! One of the traditional veggie things they eat is spinach with sand! Yes, you read it well—there's sand in it. 
 
 They also eat beans and different kinds of dough. 
 
@@ -131,7 +134,7 @@ The next day, as we were driving from the first camp to the second, we encounter
 
 <img src="./images/posts/pycon-na/elephants.jpeg" alt="Elephants" style="max-width: 100%; max-height: 100%; display: block;">
 
-One of the most fascinating things to see at night is the stars! They appear differently from the Southern Hemisphere, and you can see some constellations fully—we saw Orion and Sagittarius (that's what Karolina said, and I trust her knowledge of the galaxy - I can recognize only Venus).
+One of the most fascinating things to see at night is the stars! They appear differently from the Southern Hemisphere, and you can see some constellations fully—we saw Orion and Sagittarius (that's what Karolina said, and I trust her knowledge of the galaxy—I can recognize only Venus).
 
 <img src="./images/posts/pycon-na/stars.jpeg" alt="Stars" style="max-width: 100%; max-height: 100%; display: block;">
 
@@ -168,6 +171,8 @@ In Namibia, there's also a desert! So, we couldn't miss visiting the dunes on ou
 ## Walvis Bay And Tens of Thousands Flamingos 
 I had never seen a flamingo in my life, so seeing so many of them in one place was truly spectacular!
 <img src="./images/posts/pycon-na/flamingos.jpeg" alt="Flamingos" style="max-width: 100%; max-height: 100%; display: block;">
+
+<img src="./images/posts/pycon-na/flamingos2.jpeg" alt="Flamingos" style="max-width: 100%; max-height: 100%; display: block;">
 
 ## Things That Surprised Me 
 * ~~I didn't see a single monkey.~~ I saw a few next to the highway on my way to the airport. 
