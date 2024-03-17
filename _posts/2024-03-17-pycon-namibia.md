@@ -141,7 +141,7 @@ One of the most fascinating things to see at night is the stars! They appear dif
 <img src="./images/posts/pycon-na/stars.jpeg" alt="Stars" style="max-width: 100%; max-height: 100%; display: block;">
 
 
-On our way back from the second camp, we saw two cheetahs with small cubs lying next to the road and chilling.
+On our way back from the second camp, we saw two cheetahs with small cubs lying next to the road and chilling. Lots of zebras and orynxes as well.
 
 <img src="./images/posts/pycon-na/zebras.jpeg" alt="Zebras" style="max-width: 100%; max-height: 100%; display: block;">
 
