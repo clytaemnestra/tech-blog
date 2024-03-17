@@ -133,7 +133,7 @@ The next day, as we were driving from the first camp to the second, we encounter
 
 One of the most fascinating things to see at night is the stars! They appear differently from the Southern Hemisphere, and you can see some constellations fully—we saw Orion and Sagittarius (that's what Karolina said, and I trust her knowledge of the galaxy - I can recognize only Venus).
 
-<img src="./images/posts/pycon-na/stars.jpeg" alt="Stars" style="max-width: 50%; max-height: 50%; display: block;">
+<img src="./images/posts/pycon-na/stars.jpeg" alt="Stars" style="max-width: 100%; max-height: 100%; display: block;">
 
 
 On our way back from the second camp, we saw two cheetahs with small cubs lying next to the road and chilling.
