@@ -5,6 +5,7 @@ description: "PyCon & My Roadtrip Through Namibia"
 date: 2024-03-23
 tags: [conferences]
 ---
+
 ## Motivation
 I've never visited Africa. Last year, Honza Javorek mentioned he attended PyCon Namibia in the past and recommended that people should consider going. When Karolina mentioned in December that she was considering going there, I immediately decided that I was going as well — off to an adventure!
 
