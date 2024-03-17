@@ -148,6 +148,10 @@ We covered a total distance of around 1550 km: from Windhoek to Etosha, then to 
 
 <img src="./images/posts/pycon-na/driving2.jpeg" alt="Driving" style="max-width: 100%; max-height: 100%; display: block;">
 
+<img src="./images/posts/pycon-na/driving3.jpeg" alt="Driving" style="max-width: 100%; max-height: 100%; display: block;">
+
+<img src="./images/posts/pycon-na/driving4.jpeg" alt="Driving" style="max-width: 100%; max-height: 100%; display: block;">
+
 
 ## Swakopmund 
 Swakopmund is a small coastal town, largely established by colonists. It was clean, the air was humid, and there were several nice restaurants. The town boasts sandy beaches, but the ocean was too cold for swimming. However, the town's pronounced colonial influence gave it a vibe that didn't quite resonate with me.
