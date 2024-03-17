@@ -97,7 +97,7 @@ What shocked us the most is realizing that these atrocities didn't happen centur
 ## Cheetah Conservation Fund
 The next day, we decided to visit the Cheetah Conservation Fund. Upon our arrival, we were greeted with fascinating information about cheetahs. Did you know that cheetahs are the fastest land animals? They can accelerate from 1 to 120 km/h in just 3 seconds!
 
-Cheetahs are often mistakenly killed by farmers, as they are daytime hunters who roam freely. However, cheetahs actually hunt primarily at night and are quite selective about their food—they don't eat leftovers. So, when farmers spot them near their deceased livestock during the day, they assume the cheetahs are to blame, but it's usually leopards who are responsible!
+Cheetahs are often mistakenly killed by farmers. Farmers often find their livestock killed in the night. However, cheetahs actually hunt primarily at day and are quite selective about their food—they don't eat leftovers. So, when farmers spot them near their deceased livestock in the morning, they assume the cheetahs are to blame, but it's usually leopards who are responsible!
 
 After we learned interesting facts about them, we had the opportunity to visit three very friendly cheetahs. Unfortunately, these cheetahs had been mistreated by humans and never learned how to hunt, making them unable to be released back into the wild. 
 
