@@ -7,7 +7,7 @@ tags: [conferences]
 ---
 
 ## Motivation
-I've never visited Africa. Last year, Honza Javorek mentioned he attended PyCon Namibia in the past and recommended that people should consider going. When Karolina mentioned in December that she was considering going there, I immediately decided that I was going as well — off to an adventure!
+I've never visited Africa. Last year, [Honza Javorek](https://honzajavorek.cz/) mentioned he attended PyCon Namibia in the past and recommended that people should consider going. When [Karolina](https://cz.linkedin.com/in/karolina-surma-950452b7) mentioned in December that she was considering going there, I immediately decided that I was going as well — off to an adventure!
 
 Is there a better way to explore an African country than attending a conference and hanging out with the locals?
 
