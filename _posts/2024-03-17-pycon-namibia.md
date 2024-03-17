@@ -51,7 +51,6 @@ For lunch, we went with the organizers to the local market. I had spinach with s
 <img src="./images/posts/pycon-na/dough.JPEG" alt="Dough" style="max-width: 100%; max-height: 100%; display: block;">
 
 
-
 ## PyCon: My Talk, Other Talks & Lightning Talks 
 The next day was the day of my talk, which was an introduction to FastAPI. As there were many kids in the audience, I tried to explain everything in detail to ensure we were all on the same page. The talk went quite smoothly, and at the end, I opened the Q&A session. A young girl raised her hand and asked, "What is an API?" This question was the most challenging one I had ever received. Yet, what I admired the most was her bravery — to stand up in a room of 100 people and admit she didn't understand something. 
 
@@ -104,6 +103,9 @@ After we learned interesting facts about them, we had the opportunity to visit t
 
 <img src="./images/posts/pycon-na/cheetah.JPEG" alt="Cheetah" style="max-width: 100%; max-height: 100%; display: block;">
 
+Obligatory selfie with a cheetah:
+
+<img src="./images/posts/pycon-na/selfie.JPEG" alt="Selfie" style="max-width: 100%; max-height: 100%; display: block;">
 
 Beyond caring for cheetahs that cannot be released, the conservation fund runs a special program where they train dogs to detect predators and herd sheep, thereby preventing attacks. The dogs were cute, but not cuddly nor interested in humans.
 
