@@ -2,7 +2,7 @@
 layout: post
 title: "PyCon & My Roadtrip Through Namibia"
 description: "PyCon & My Roadtrip Through Namibia"
-date: 2024-03-23
+date: 2024-03-17
 tags: [conferences]
 ---
 
