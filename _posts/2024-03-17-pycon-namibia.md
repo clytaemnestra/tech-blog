@@ -4,6 +4,7 @@ title: "PyCon & My Roadtrip Through Namibia"
 description: "PyCon & My Roadtrip Through Namibia"
 date: 2024-03-17
 tags: [conferences]
+feature_image: "./images/posts/pycon-na/attendees.JPEG"
 ---
 
 ## Motivation
