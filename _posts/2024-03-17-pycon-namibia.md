@@ -14,7 +14,7 @@ Is there a better way to explore an African country than attending a conference 
 ## Beer 
 I'm a huge beer enthusiast. On our first night after arriving, we decided to grab a beer. We enjoyed a South African draught Castle Lite at a rooftop bar, and I really liked the taste! What surprised us was how small and decentralized the city is, and also the number of stars visible in the sky.
 
-<img src="./images/posts/pycon-na/beer.jpeg" alt="Beer" style="max-width: 100%; max-height: 100%; display: block;">
+<img src="./images/posts/pycon-na/beer.jpeg" alt="Beer" style="max-width: 50%; max-height: 50%; display: block;">
 
 
 ## PyCon: Educational Day Or Teaching In The Township (Slums)
@@ -43,7 +43,9 @@ I participated in a morning workshop introducing Python, where I was assigned tw
 For lunch, we went with the organizers to the local market. I had spinach with sand, fatcake (basically fried dough), and a porridge-like dough. It was fascinating to see how everything is eaten by hand, even spinach in a sauce. I ate everything with my hands, trying my best not to make a mess, but I probably looked clumsy.
 
 <img src="./images/posts/pycon-na/spinach.JPEG" alt="Spinach" style="max-width: 100%; max-height: 100%; display: block;">
+
 <img src="./images/posts/pycon-na/fat-cake.JPEG" alt="Cake" style="max-width: 100%; max-height: 100%; display: block;">
+
 <img src="./images/posts/pycon-na/dough.JPEG" alt="Dough" style="max-width: 100%; max-height: 100%; display: block;">
 
 
@@ -83,7 +85,7 @@ They also eat beans and different kinds of dough.
 
 When we were travelling around the country, we bought some cans, a plastic bowl, and a plastic spoon. The best decision ever! 
 
-<img src="./images/posts/pycon-na/cans.JPEG" alt="Food" style="max-width: 100%; max-height: 100%; display: block;">
+<img src="./images/posts/pycon-na/cans.JPEG" alt="Food" style="max-width: 50%; max-height: 50%; display: block;">
 
 ## Independence Museum 
 We decided to visit independence museum in order to learn something about the history of Namibia. I was raised in South-Eastern Europe and we were never taught at school much about colonialism or apartheid except that *it happened*. 
@@ -109,12 +111,14 @@ Beyond caring for cheetahs that cannot be released, the conservation fund runs a
 Etosha is a national park located in the northern part of Namibia. What would visiting Africa be without going on early morning and night safaris?
 
 <img src="./images/posts/pycon-na/rhyno.jpeg" alt="Rhyno" style="max-width: 100%; max-height: 100%; display: block;">
+
 <img src="./images/posts/pycon-na/orynx.jpeg" alt="Orynx" style="max-width: 100%; max-height: 100%; display: block;">
 
 
 Camps are located next to waterholes — small lakes where animals come to drink in the evenings. We spent a few hours in the evening observing animals drinking 50 meters away from us. It was fascinating seeing how careful they are! It took an hour for three giraffes to drink! 
 
 <img src="./images/posts/pycon-na/giraffes.jpeg" alt="Giraffe" style="max-width: 100%; max-height: 100%; display: block;">
+
 <img src="./images/posts/pycon-na/wild-dog.jpeg" alt="Wild dog" style="max-width: 100%; max-height: 100%; display: block;">
 
 
@@ -122,12 +126,14 @@ Camps are located next to waterholes — small lakes where animals come to drink
 The next day, as we were driving from the first camp to the second, we encountered an elephant on the road! My first reaction was to start panicking and go in reverse as fast as I could. The elephant eventually turned elsewhere, simply wanting to pass through — it wasn't bothered by people at all. Then, we saw lots of elephants bathing together!
 
 <img src="./images/posts/pycon-na/elephant.jpeg" alt="Elephant" style="max-width: 100%; max-height: 100%; display: block;">
+
 <img src="./images/posts/pycon-na/elephant2.jpeg" alt="Elephant" style="max-width: 100%; max-height: 100%; display: block;">
+
 <img src="./images/posts/pycon-na/elephants.jpeg" alt="Elephants" style="max-width: 100%; max-height: 100%; display: block;">
 
 One of the most fascinating things to see at night is the stars! They appear differently from the Southern Hemisphere, and you can see some constellations fully—we saw Orion and Sagittarius (that's what Karolina said, and I trust her knowledge of the galaxy - I can recognize only Venus).
 
-<img src="./images/posts/pycon-na/stars.jpeg" alt="Stars" style="max-width: 100%; max-height: 100%; display: block;">
+<img src="./images/posts/pycon-na/stars.jpeg" alt="Stars" style="max-width: 50%; max-height: 50%; display: block;">
 
 
 On our way back from the second camp, we saw two cheetahs with small cubs lying next to the road and chilling.
@@ -139,6 +145,7 @@ On our way back from the second camp, we saw two cheetahs with small cubs lying 
 We covered a total distance of around 1550 km: from Windhoek to Etosha, then to Swakopmund, Walvis Bay, back to Swakopmund, and finally returning to Windhoek. Some roads were paved, while others were gravel, and we also drove through sand. We rented a Toyota Hilux 4x4. It was my first experience driving on the left side of the road, and for some reason unknown to me, it felt more natural than driving on the right!
 
 <img src="./images/posts/pycon-na/driving1.jpeg" alt="Driving" style="max-width: 100%; max-height: 100%; display: block;">
+
 <img src="./images/posts/pycon-na/driving2.jpeg" alt="Driving" style="max-width: 100%; max-height: 100%; display: block;">
 
 
@@ -151,6 +158,7 @@ Swakopmund is a small coastal town, largely established by colonists. It was cle
 ## Driving Around The Coast And Walking On Sand Dunes 
 In Namibia, there's also a desert! So, we couldn't miss visiting the dunes on our road trip.
 <img src="./images/posts/pycon-na/dunes.jpeg" alt="Dunes" style="max-width: 100%; max-height: 100%; display: block;">
+
 <img src="./images/posts/pycon-na/dunes2.jpeg" alt="Dunes" style="max-width: 100%; max-height: 100%; display: block;">
 
 ## Walvis Bay And Tens of Thousands Flamingos 
@@ -183,3 +191,5 @@ I'd like to thank the organizers for organizing the event, giving us the opportu
 * The conference was amazing. 
 * The roadtrip was even more so. 
 * If you get the chance, you should definitely attend PyCon Namibia and go for a trip!
+
+<img src="./images/posts/pycon-na/everyone.jpg" alt="Everyone" style="max-width: 100%; max-height: 100%; display: block;">
