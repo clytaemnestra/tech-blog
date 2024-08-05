@@ -80,6 +80,7 @@ I’d like to thank everyone who supported me throughout my talk:
 * My ex-manager [Tomáš Bartál](https://www.linkedin.com/in/tomasbartal) for his support and allowing me preparation time during work hours.
 * My friend and colleague from the [EuroPython Society](https://pl.linkedin.com/in/arturczepiel) [Artur Czepiel](https://www.linkedin.com/in/arturczepiel) for support and reviewing Django-related content.
 * [Ataccama](https://www.ataccama.com/) for their support and allowing me to share my experiences, some of which were work-related.
+* [Nicole Adelman](https://www.linkedin.com/in/nicolejadelmanhtbh) for support and providing public speaking lessons. 
 * And to all the people at various tech events I attended in the last few months, who provided their insights on Python frameworks that helped shape my talk.
 
 A big thanks to all the volunteer organizers for their effort in making this amazing event happen. Can’t wait for next year in Dublin!
