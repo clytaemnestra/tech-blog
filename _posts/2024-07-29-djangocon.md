@@ -30,8 +30,8 @@ What I love about Spain is its vibrant, outdoor culture. As night falls, everyon
 
 
 <div style="display: flex; justify-content: space-between;">
-  <img src="./images/posts/djangocon/food1.jpg" alt="Delicious pizza" style="max-width: 45%; height: auto;">
-  <img src="./images/posts/djangocon/food2.jpg" alt="Another delicious pizza" style="max-width: 45%; height: auto;">
+  <img src="images/posts/djangocon/food1.jpg" alt="Delicious pizza" style="max-width: 45%; height: auto;">
+  <img src="images/posts/djangocon/food2.jpg" alt="Another delicious pizza" style="max-width: 45%; height: auto;">
 </div>
 
 
