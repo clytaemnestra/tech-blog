@@ -71,9 +71,9 @@ If EuroPython happens in Prague again and I'm doing another announcement at Djan
 ## Talks URL 
 My talk is already online! Check it out here: [https://www.youtube.com/watch?v=AERuDe9YxWE](https://www.youtube.com/watch?v=AERuDe9YxWE). Slides are available here: [https://github.com/clytaemnestra/talks/blob/main/django-orm-fast-api-djangocon.pdf](https://github.com/clytaemnestra/talks/blob/main/django-orm-fast-api-djangocon.pdf).
 
-My lightning talk is also available! If you want to play a game, check it out here: [https://youtu.be/Fpdm0g9v6YU?t=1436](https://www.youtube.com/watch?v=AERuDe9YxWE).
+My lightning talk is also available! If you want to play a game, check it out here: [https://youtu.be/Fpdm0g9v6YU?t=1436](https://youtu.be/Fpdm0g9v6YU?t=1436).
 
-And here's my previous lightning talk about what do Prague & Edinburgh have in common: [https://youtu.be/Zc0W3L1tIZM?t=2343](https://www.youtube.com/watch?v=AERuDe9YxWE).
+And here's my previous lightning talk about what do Prague & Edinburgh have in common: [https://youtu.be/Zc0W3L1tIZM?t=2343](https://youtu.be/Zc0W3L1tIZM?t=2343).
 
 # Thank you!  
 I’d like to thank everyone who supported me throughout my talk:
