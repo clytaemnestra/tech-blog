@@ -10,19 +10,19 @@ Djangocon was held this year in the charming city of Vigo, in Northern Spain, ju
 
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
   <div style="flex: 1 1 30%; margin: 5px;">
-    <img src="./images/posts/djangocon/sculpture.jpg" alt="Burger" style="width: 100%; height: auto;">
+    <img src="images/posts/djangocon/sculpture.jpg" alt="Burger" style="width: 100%; height: auto;">
   </div>
   <div style="flex: 1 1 30%; margin: 5px;">
-    <img src="./images/posts/djangocon/vigo-night.jpg" alt="Bagel 1" style="width: 100%; height: auto;">
+    <img src="images/posts/djangocon/vigo-night.jpg" alt="Bagel 1" style="width: 100%; height: auto;">
   </div>
   <div style="flex: 1 1 30%; margin: 5px;">
-    <img src="./images/posts/djangocon/vigo-night3.jpg" alt="Burrito" style="width: 100%; height: auto;">
+    <img src="images/posts/djangocon/vigo-night3.jpg" alt="Burrito" style="width: 100%; height: auto;">
   </div>
   <div style="flex: 1 1 20%; margin: 20px;">
-    <img src="./images/posts/djangocon/vigo-night2.jpg" alt="Bagel 2" style="width: 100%; height: auto;">
+    <img src="images/posts/djangocon/vigo-night2.jpg" alt="Bagel 2" style="width: 100%; height: auto;">
   </div>
   <div style="flex: 1 1 20%; margin: 20px;">
-    <img src="./images/posts/djangocon/vigo-night4.jpg" alt="Sushi" style="width: 100%; height: auto;">
+    <img src="images/posts/djangocon/vigo-night4.jpg" alt="Sushi" style="width: 100%; height: auto;">
   </div>
 </div>
 
