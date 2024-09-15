@@ -1,0 +1,2557 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>TIL</title>
+        <description>Hi there! Welcome to my TIL blog.</description>
+        <link>https://clytaemnestra.github.io/tech-blog/</link>
+        <atom:link href="https://clytaemnestra.github.io/tech-blog/feed.xml" rel="self" type="application/rss+xml"/>
+        <pubDate>Sun, 15 Sep 2024 19:25:21 +0000</pubDate>
+        <lastBuildDate>Sun, 15 Sep 2024 19:25:21 +0000</lastBuildDate>
+        <generator>Jekyll v3.10.0</generator>
+        
+            <item>
+                <title>PostgreSQL: About Internals &amp; Tuning</title>
+                <description>&lt;p&gt;I attended Karen Jex’s &lt;a href=&quot;https://www.youtube.com/watch?v=7CnqVoMxoeo&quot;&gt;talk on databases&lt;/a&gt; at DjangoCon in Edinburgh 2023. That sparked my curiousity. I find databases fascinating—they don’t change as fast and as much as other software, such as frameworks, yet they’re used in nearly every system we rely on.&lt;/p&gt;
+
+&lt;p&gt;I decided to spend this rainy weekend in Prague exploring the internals of PostgreSQL and writing down some notes from my learnings.&lt;/p&gt;
+
+&lt;h2 id=&quot;how-is-data-stored&quot;&gt;How Is Data Stored?&lt;/h2&gt;
+&lt;p&gt;As someone who regularly works with databases, I know data is stored in tables, but how exactly are these tables stored?&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Tables&lt;/strong&gt;: Stored as heap files on disk.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Heap Files&lt;/strong&gt;: Consist of data pages (also called blocks), each typically 8 KB in size.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Data Pages&lt;/strong&gt;: The basic unit of storage in PostgreSQL, containing tuples (rows) and header information.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Tuples&lt;/strong&gt;: Each tuple consists of a header (metadata) and the actual data (column values). Tuples are not stored in any particular order.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;structure-of-a-data-page&quot;&gt;Structure of a Data Page&lt;/h3&gt;
+
+&lt;p&gt;A data page has the following components:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;Page Header:&lt;/strong&gt; Contains metadata about the page.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Line Pointer (Item Identifier) Array:&lt;/strong&gt; An array of pointers to the tuples stored within the page.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Tuple Data Area:&lt;/strong&gt; The actual storage area where tuples (rows) are stored.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Free Space:&lt;/strong&gt; Unused space available for new tuples.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;figure&gt;
+  &lt;img src=&quot;./images/posts/postgres/page.png&quot; alt=&quot;Page architecture&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;
+  &lt;figcaption style=&quot;text-align: center;&quot;&gt;Page architecture. Source: interdb.jp/pg&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;figure&gt;
+&lt;img src=&quot;./images/posts/postgres/tuple.png&quot; alt=&quot;Tuple architecture&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;
+  &lt;figcaption style=&quot;text-align: center;&quot;&gt;Tuple architecture. Source: interdb.jp/pg&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h3 id=&quot;line-pointer-array&quot;&gt;Line Pointer Array&lt;/h3&gt;
+&lt;p&gt;Now that we’ve introduced data pages, we can explain the &lt;strong&gt;line pointer array&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;An array of pointers located immediately after the page header in each data page.&lt;/li&gt;
+  &lt;li&gt;Each entry in this array is called a “line pointer.”&lt;/li&gt;
+  &lt;li&gt;Each line pointer corresponds to a tuple (row) stored within the data range.&lt;/li&gt;
+  &lt;li&gt;It points to the offset within the page where a tuple starts.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;what-happens-when-a-new-row-is-inserted&quot;&gt;What Happens When a New Row is Inserted?&lt;/h4&gt;
+&lt;ol&gt;
+  &lt;li&gt;PostgreSQL places the new row into a data page.&lt;/li&gt;
+  &lt;li&gt;The tuple for this row has a header (metadata) and the data itself (column values).&lt;/li&gt;
+  &lt;li&gt;The line pointer array contains a pointer to this tuple’s location within the page.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;figure&gt;
+  &lt;img src=&quot;./images/posts/postgres/tuple-insertion.png&quot; alt=&quot;Tuple insertion&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;
+  &lt;figcaption style=&quot;text-align: center;&quot;&gt;Tuple insertion. Source: interdb.jp/pg&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h4 id=&quot;what-happens-when-a-row-is-deleted&quot;&gt;What Happens When a Row is Deleted?&lt;/h4&gt;
+&lt;ol&gt;
+  &lt;li&gt;The row is marked as logically deleted (dead) by updating its metadata.&lt;/li&gt;
+  &lt;li&gt;Its visibility is changed so future transactions cannot see it.&lt;/li&gt;
+  &lt;li&gt;The line pointer still points to the row’s location, but it is marked as ‘dead.’&lt;/li&gt;
+  &lt;li&gt;The data remains on the page until a cleanup process (VACUUM) occurs.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&quot;what-happens-when-a-row-is-updated&quot;&gt;What Happens When a Row is Updated?&lt;/h4&gt;
+&lt;ol&gt;
+  &lt;li&gt;A new version of the tuple is created and may be placed in a different part of the page or even a different page.&lt;/li&gt;
+  &lt;li&gt;The line pointer array is updated to point to the new location of the tuple.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;internals&quot;&gt;Internals&lt;/h2&gt;
+&lt;p&gt;With an understanding of how data is stored, let’s check out other key concepts of PostgreSQL internals.&lt;/p&gt;
+
+&lt;p&gt;PostgreSQL follows a client-server architecture where each client connection is handled by a separate backend process. The database consists of various subsystems responsible for processing queries, managing memory, storing data, and many more.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;img src=&quot;./images/posts/postgres/process-architecture.png&quot; alt=&quot;Process architecture&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;
+  &lt;figcaption style=&quot;text-align: center;&quot;&gt;Process architecture. Source: interdb.jp/pg&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;memory-architecture&quot;&gt;Memory Architecture&lt;/h3&gt;
+&lt;p&gt;PostgreSQL’s memory architecture consists of:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Local Memory:&lt;/strong&gt; Allocated by each backend process for its own use.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Shared Memory:&lt;/strong&gt; Used by all processes.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure&gt;
+  &lt;img src=&quot;./images/posts/postgres/memory-architecture.png&quot; alt=&quot;Memory architecture&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;
+  &lt;figcaption style=&quot;text-align: center;&quot;&gt;Memory architecture. Source: interdb.jp/pg&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;indexes&quot;&gt;Indexes&lt;/h3&gt;
+&lt;p&gt;Indexes improve data retrieval speed by providing quick access paths to data. The most commonly used underlying structure is a B-Tree.&lt;/p&gt;
+
+&lt;p&gt;Index Lookup Process:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;Search Index:&lt;/strong&gt; Find matching keys.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Retrieve CTIDs:&lt;/strong&gt; Get the physical locations.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Access Data Pages:&lt;/strong&gt; Use CTIDs to fetch tuples directly.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Without an index, PostgreSQL performs a sequential scan, checking each row in every page.&lt;/p&gt;
+
+&lt;h4 id=&quot;difference-between-an-index-and-a-line-pointer&quot;&gt;Difference Between an Index and a Line Pointer&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;Index is an external structure to the table while a line pointer is internal to each data page.&lt;/li&gt;
+  &lt;li&gt;Index provides a mapping from column values to CTIDs, while line pointer points to the physical offset of tuples within the page&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;query-path&quot;&gt;Query Path&lt;/h3&gt;
+&lt;p&gt;Let’s see how a query is processed:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;Connection Established:&lt;/strong&gt; A process is created per user.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Query Sent:&lt;/strong&gt; The client sends a plain text query to the backend.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Parsing:&lt;/strong&gt; The parser checks the query syntax and creates a query tree. It performs semantic analysis to understand the tables, functions, and operators referenced.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Rewrite System:&lt;/strong&gt; Applies rules to the query tree.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Planning:&lt;/strong&gt; The planner generates a query plan, choosing the optimal execution path.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Execution:&lt;/strong&gt; The executor steps through the plan tree and retrieves rows in the way represented by the plan.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;vacuum&quot;&gt;VACUUM&lt;/h2&gt;
+&lt;p&gt;Maintains database health by:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Removing dead tuples.&lt;/li&gt;
+  &lt;li&gt;Freezing transaction IDs.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Two types of VACUUM:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;Concurrent VACUUM:&lt;/strong&gt; Removes dead tuples while allowing other transactions to read the table.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Full VACUUM:&lt;/strong&gt; Removes dead tuples and defragments live tuples in the entire file, blocking access to the table during the process.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;write-ahead-logging-wal&quot;&gt;Write-Ahead Logging (WAL)&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Ensures no data is lost even in case of system failure.&lt;/li&gt;
+  &lt;li&gt;WAL records (XLOG records) are written to in-memory buffers and then immediately to a WAL segment file upon transaction commit or abort.&lt;/li&gt;
+  &lt;li&gt;PostgreSQL starts recovery from the &lt;strong&gt;REDO point&lt;/strong&gt;, the location of the latest checkpoint.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;how-does-replication-work&quot;&gt;How Does Replication Work?&lt;/h3&gt;
+&lt;p&gt;The primary server continuously sends WAL data to standby servers, which then replay the received data.&lt;/p&gt;
+
+&lt;h2 id=&quot;how-to-tune-postgres&quot;&gt;How to Tune Postgres?&lt;/h2&gt;
+&lt;p&gt;Now that you know the basics, you might be wondering if there’s anything you need to tune or if PostgreSQL just works as is. If you look at the documentation, you’ll find over 300 parameters, which can be pretty overwhelming. I came across &lt;a href=&quot;https://www.youtube.com/watch?v=7CnqVoMxoeo&quot;&gt;Karen’s talk&lt;/a&gt; at DjangoCon, where she shared a list of the most important parameters to change from their default values. Here are my notes from her talk. If you’re interested in tuning PostgreSQL, I recommend watching the full talk!&lt;/p&gt;
+
+&lt;h3 id=&quot;setting-parameters&quot;&gt;Setting Parameters&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Cluster level:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;postgresql.conf&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ALTER SYSTEM SET parameter=value;&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Database level:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ALTER DATABASE db1 SET parameter=value;&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;User/Role level:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ALTER ROLE bob SET parameter=value;&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Session level:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SET parameter=value;&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Transaction level:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SET LOCAL parameter=value;&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;contexts&quot;&gt;Contexts&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Internal:&lt;/strong&gt; Set during cluster creation, can’t be changed.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Postmaster:&lt;/strong&gt; Requires server restart.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;SIGHUP:&lt;/strong&gt; Requires config file reload.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Superuser-backend:&lt;/strong&gt; Affects only new connections.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Backend:&lt;/strong&gt; Affects existing connections.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Superuser/User:&lt;/strong&gt; Can be set in the session.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;where-to-find-information-about-parameters&quot;&gt;Where to Find Information About Parameters?&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Documentation.&lt;/li&gt;
+  &lt;li&gt;Default &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;postgresql.conf&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pg_settings&lt;/code&gt; view. Example query: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SELECT * FROM pg_settings WHERE name=’max_connections’;&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;connection-and-session-parameters&quot;&gt;Connection and Session Parameters&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;listen_addresses:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Addresses allowed to connect.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;localhost&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;*&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0.0.0.0&lt;/code&gt; (all IPv4), &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;::&lt;/code&gt; (all IPv6)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;max_connections:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Maximum concurrent connections.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;100&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; No more than &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;500&lt;/code&gt;. Use connection pooling if you have over hundreds of connections.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;idle_in_transaction_session_timeout:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Max idle time between queries in a transaction.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0&lt;/code&gt; (disabled)&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;30 minutes&lt;/code&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;memory-parameters&quot;&gt;Memory Parameters&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;shared_buffers:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Memory for caching data.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;128MB&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;25-40%&lt;/code&gt; of available memory.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;work_mem:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Max memory per operation before spilling to disk.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;4MB&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;10MB&lt;/code&gt;. Adjust per session for large operations.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;maintenance_work_mem:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Memory for maintenance tasks like VACUUM.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;64MB&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~5%&lt;/code&gt; of total RAM.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;logging-parameters&quot;&gt;Logging Parameters&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;log_min_duration_statement:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Logs statements exceeding a duration.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-1&lt;/code&gt; (disabled)&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1s&lt;/code&gt; or as per system needs.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;log_line_prefix:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Information prefixed to each log line.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;%m [%p]&lt;/code&gt; (timestamp and process ID)&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;%t:%r:%u@%d:[%p]:&lt;/code&gt; (timestamp, host, user, database, process ID).&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;wal-parameters&quot;&gt;WAL Parameters&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;wal_buffers:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Memory for WAL before syncing to disk.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-1&lt;/code&gt; (auto-calculated)&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;32MB&lt;/code&gt; for many concurrent connections.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;checkpoint_timeout:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Max time between automatic WAL checkpoints.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;5 minutes&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;10-30 minutes&lt;/code&gt; to balance crash recovery and IO intensity.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;max_wal_size:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Sets WAL size that triggers a checkpoint.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1GB&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;½ to ⅔&lt;/code&gt; of disk space in the WAL directory.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;query-tuning&quot;&gt;Query Tuning&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;effective_cache_size:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Approximate memory available for operations.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;4GB&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;50-70%&lt;/code&gt; of total memory.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;random_page_cost:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Cost estimate for fetching a disk page.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;4&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1.1&lt;/code&gt; for SSDs, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;2.0&lt;/code&gt; for fast spinning disks.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;parameters-to-avoid-changing&quot;&gt;Parameters to Avoid Changing&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;fsync:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Can cause database corruption if disabled.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;synchronous_commit:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Risk of data loss.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;autovacuum:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Essential for cleaning up dead tuples. Monitor with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;log_autovacuum_min_duration=0&lt;/code&gt;.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;what-more-to-pay-attention-to&quot;&gt;What More to Pay Attention to?&lt;/h2&gt;
+&lt;p&gt;I recently attended &lt;a href=&quot;https://www.youtube.com/watch?v=G7glaoEa9WQ&quot;&gt;another one of Karen’s talks&lt;/a&gt; at PyCon UK called “How to Make Your Database Happy.” In addition to the parameters from above, she mentioned the importance of backups and high availability. Here are my notes from the talk.&lt;/p&gt;
+
+&lt;h3 id=&quot;backups&quot;&gt;Backups&lt;/h3&gt;
+&lt;p&gt;If your data is important and you want to be able to recover it, you need:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Somewhere to store it:&lt;/strong&gt; A backup repository (preferably on a different server).&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Backup tool:&lt;/strong&gt; Use tools like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pgBackRest&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Barman&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Scheduling:&lt;/strong&gt; Ensure regular backups.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Online backups:&lt;/strong&gt; Implement WAL archiving to save WAL files in a separate location.
+    &lt;ul&gt;
+      &lt;li&gt;Enable archive mode and set up an archive command.&lt;/li&gt;
+      &lt;li&gt;Use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pgBackRest&lt;/code&gt; to take regular backups.&lt;/li&gt;
+      &lt;li&gt;Backup = Copy of data + WAL.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;high-availability&quot;&gt;High Availability&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Streaming Replication:&lt;/strong&gt; Use PostgreSQL streaming replication to push data from the primary to replicas.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Failover Management:&lt;/strong&gt; Use tools like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Patroni&lt;/code&gt; to monitor your cluster. If the primary fails, a standby can take over as the new primary.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;sources&quot;&gt;Sources&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;How to make you database happy?, Karen Jex: &lt;a href=&quot;https://www.youtube.com/watch?v=G7glaoEa9WQ&quot;&gt;https://www.youtube.com/watch?v=G7glaoEa9WQ&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Tuning PostgreSQL to work even better, Karen Jex: &lt;a href=&quot;https://www.youtube.com/watch?v=7CnqVoMxoeo&quot;&gt;https://www.youtube.com/watch?v=7CnqVoMxoeo&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;The internals of PostgreSQL, Hironobu Suzuki: &lt;a href=&quot;https://www.interdb.jp/pg/index.html&quot;&gt;https://www.interdb.jp/pg/index.html&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;PostgreSQL documentation: &lt;a href=&quot;https://www.postgresql.org/docs/current/index.html&quot;&gt;https://www.postgresql.org/docs/current/index.html&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+                <pubDate>Sun, 15 Sep 2024 00:00:00 +0000</pubDate>
+                <link>https://clytaemnestra.github.io/tech-blog/postgres</link>
+                <guid isPermaLink="true">https://clytaemnestra.github.io/tech-blog/postgres</guid>
+                
+                <category>conferences</category>
+                
+                <category>system-design</category>
+                
+                
+            </item>
+        
+            <item>
+                <title>Djangocon: Sunny Spain, My Talk &amp; Some Thoughts About Public Speaking</title>
+                <description>&lt;h1 id=&quot;spain&quot;&gt;Spain&lt;/h1&gt;
+&lt;p&gt;Djangocon was held this year in the charming city of Vigo, in Northern Spain, just above Portugal. Vigo is a small, picturesque city full of cute streets and passages.&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; flex-wrap: wrap; justify-content: space-between;&quot;&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;images/posts/djangocon/sculpture.jpg&quot; alt=&quot;Burger&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;images/posts/djangocon/vigo-night.jpg&quot; alt=&quot;Bagel 1&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;images/posts/djangocon/vigo-night3.jpg&quot; alt=&quot;Burrito&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 20%; margin: 20px;&quot;&gt;
+    &lt;img src=&quot;images/posts/djangocon/vigo-night2.jpg&quot; alt=&quot;Bagel 2&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 20%; margin: 20px;&quot;&gt;
+    &lt;img src=&quot;images/posts/djangocon/vigo-night4.jpg&quot; alt=&quot;Sushi&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;What I love about Spain is its vibrant, outdoor culture. As night falls, everyone heads out to dine together. Everything I ate was delicious. I tried potato pancakes and salty chili peppers for the first time and loved them!&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;images/posts/djangocon/food1.jpg&quot; alt=&quot;Delicious pizza&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;images/posts/djangocon/food2.jpg&quot; alt=&quot;Another delicious pizza&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;djangocon&quot;&gt;Djangocon&lt;/h1&gt;
+&lt;p&gt;Djangocon is one of my favorite conferences. It’s single-track, meaning everyone is together. It’s very community-oriented, and I see many familiar faces each year. Unlike big conferences where people stick to their groups, at Djangocon, whether I go with colleagues or alone, I always enjoy it because everyone is so nice, friendly, and open.&lt;/p&gt;
+
+&lt;h1 id=&quot;about-public-speaking&quot;&gt;About Public Speaking&lt;/h1&gt;
+&lt;p&gt;As a logical, analytical, and facts-oriented person, I’m fascinated by storytelling and how it can be more impactful than mere facts.&lt;/p&gt;
+
+&lt;p&gt;I remember &lt;a href=&quot;https://ntoll.org/&quot;&gt;Nicholas&lt;/a&gt; once told me that the best speakers are those who are vulnerable on stage. This requires experience and self-confidence. I didn’t fully grasp this until I delivered my talk at Djangocon.&lt;/p&gt;
+
+&lt;h2 id=&quot;my-talk&quot;&gt;My Talk&lt;/h2&gt;
+&lt;p&gt;I spent months taking public speaking lessons, reading books, and preparing perfect notes and slides for my talk. However, I decided to take a risk: I grabbed the microphone, stood in front of the audience, and spoke without prepared notes, choosing to be vulnerable. It was incredible! Although I delivered the same talk in the US and Italy, I never felt as connected to the audience as I did at Djangocon. In the US, the bright lights and echo made it hard to see the audience, and in Italy, a guy slept through my entire talk, which was distracting.&lt;/p&gt;
+
+&lt;p&gt;Instead of sticking to general facts, I shared personal stories. The feedback was overwhelmingly positive—three people mentioned my talk as one of their favorites! I worried about pauses, grammar mistakes, and mispronunciations, but what truly matters is engagement, which is easier to create when you’re not hidden behind the podium. While I don’t plan to repeat this talk, I’m grateful for the experience and will keep it in mind for future presentations.&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between; margin: 5px;&quot;&gt;
+  &lt;img src=&quot;./images/posts/djangocon/djangocon-cropped.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/djangocon/djangocon2-cropped2.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;./images/posts/djangocon/djangocon1.jpg&quot; alt=&quot;A person smiling on Times Square&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;my-lightning-talk&quot;&gt;My Lightning Talk&lt;/h2&gt;
+&lt;p&gt;For the second year in a row, EuroPython was held in Prague, and I delivered a lightning talk announcing it. I enjoy making fun performances and I always put a lot of effort into them. In Edinburgh I gave a lightning talk about what do Prague and Edinburgh have in common - if you think nothing, you’d be surprised!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/djangocon/lt2.png&quot; alt=&quot;A person smiling on Times Square&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This year, I decided to create a game for my lightning talk. My colleague from the EuroPython Society Artur and I spent the entire day figuring out the best way to present it. We decided to show three cities, ask the audience to guess them, and reward those who guessed what they had in common with a Python cookie cutter I brought with me. I showed the first photo of a city that had nothing in common with Prague, and guess what everyone said—Prague! No spoilers for the game, but I just want to say that the lightning talk was SO much fun, and a lucky person got a cookie cutter!&lt;/p&gt;
+
+&lt;p&gt;If EuroPython happens in Prague again and I’m doing another announcement at Djangocon, I might just stand on stage for five minutes—everyone will know what it’s about.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/djangocon/djangocon-lt.jpg&quot; alt=&quot;A person smiling on Times Square&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;talks-url&quot;&gt;Talks URL&lt;/h2&gt;
+&lt;p&gt;My talk is already online! Check it out here: &lt;a href=&quot;https://www.youtube.com/watch?v=AERuDe9YxWE&quot;&gt;https://www.youtube.com/watch?v=AERuDe9YxWE&lt;/a&gt;. Slides are available here: &lt;a href=&quot;https://github.com/clytaemnestra/talks/blob/main/django-orm-fast-api-djangocon.pdf&quot;&gt;https://github.com/clytaemnestra/talks/blob/main/django-orm-fast-api-djangocon.pdf&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;My lightning talk is also available! If you want to play a game, check it out here: &lt;a href=&quot;https://youtu.be/Fpdm0g9v6YU?t=1436&quot;&gt;https://youtu.be/Fpdm0g9v6YU?t=1436&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;And here’s my previous lightning talk about what do Prague &amp;amp; Edinburgh have in common: &lt;a href=&quot;https://youtu.be/Zc0W3L1tIZM?t=2343&quot;&gt;https://youtu.be/Zc0W3L1tIZM?t=2343&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1 id=&quot;thank-you&quot;&gt;Thank you!&lt;/h1&gt;
+&lt;p&gt;I’d like to thank everyone who supported me throughout my talk:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;My ex-manager &lt;a href=&quot;https://www.linkedin.com/in/tomasbartal&quot;&gt;Tomáš Bartál&lt;/a&gt; for his support and allowing me preparation time during work hours.&lt;/li&gt;
+  &lt;li&gt;My friend and colleague from the &lt;a href=&quot;https://pl.linkedin.com/in/arturczepiel&quot;&gt;EuroPython Society&lt;/a&gt; &lt;a href=&quot;https://www.linkedin.com/in/arturczepiel&quot;&gt;Artur Czepiel&lt;/a&gt; for support and reviewing Django-related content.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.ataccama.com/&quot;&gt;Ataccama&lt;/a&gt; for their support and allowing me to share my experiences, some of which were work-related.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.linkedin.com/in/nicolejadelmanhtbh&quot;&gt;Nicole Adelman&lt;/a&gt; for support and providing public speaking lessons.&lt;/li&gt;
+  &lt;li&gt;And to all the people at various tech events I attended in the last few months, who provided their insights on Python frameworks that helped shape my talk.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;A big thanks to all the volunteer organizers for their effort in making this amazing event happen. Can’t wait for next year in Dublin!&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between; margin: 5px;&quot;&gt;
+  &lt;img src=&quot;./images/posts/djangocon/vigo-day2.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/djangocon/vigo-day.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;./images/posts/djangocon/sea.jpg&quot; alt=&quot;A person smiling on Times Square&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
+</description>
+                <pubDate>Mon, 29 Jul 2024 00:00:00 +0000</pubDate>
+                <link>https://clytaemnestra.github.io/tech-blog/djangocon</link>
+                <guid isPermaLink="true">https://clytaemnestra.github.io/tech-blog/djangocon</guid>
+                
+                <category>conferences</category>
+                
+                
+            </item>
+        
+            <item>
+                <title>PyCon Italia: The Beauty of Florence, My Talk &amp; Public Speaking Workshop</title>
+                <description>&lt;p&gt;If you ask me which PyCon in Europe takes place in the most beautiful location, has the best food, great social events, and offers high-quality talks, I’d say without hesitation—PyCon Italia! I flew to Italy directly from PyCon US, which was in total a 25-hour journey, but it was totally worth it!&lt;/p&gt;
+
+&lt;h1 id=&quot;florence&quot;&gt;Florence&lt;/h1&gt;
+&lt;p&gt;Florence is an incredibly charming city filled with sculptures, cute streets, and lovely natural surroundings. You can wander around for hours and find beautiful sculptures or artistic sights around every corner.&lt;/p&gt;
+&lt;div style=&quot;display: flex; flex-wrap: wrap; justify-content: space-between;&quot;&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-ita/street.jpg&quot; alt=&quot;Street in Florence&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-ita/street4.jpg&quot; alt=&quot;Another street in Florence&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt; 
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-ita/cathedral.jpg&quot; alt=&quot;Florence Cathedral&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-ita/night-view.jpg&quot; alt=&quot;Florence night view&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-ita/sculpture.jpg&quot; alt=&quot;Sculpture in Florence&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;The city is safe and super clean. As a huge plant lover, I appreciated seeing so many plants around.&lt;/p&gt;
+&lt;div style=&quot;display: flex; flex-wrap: wrap; justify-content: space-between;&quot;&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-ita/nature1.jpg&quot; alt=&quot;Nature in Florence&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-ita/night-street.jpg&quot; alt=&quot;Night street in Florence&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-ita/street3.jpg&quot; alt=&quot;Street in Florence&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 90%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-ita/nature2.jpg&quot; alt=&quot;More nature in Florence&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;food&quot;&gt;Food&lt;/h2&gt;
+&lt;p&gt;My first quest upon arriving in Italy was to eat pizza! I went to random places, and every single spot I visited had such delicious food! I had no issues finding vegetarian options in Florence.&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;./images/posts/pycon-ita/pizza.jpg&quot; alt=&quot;Delicious pizza&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/pycon-ita/pizza2.jpg&quot; alt=&quot;Another delicious pizza&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;public-speaking-workshop&quot;&gt;Public Speaking Workshop&lt;/h2&gt;
+&lt;p&gt;The biggest highlight of the conference was a public speaking workshop with &lt;a href=&quot;https://lorenzobarbieri.info/&quot;&gt;Lorenzo&lt;/a&gt;. The main takeaway from the workshop was to remove from your presentation anything that doesn’t add value to the end user. He also highlighted the importance of storytelling and how people don’t care much about facts.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-ita/workshop.jpg&quot; alt=&quot;Public speaking workshop&quot; style=&quot;max-width: 65%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Lorenzo inspired me to remove my ‘About Me’ slide—the audience doesn’t care about the speaker; they care about the value they receive. When I think about the best speakers I’ve ever seen, none of them spent a minute of their valuable time talking about themselves—they jumped straight into the topic.&lt;/p&gt;
+
+&lt;p&gt;The most important tip I remember is this: after every presentation, decide to improve one single thing. If you constantly improve after each of 10 talks, you’ll be better than 95% of the speakers.&lt;/p&gt;
+
+&lt;p&gt;When I got home, I read both of his e-books and can totally recommend them! You can find the link &lt;a href=&quot;https://publicspeaking.dev/&quot;&gt;here&lt;/a&gt;. They offer lots of practical advice on putting slides together, understanding accessibility, and more.&lt;/p&gt;
+
+&lt;p&gt;In one of the books, Lorenzo shares a story where he asked his mentor for one piece of advice to improve as a public speaker. The mentor told him to start writing. This story inspired me to write more as well! Thank you, Lorenzo!&lt;/p&gt;
+
+&lt;h2 id=&quot;my-talk&quot;&gt;My talk&lt;/h2&gt;
+&lt;p&gt;It was fun! I enjoyed talking to people afterward and received very valuable feedback on what to improve. I learned a lot and can’t wait for the final run of my talk at DjangoCon, where I’ll incorporate even more changes to make it even better!&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;./images/posts/pycon-ita/pycon-ita-talk2.png&quot; alt=&quot;Giving a talk at PyCon Italia&quot; style=&quot;max-width: 30%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/pycon-ita/pyconita.png&quot; alt=&quot;Giving a talk at PyCon Italia2&quot; style=&quot;max-width: 65%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;talks&quot;&gt;Talks&lt;/h2&gt;
+&lt;p&gt;I greatly enjoyed the keynote talk about Python performance &amp;amp; myths by &lt;a href=&quot;http://antocuni.eu/&quot;&gt;Antonio Cuni&lt;/a&gt;, the author of CPy and core developer of MyPy. He mentioned an interesting point: if you have a program where 80% is slow and 20% is fast, you can speed up the 80% part, but then the 20% part becomes the bottleneck. So, you end up at the same place. The reason Python is slow is because it’s dynamic - the interpreter has to do a lot of guesswork, which takes time. I highly recommend watching the talk!&lt;/p&gt;
+
+&lt;p&gt;If you’ve ever wondered where the line is between humans and LLMs, I highly recommend &lt;a href=&quot;https://www.linkedin.com/in/jodieburchell&quot;&gt;Jodie Burchell’s&lt;/a&gt; keynote talk! She also discusses the phenomenon of LLMs hallucinating, explaining how they work and why. Beyond the content, I was really impressed by her presentation skills—she speaks clearly and articulately, making her easy to listen to.&lt;/p&gt;
+
+&lt;p&gt;I also loved &lt;a href=&quot;https://vurt.org/&quot;&gt;Daniele Procida’s&lt;/a&gt; keynote talk about attention and details. He showed the following photograph and asked what we see in it.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-ita/photograph.jpg&quot; alt=&quot;Interesting photograph discussed in keynote&quot; style=&quot;max-width: 65%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The longer you look at it, the more details you notice, like the perfect alignment of elbows or knees, or the two thirds rule. It’s so nice to hear someone talk about art at a technical conference!&lt;/p&gt;
+
+&lt;h1 id=&quot;thank-you-organizers&quot;&gt;Thank You, Organizers!&lt;/h1&gt;
+&lt;p&gt;As a fellow community organizer, I want to thank the organizers for the time and effort they put into making this event happen!&lt;/p&gt;
+
+&lt;p&gt;Arrivederci until next year!&lt;/p&gt;
+</description>
+                <pubDate>Sun, 02 Jun 2024 00:00:00 +0000</pubDate>
+                <link>https://clytaemnestra.github.io/tech-blog/pycon-ita</link>
+                <guid isPermaLink="true">https://clytaemnestra.github.io/tech-blog/pycon-ita</guid>
+                
+                <category>conferences</category>
+                
+                
+            </item>
+        
+            <item>
+                <title>Speaking at PyCon &amp; My First Time in the US</title>
+                <description>&lt;p&gt;I always wanted to visit the US. When I got accepted to PyCon US and PyCon Italia, I decided to spend a week in New York, then fly to Pittsburgh for PyCon, and afterward head to Florence via Rome for PyCon Italia. This blog covers the first part of my adventure: New York and Pittsburgh.&lt;/p&gt;
+
+&lt;h1 id=&quot;first-stop-new-york&quot;&gt;First Stop: New York&lt;/h1&gt;
+&lt;p&gt;New York is the coolest city I’ve ever visited! It felt so European – it’s perfectly walkable, the public transportation is great, it’s clean, there are lots of trees around, and Central Park is a huge forest with enormous skyscrapers in the background. The city is so diverse that walking down the streets made me feel at home.&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;./images/posts/pycon-us/times-square.jpg&quot; alt=&quot;A person smiling on Times Square&quot; style=&quot;max-width: 30%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/pycon-us/brooklyn2.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 30%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/pycon-us/ny-street.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 30%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;skyline&quot;&gt;Skyline&lt;/h2&gt;
+&lt;p&gt;The New York skyline is one of the most famous in the world, and once you see it from a distance, you’ll understand why!&lt;/p&gt;
+
+&lt;p&gt;At the Empire State Building:&lt;/p&gt;
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;./images/posts/pycon-us/esb.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/pycon-us/esb2.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;View from Brooklyn on Manhattan (left) and view from my Manhattan hotel room on Brooklyn (right):&lt;/p&gt;
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;./images/posts/pycon-us/brooklyn3.jpg&quot; alt=&quot;New York Skyline from Brooklyn&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/pycon-us/skyline-hotel.jpg&quot; alt=&quot;New York Skyline from hotel&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;time-square&quot;&gt;Time Square&lt;/h2&gt;
+&lt;p&gt;The shiniest place I’ve ever seen. It felt super cool to be in the middle of all the buzz!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-us/times-square3.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 50%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;broadway&quot;&gt;Broadway&lt;/h2&gt;
+&lt;p&gt;I went to Broadway to watch “The Book of Mormon.” I had never seen it before, so I had no idea what it was about. I don’t usually like theater, as I’m more of a visual and movie person, but that experience was visually stunning and the actors were singing so well that I enjoyed it a lot! The storyline was funny as well!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-us/broadway.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 50%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;live-jazz-in-harlem&quot;&gt;Live Jazz in Harlem&lt;/h2&gt;
+&lt;p&gt;I love jazz, and I couldn’t miss the chance to visit one of its historic hubs! Situated in Upper Manhattan, Harlem is a neighborhood with lots of cozy bars offering live jazz every night and fancy cocktails. I spent a few hours there, listening to great music and sipping cocktails.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-us/cocktail.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 30%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;food&quot;&gt;Food&lt;/h2&gt;
+&lt;p&gt;New York City is a haven for delicious and affordable food, especially if you’re a vegetarian. While I’m not usually a fan of burgers, I was pleasantly surprised by the wide range of vegetarian options available everywhere. Bagels are another highlight – they’re like tasty sandwiches with endless possibilities, and you can find them on nearly every street corner.&lt;/p&gt;
+
+&lt;p&gt;As a lover of Mexican cuisine, I was thrilled to discover authentic Mexican restaurants all around the city.&lt;/p&gt;
+
+&lt;p&gt;Have you ever wondered how to recognize good-quality food? For me, it’s when the taste of all the ingredients is present yet subtle. That’s exactly how the sushi felt – a perfect blend of flavors, nothing overpowering, just as it should be.&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; flex-wrap: wrap; justify-content: space-between;&quot;&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-us/burger.jpg&quot; alt=&quot;Burger&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-us/bagel1.jpg&quot; alt=&quot;Bagel 1&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-us/bagel2.jpg&quot; alt=&quot;Bagel 2&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-us/burrito.jpg&quot; alt=&quot;Burrito&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-us/sushi.jpg&quot; alt=&quot;Sushi&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;pycon&quot;&gt;PyCon&lt;/h1&gt;
+&lt;p&gt;This was my first time at PyCon US, the biggest Python conference on the planet, held this year in Pittsburgh. While Pittsburgh is small with not much happening, the PyCon venue was huge.&lt;/p&gt;
+
+&lt;p&gt;Most events are related to sprints, special summits, or open spaces where you can discuss anything (there was even a juggling workshop!). There were also many interesting talks! My favorites were about removing the GIL and sub-interpreters in Python 3.13. I’ll share my notes in a future blog post.&lt;/p&gt;
+
+&lt;p&gt;I participated in a JetBrains data science quiz and won a one-year PyCharm Professional subscription! Funny enough, I’m not a data scientist, but I still remember a lot from university.&lt;/p&gt;
+
+&lt;p&gt;One of the most impactful experiences was the PyLadies lunch. After eating, everyone who wanted to went on stage to share a personal achievement. The idea was for us, as women, to proudly share our achievements and empower each other. It was wholesome, with people sharing personal stories like being cancer-free, being inspired by other women, or big accomplishments like obtaining a degree or a promotion. I felt very touched for hours after the session.&lt;/p&gt;
+
+&lt;p&gt;Part of the conference included interviews with speakers, organized by JetBrains, where they asked me about the hottest trends in the Python ecosystem in 2024. I have no idea how I looked on camera, and I don’t even remember what I said, but I can’t wait for it to be released!&lt;/p&gt;
+
+&lt;p&gt;Fun fact: I attended a talk where Guido was sitting right in front of me and a CPython core developer was next to me. One of the biggest benefits of PyCon US is talking to people. I spoke with &lt;a href=&quot;https://github.com/willingc&quot;&gt;Carol Willing&lt;/a&gt;, a CPython core developer, and it was empowering to hear her say that even its creators don’t know everything. She described it as learning to break things into smaller, manageable chunks, moving forward, and unblocking yourself when stuck. Carol was very kind, welcoming, and inspiring, and I can’t wait to listen to her keynote at the next EuroPython!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-us/badge.jpg&quot; alt=&quot;A person smiling on Times Square&quot; style=&quot;max-width: 65%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between; margin: 5px;&quot;&gt;
+  &lt;img src=&quot;./images/posts/pycon-us/map.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/pycon-us/psf.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;my-talk&quot;&gt;My Talk&lt;/h2&gt;
+&lt;p&gt;I’m happy with how my talk went. There were some technical issues with my presentation, but no one noticed. The room was big, with a lot of echo, so I could hear my voice from all sides. The lights were very strong, and I couldn’t see the audience. It was my first time presenting in such conditions, so I spoke slowly and carefully enunciated each word. It was a new experience for me, and even though I prefer more interaction with the audience and smaller rooms, I enjoyed it a lot!&lt;/p&gt;
+
+&lt;p&gt;Presenting in front of a huge audience and sharing my personal experience with Python frameworks was very empowering.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-us/talk1.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;There were three questions during the Q&amp;amp;A session, and after the talk, many people approached me to say they liked it and to share their experiences with Python frameworks. I even met someone else using FastAPI &amp;amp; Django ORM, the first person I’ve ever met who uses this combo!&lt;/p&gt;
+
+&lt;p&gt;Overall, it went well, and I’m super happy I got to talk to so many people!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-us/talk2.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;thank-you-organizers&quot;&gt;Thank You, Organizers!&lt;/h1&gt;
+&lt;p&gt;PyCon US is a community conference organized by the community, for the community. As a fellow community organizer, I want to thank the organizers for the time and effort they put into making this event happen!&lt;/p&gt;
+
+&lt;h1 id=&quot;travel-tips-and-things-i-wish-someone-told-me-before&quot;&gt;Travel Tips And Things I Wish Someone Told Me Before&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;Evenings in New York are cold! Take a warm jacket.&lt;/li&gt;
+  &lt;li&gt;Some rooms at the venue in Pittsburgh were very cold as well. Bring layers to stay comfortable.&lt;/li&gt;
+  &lt;li&gt;Finding healthy veggies: Go to Whole Foods in big cities or Giant Eagle in Pittsburgh. Keep in mind that healthy food in the US is quite expensive.&lt;/li&gt;
+  &lt;li&gt;Airports in big cities are huge. It can take an hour to get from one part to another. You might also get stuck in traffic on your way to the airport. Be there 3 hours before your flight.&lt;/li&gt;
+  &lt;li&gt;Immigration queues can be long. Once you arrive, you might wait for hours for the immigration office to process your request.&lt;/li&gt;
+  &lt;li&gt;Get involved at PyCon US: I recommend volunteering or organizing something (even an open space informal discussion), as the conference felt pretty busy with people focused on their work.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;tldr&quot;&gt;TL;DR:&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;Attend the conference if you can! If you can’t, check the PSF grants. It’s a great opportunity to learn about Python from its developers.&lt;/li&gt;
+  &lt;li&gt;Speaking at PyCon US is a unique experience, as most smaller PyCons don’t host as many people in regular rooms (unless it’s a keynote).&lt;/li&gt;
+  &lt;li&gt;PyLadies lunch was very wholesome. If you’re a woman or non-binary, I totally recommend attending it!&lt;/li&gt;
+  &lt;li&gt;New York is super cool!&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+                <pubDate>Sun, 26 May 2024 00:00:00 +0000</pubDate>
+                <link>https://clytaemnestra.github.io/tech-blog/pycon-us</link>
+                <guid isPermaLink="true">https://clytaemnestra.github.io/tech-blog/pycon-us</guid>
+                
+                <category>conferences</category>
+                
+                
+            </item>
+        
+            <item>
+                <title>PyCon &amp; My Roadtrip Through Namibia</title>
+                <description>&lt;h2 id=&quot;motivation&quot;&gt;Motivation&lt;/h2&gt;
+&lt;p&gt;I’ve never visited Africa. Last year, &lt;a href=&quot;https://honzajavorek.cz/&quot;&gt;Honza Javorek&lt;/a&gt; mentioned he attended PyCon Namibia in the past and recommended that people should consider going. When &lt;a href=&quot;https://cz.linkedin.com/in/karolina-surma-950452b7&quot;&gt;Karolina&lt;/a&gt; mentioned in December that she was considering going there, I immediately decided that I was going as well — off to an adventure!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/packing.JPEG&quot; alt=&quot;Packing&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Is there a better way to explore an African country than attending a conference and hanging out with the locals?&lt;/p&gt;
+
+&lt;h2 id=&quot;beer&quot;&gt;Beer&lt;/h2&gt;
+&lt;p&gt;I’m a huge beer enthusiast. On our first night after arriving, we decided to grab a beer. We enjoyed a South African draught Castle Lite at a rooftop bar, and I really liked the taste! What surprised us was how small and decentralized the city is, and also the number of stars visible in the sky.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/beer.jpeg&quot; alt=&quot;Beer&quot; style=&quot;max-width: 50%; max-height: 50%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;pycon-educational-day-or-teaching-in-the-township-slums&quot;&gt;PyCon: Educational Day Or Teaching In The Township (Slums)&lt;/h2&gt;
+&lt;p&gt;The first day of PyCon was designated as an education day at the local university, yet I chose not to attend, as I needed to prepare my talk.&lt;/p&gt;
+
+&lt;p&gt;The second day featured an educational event at a high school situated in the Katatura township, an area essentially formed by apartheid legislation into slums.&lt;/p&gt;
+
+&lt;p&gt;Wandering around the township initially filled me with sadness as I witnessed the conditions in which people live. In the township, water and electricity cuts are common, schools face a shortage of teachers for the number of pupils, making quality education a challenge, many residents are unemployed, and residents are confined to small living spaces. Out of respect for their personal space, I refrained from taking any photographs.&lt;/p&gt;
+
+&lt;p&gt;However, after reading an incredible book titled Katutura by Rolf Brockmann and Gunther Christoph Dade, consisting of interviews with residents, I began to perceive another dimension to it — the essence of living within a community. Here is my favorite quote from the book:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Katutura is a place filled with a lot of joy, action, liveliness and a lot of fun. There are so many people walking up and down the streets, who are talking, laughing or hollering at each other. Other places in town like Klein Windhoek, where people are rich, you hardly see a person walking around. If you get seen walking around they think you are up to something bad like stealing, especially if you are a person of color. Apart from that it is actually a bad idea to stroll around there, because all the dogs of the neighborhood will be barking at you.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/book.JPEG&quot; alt=&quot;Book&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;When we arrived at the school, I was surprised how disciplined and kind the local children are! They all wore uniforms, addressed us as Madam/Sir, and were very polite!&lt;/p&gt;
+
+&lt;p&gt;The school stray dog came to greet us as well! 
+&lt;img src=&quot;./images/posts/pycon-na/school-dog.JPEG&quot; alt=&quot;Dog&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I participated in a morning workshop introducing Python, where I was assigned two students. We covered the very basics, and it was rewarding to see them grasp complex concepts they were encountering for the first time. It was also remarkable how these kids could sit for four hours straight, without any breaks, only focusing on programming!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/school.jpeg&quot; alt=&quot;School&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;For lunch, we went with the organizers to the local market. I had spinach with sand, fatcake (basically fried dough), and a porridge-like dough. It was fascinating to see how everything is eaten by hand, even spinach in a sauce. I ate everything with my hands, trying my best not to make a mess, but I probably looked clumsy.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/spinach.JPEG&quot; alt=&quot;Spinach&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/fat-cake.JPEG&quot; alt=&quot;Cake&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/dough.JPEG&quot; alt=&quot;Dough&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;pycon-my-talk-other-talks--lightning-talks&quot;&gt;PyCon: My Talk, Other Talks &amp;amp; Lightning Talks&lt;/h2&gt;
+&lt;p&gt;The next day was the day of my talk, which was an introduction to FastAPI. As there were many kids in the audience, I tried to explain everything in detail to ensure we were all on the same page. The talk went quite smoothly, and at the end, I opened the Q&amp;amp;A session. A young girl raised her hand and asked, “What is an API?” This question was the most challenging one I had ever received. Yet, what I admired the most was her bravery — to stand up in a room of 100 people and admit she didn’t understand something.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/my-talk.jpg&quot; alt=&quot;Delivering a talk&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I believe conferences are not only about knowledge sharing, but about inspiring others. If that young girl, upon seeing a blue-haired, tattooed woman speaking on topics far beyond her current understanding, thought to herself, &lt;em&gt;I have no idea what she’s talking about, but it sounds cool, and I want to try it&lt;/em&gt;, I’d be super happy.&lt;/p&gt;
+
+&lt;p&gt;At the closing session, one of the students gave a lightning talk in which he thanked the organizers and me for showing him what programming is all about. It was the most heartwarming experience I’ve ever had. Working with kids can be incredibly rewarding.&lt;/p&gt;
+
+&lt;p&gt;Karolina gave a fantastic lightning talk about PyLadies. I’ve never seen someone deliver a lightning talk with such passion for the topic. She discussed PyLadies’ history and aimed to encourage girls to chase their dreams and get into programming.&lt;/p&gt;
+
+&lt;p&gt;I also enjoyed a lightning talk by &lt;a href=&quot;https://vknight.org/&quot;&gt;Vince&lt;/a&gt;, a British mathematician and computer scientist. He simulated the Monty Hall problem in Python and explained why switching your choice is statistically better. I wish I had such teachers when I was younger!&lt;/p&gt;
+
+&lt;p&gt;Another interesting talk was by &lt;a href=&quot;https://fci.nust.na/mr-gabriel-nhinda&quot;&gt;Gabriel&lt;/a&gt;, a Namibian computer scientist and researcher. Gabriel was designing software for use by communities in rural Namibia. His talk emphasized the importance of cooperating with locals when designing something; otherwise, people will not use it.&lt;/p&gt;
+
+&lt;p&gt;Last but not least, there was an amazing keynote by &lt;a href=&quot;https://www.sheenaoc.com/&quot;&gt;Sheena&lt;/a&gt; about AI and the future of programming. I liked her idea that we solve problems not just for the sake of solving them (since AI can do that as well), but to train our brains, enabling us to tackle even bigger problems that AI cannot solve.&lt;/p&gt;
+
+&lt;h2 id=&quot;pycon-hanging-out-with-other-attendees&quot;&gt;PyCon: Hanging Out With Other Attendees&lt;/h2&gt;
+&lt;p&gt;What would be a conference without hanging with other attendees?&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/attendees.JPEG&quot; alt=&quot;Attendees&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;diversity-at-pycon&quot;&gt;Diversity At PyCon&lt;/h2&gt;
+&lt;p&gt;This was the first tech conference I’ve ever attended where half of the attendees were female. It was quite refreshing to see young girls playing with hardware gadgets and learning to program, free from the gender stereotypes imposed by society.&lt;/p&gt;
+
+&lt;h2 id=&quot;namibian-food---veggie-survival-guide&quot;&gt;Namibian Food - Veggie Survival Guide&lt;/h2&gt;
+&lt;p&gt;Namibians eat lots of meat!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/meat.png&quot; alt=&quot;Meat&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Organizers did their best to accommodate our needs and prepare some vegan and vegetarian food for a few of us herbivores—kudos to organizers! One of the traditional veggie things they eat is spinach with sand! Yes, you read it well—there’s sand in it.&lt;/p&gt;
+
+&lt;p&gt;They also eat beans and different kinds of dough.&lt;/p&gt;
+
+&lt;p&gt;When we were travelling around the country, we bought some cans, a plastic bowl, and a plastic spoon. The best decision ever!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/cans.JPEG&quot; alt=&quot;Food&quot; style=&quot;max-width: 50%; max-height: 50%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;independence-museum&quot;&gt;Independence Museum&lt;/h2&gt;
+&lt;p&gt;We decided to visit independence museum in order to learn something about the history of Namibia. I was raised in South-Eastern Europe and we were never taught at school much about colonialism or apartheid except that &lt;em&gt;it happened&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;What shocked us the most is realizing that these atrocities didn’t happen centuries ago, but rather 30, 40, or 50 years back. The older siblings or parents of our new Namibian friends likely carry personal memories of those times. I was very distressed the whole day.&lt;/p&gt;
+
+&lt;h2 id=&quot;cheetah-conservation-fund&quot;&gt;Cheetah Conservation Fund&lt;/h2&gt;
+&lt;p&gt;The next day, we decided to visit the Cheetah Conservation Fund. Upon our arrival, we were greeted with fascinating information about cheetahs. Did you know that cheetahs are the fastest land animals? They can accelerate from 1 to 120 km/h in just 3 seconds!&lt;/p&gt;
+
+&lt;p&gt;Cheetahs are often mistakenly killed by farmers. Farmers often find their livestock killed in the night. However, cheetahs actually hunt primarily at day and are quite selective about their food—they don’t eat leftovers. So, when farmers spot them near their deceased livestock in the morning, they assume the cheetahs are to blame, but it’s usually leopards who are responsible!&lt;/p&gt;
+
+&lt;p&gt;After we learned interesting facts about them, we had the opportunity to visit three very friendly cheetahs. Unfortunately, these cheetahs had been mistreated by humans and never learned how to hunt, making them unable to be released back into the wild.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/cheetah.JPEG&quot; alt=&quot;Cheetah&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Obligatory selfie with a cheetah:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/selfie.JPEG&quot; alt=&quot;Selfie&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Beyond caring for cheetahs that cannot be released, the conservation fund runs a special program where they train dogs to detect predators and herd sheep, thereby preventing attacks. The dogs were cute, but not cuddly nor interested in humans.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/dog.JPEG&quot; alt=&quot;Dog&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;etosha-safari-elephant-on-street-and-night-stars&quot;&gt;Etosha: Safari, Elephant On Street And Night Stars&lt;/h2&gt;
+&lt;p&gt;Etosha is a national park located in the northern part of Namibia. What would visiting Africa be without going on early morning and night safaris?&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/rhyno.jpeg&quot; alt=&quot;Rhyno&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/orynx.jpeg&quot; alt=&quot;Orynx&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Camps are located next to waterholes — small lakes where animals come to drink in the evenings. We spent a few hours in the evening observing animals drinking 50 meters away from us. It was fascinating seeing how careful they are! It took an hour for three giraffes to drink!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/giraffes.jpeg&quot; alt=&quot;Giraffe&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/wild-dog.jpeg&quot; alt=&quot;Wild dog&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The next day, as we were driving from the first camp to the second, we encountered an elephant on the road! My first reaction was to start panicking and go in reverse as fast as I could. The elephant eventually turned elsewhere, simply wanting to pass through — it wasn’t bothered by people at all. Then, we saw lots of elephants bathing together!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/elephant.jpeg&quot; alt=&quot;Elephant&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/elephant2.jpeg&quot; alt=&quot;Elephant&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/elephants.jpeg&quot; alt=&quot;Elephants&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;One of the most fascinating things to see at night is the stars! They appear differently from the Southern Hemisphere, and you can see some constellations fully—we saw Orion and Sagittarius (that’s what Karolina said, and I trust her knowledge of the galaxy—I can recognize only Venus).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/stars.jpeg&quot; alt=&quot;Stars&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On our way back from the second camp, we saw two cheetahs with small cubs lying next to the road and chilling. Lots of zebras and orynxes as well.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/zebras.jpeg&quot; alt=&quot;Zebras&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;driving-through-namibia&quot;&gt;Driving Through Namibia&lt;/h2&gt;
+&lt;p&gt;We covered a total distance of around 1550 km: from Windhoek to Etosha, then to Swakopmund, Walvis Bay, back to Swakopmund, and finally returning to Windhoek. Some roads were paved, while others were gravel, and we also drove through sand. We rented a Toyota Hilux 4x4. It was my first experience driving on the left side of the road, and for some reason unknown to me, it felt more natural than driving on the right!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/driving1.jpeg&quot; alt=&quot;Driving&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/driving2.jpeg&quot; alt=&quot;Driving&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/driving3.jpeg&quot; alt=&quot;Driving&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/driving4.jpeg&quot; alt=&quot;Driving&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;swakopmund&quot;&gt;Swakopmund&lt;/h2&gt;
+&lt;p&gt;Swakopmund is a small coastal town, largely established by colonists. It was clean, the air was humid, and there were several nice restaurants. The town boasts sandy beaches, but the ocean was too cold for swimming. However, the town’s pronounced colonial influence gave it a vibe that didn’t quite resonate with me.
+&lt;img src=&quot;./images/posts/pycon-na/swakopmund.jpeg&quot; alt=&quot;City view&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/swakopmund2.jpeg&quot; alt=&quot;City view&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;driving-around-the-coast-and-walking-on-sand-dunes&quot;&gt;Driving Around The Coast And Walking On Sand Dunes&lt;/h2&gt;
+&lt;p&gt;In Namibia, there’s also a desert! So, we couldn’t miss visiting the dunes on our road trip.
+&lt;img src=&quot;./images/posts/pycon-na/dunes.jpeg&quot; alt=&quot;Dunes&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/dunes2.jpeg&quot; alt=&quot;Dunes&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;walvis-bay-and-tens-of-thousands-flamingos&quot;&gt;Walvis Bay And Tens of Thousands Flamingos&lt;/h2&gt;
+&lt;p&gt;I had never seen a flamingo in my life, so seeing so many of them in one place was truly spectacular!
+&lt;img src=&quot;./images/posts/pycon-na/flamingos.jpeg&quot; alt=&quot;Flamingos&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/flamingos2.jpeg&quot; alt=&quot;Flamingos&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;things-that-surprised-me&quot;&gt;Things That Surprised Me&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;del&gt;I didn’t see a single monkey.&lt;/del&gt; I saw a few next to the highway on my way to the airport.&lt;/li&gt;
+  &lt;li&gt;People told us not to drink tap water, because in Africa there are different bacteria to which Europeans aren’t accustomed, potentially causing stomach issues, but we drank the tap water and it was completely fine.&lt;/li&gt;
+  &lt;li&gt;Zebras are like very beautiful and small horses.&lt;/li&gt;
+  &lt;li&gt;Cheetahs are very thin.&lt;/li&gt;
+  &lt;li&gt;Cheetahs meow and purr a lot!&lt;/li&gt;
+  &lt;li&gt;I didn’t see a single snake.&lt;/li&gt;
+  &lt;li&gt;In Etosha, it was around 38 degrees, but dry air made it feel totally okay. On the coast, it was 15-20 degrees, and my shirt was constantly wet.&lt;/li&gt;
+  &lt;li&gt;Flamingos are less pink than I thought.&lt;/li&gt;
+  &lt;li&gt;Ostriches are HUGE! Up to 2.75-3 meters.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;travel-tips--things-i-wish-i-knew-before-i-arrived-to-namibia&quot;&gt;Travel Tips &amp;amp; Things I Wish I Knew Before I Arrived To Namibia&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;My visa was approved, but I couldn’t download it. When I arrived to Namibia, they told me I shouldn’t have boarded the plane without a valid visa. Great. I told them I have it, but it’s online in the system. They told me they can’t log into the system because it’s weekend. Then another person told me next time not to bother and to apply on the spot.&lt;/li&gt;
+  &lt;li&gt;I tried two different e-SIMs and they didn’t work! Buy a local one.&lt;/li&gt;
+  &lt;li&gt;Use sunscreen even when it’s cloudy! I got burned on a cloudy day with 15 degrees Celsius outside.&lt;/li&gt;
+  &lt;li&gt;For a morning safari, take a warm jacket! I took a long-sleeve shirt and felt very cold.&lt;/li&gt;
+  &lt;li&gt;I’m glad we rented a 4x4 car. It was extremely useful for driving in sand.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;thank-you-organizers&quot;&gt;Thank You, Organizers!&lt;/h2&gt;
+&lt;p&gt;I’d like to thank the organizers for organizing the event, giving us the opportunity to attend and visit their beautiful country. Also, for taking care of us throughout our stay in Namibia!&lt;/p&gt;
+
+&lt;h2 id=&quot;tldr&quot;&gt;TL;DR:&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;The conference was amazing.&lt;/li&gt;
+  &lt;li&gt;The roadtrip was even more so.&lt;/li&gt;
+  &lt;li&gt;If you get the chance, you should definitely attend PyCon Namibia and go for a trip!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-na/everyone.jpg&quot; alt=&quot;Everyone&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+</description>
+                <pubDate>Sun, 17 Mar 2024 00:00:00 +0000</pubDate>
+                <link>https://clytaemnestra.github.io/tech-blog/pycon-namibia</link>
+                <guid isPermaLink="true">https://clytaemnestra.github.io/tech-blog/pycon-namibia</guid>
+                
+                <category>conferences</category>
+                
+                
+            </item>
+        
+            <item>
+                <title>All About AWS</title>
+                <description>&lt;p&gt;I’ve successfully passed my AWS developer associate exam and these are my notes - everything I’ve learned about AWS.&lt;/p&gt;
+
+&lt;h2 id=&quot;compute-services&quot;&gt;Compute Services&lt;/h2&gt;
+&lt;p&gt;There are three main compute options:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Virtual machines
+    &lt;ul&gt;
+      &lt;li&gt;VM user hypervisor&lt;/li&gt;
+      &lt;li&gt;Partitions the server resources like RAM and CPU into multiple chunks&lt;/li&gt;
+      &lt;li&gt;One physical server can turn into multiple servers, each having its dedicated resources&lt;/li&gt;
+      &lt;li&gt;Hypervisor provides hardware virtualization&lt;/li&gt;
+      &lt;li&gt;VMs have two OS:
+        &lt;ul&gt;
+          &lt;li&gt;Host OS - given by cloud provided&lt;/li&gt;
+          &lt;li&gt;Guest OS - chosen by customer&lt;/li&gt;
+          &lt;li&gt;Having two OS is a strength and a weakness:
+            &lt;ul&gt;
+              &lt;li&gt;Two OS consume extra resources&lt;/li&gt;
+              &lt;li&gt;Alternative to it are containers&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Container service
+    &lt;ul&gt;
+      &lt;li&gt;Operating system virtualization&lt;/li&gt;
+      &lt;li&gt;No Guest OS&lt;/li&gt;
+      &lt;li&gt;Needs fewer resources, uses Host OS&lt;/li&gt;
+      &lt;li&gt;Customers can run applications independently, but share the same Linux kernel&lt;/li&gt;
+      &lt;li&gt;Highly portable (can quickly move from one cloud environment to another), highly scalable&lt;/li&gt;
+      &lt;li&gt;Cons:
+        &lt;ul&gt;
+          &lt;li&gt;Security concerns (due to same host kernel)&lt;/li&gt;
+          &lt;li&gt;Dependency on one type of OS provided by the provider&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Serverless
+    &lt;ul&gt;
+      &lt;li&gt;They solve the problem of the end user that needs to maintain the server part when using VMs or containers&lt;/li&gt;
+      &lt;li&gt;No need to manage servers&lt;/li&gt;
+      &lt;li&gt;No cost if the functions are not running&lt;/li&gt;
+      &lt;li&gt;Cons:
+        &lt;ul&gt;
+          &lt;li&gt;Lack of standards, which can provide a vendor lock-in for a customer&lt;/li&gt;
+          &lt;li&gt;Security concerns as apps from different customers run on the same server&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/vms-vs-containers.png&quot; alt=&quot;VMs vs containers&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;serverless&quot;&gt;Serverless&lt;/h2&gt;
+&lt;h3 id=&quot;lambda&quot;&gt;Lambda&lt;/h3&gt;
+&lt;p&gt;The idea of Lambda is to be able to run code without provisioning or managing servers.&lt;/p&gt;
+
+&lt;p&gt;The main components of Lambda are:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Function
+    &lt;ul&gt;
+      &lt;li&gt;Resource to invoke to run code in Lambda&lt;/li&gt;
+      &lt;li&gt;Lambda runs instances of the function to process events&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Trigger
+    &lt;ul&gt;
+      &lt;li&gt;Describe when a Lambda function should run&lt;/li&gt;
+      &lt;li&gt;Integrated Lambda function with other AWS services and event source mappings&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Event
+    &lt;ul&gt;
+      &lt;li&gt;JSON document that contains data for a Lambda function to process&lt;/li&gt;
+      &lt;li&gt;The runtime converts the event to an object and passes it to the function code&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Application environment
+    &lt;ul&gt;
+      &lt;li&gt;Secure and isolated runtime environment for the Lambda function&lt;/li&gt;
+      &lt;li&gt;An application environment manages the processes and resources that are required to run the function&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Deployment package
+    &lt;ul&gt;
+      &lt;li&gt;Used to deploy Lambda function code&lt;/li&gt;
+      &lt;li&gt;Two types of deployment packages:
+        &lt;ul&gt;
+          &lt;li&gt;A .zip file archive
+            &lt;ul&gt;
+              &lt;li&gt;Function code &amp;amp; its dependencies&lt;/li&gt;
+              &lt;li&gt;Lambda provides the OS and runtime for the function&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+          &lt;li&gt;A container image
+            &lt;ul&gt;
+              &lt;li&gt;Compatible with the Open Container Initiative (OCI) specification&lt;/li&gt;
+              &lt;li&gt;Add function code &amp;amp; dependencies, OS and Lambda runtime to the image&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Runtime
+    &lt;ul&gt;
+      &lt;li&gt;Language-specific environment that runs in an application environment&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Lambda function handler
+    &lt;ul&gt;
+      &lt;li&gt;Method in the function code that processes events&lt;/li&gt;
+      &lt;li&gt;When the function is invoked, Lambda runs the handler method&lt;/li&gt;
+      &lt;li&gt;When the handler exists or reuters a response, it becomes available to handle another event&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;How to optimize memory?&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;If it’s CPU, change the memory settings to improve the performance&lt;/li&gt;
+  &lt;li&gt;Lambda power tuning tool that uses step functions to run multiple concurrent versions of the functions at different memory allocations and measures memory
+performance&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;When not to use Lambda function?&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Functions that acts that orchestrators - use step functions instead&lt;/li&gt;
+  &lt;li&gt;Function that transform data from one service to another without business logic - use service integrations (within services)&lt;/li&gt;
+  &lt;li&gt;Filtering so to use a smaller subset of events - filter before the function in the service such as S3, SNS etc., EventBridge has content filtering logic which events trigger Lambda function&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;fargate&quot;&gt;Fargate&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Purpose-built serverless compute engine for containers&lt;/li&gt;
+  &lt;li&gt;Allocates the amount of compute on its own&lt;/li&gt;
+  &lt;li&gt;Abstracts the EC2 instance, so there’s no need to manage the underlying compute
+infrastructure&lt;/li&gt;
+  &lt;li&gt;APIs and AWS integrations are still available&lt;/li&gt;
+  &lt;li&gt;It’s natively integrated with IAM and Amazon Virtual Private Cloud (Amazon VPC)&lt;/li&gt;
+  &lt;li&gt;Supports your containers completely managed by AWS as a service&lt;/li&gt;
+  &lt;li&gt;Focus on building applications without managing servers&lt;/li&gt;
+  &lt;li&gt;Compatible with ECS and EKS&lt;/li&gt;
+  &lt;li&gt;Fargate vs ECS cs EKS
+    &lt;ul&gt;
+      &lt;li&gt;ECS and EKS are orchestration services
+        &lt;ul&gt;
+          &lt;li&gt;Manage where and when your containers run&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Fargate (and EC2) are compute services
+        &lt;ul&gt;
+          &lt;li&gt;Serverless&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;container-services&quot;&gt;Container Services&lt;/h2&gt;
+&lt;p&gt;There are multiple container services. Which one to use depends on specific use cases.&lt;/p&gt;
+
+&lt;p&gt;Use cases:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;EKS
+    &lt;ul&gt;
+      &lt;li&gt;Your workload runs on Kubernetes, but you want a managed K8s service to simplify management&lt;/li&gt;
+      &lt;li&gt;You need more networking nodes on-demand&lt;/li&gt;
+      &lt;li&gt;You have the time and expertise to deploy, run and optimize containers on K8s&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;ECS
+    &lt;ul&gt;
+      &lt;li&gt;Most of your workloads run on the AWS ecosystem and you want to run containers at scale&lt;/li&gt;
+      &lt;li&gt;You need deep integration with AWS services, including code pipeline and ECR&lt;/li&gt;
+      &lt;li&gt;You have limited time and expertise to learn, migrate and maintain container workload in Kubernetes&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Fargate
+    &lt;ul&gt;
+      &lt;li&gt;Your existing workload is running on serverless technologies&lt;/li&gt;
+      &lt;li&gt;Minimal server management strategy is needed&lt;/li&gt;
+      &lt;li&gt;Using Docker or Kubernetes-based containers is mostly irrelevant&lt;/li&gt;
+      &lt;li&gt;You don’t have a problem using only one networking mode (VPC)&lt;/li&gt;
+      &lt;li&gt;Pay only for computing time, not underlying EC2 instances&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;eks&quot;&gt;EKS&lt;/h3&gt;
+&lt;p&gt;EKS allows you to run Kubernetes on AWS without needing to install, operate, and maintain your own Kubernetes control plane or nodes&lt;/p&gt;
+
+&lt;p&gt;EKS vs ECS:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;ECS - tye machine, that runs the containers, is an EC2 instance that has an ECS agent installed and it’s named a container instance&lt;/li&gt;
+  &lt;li&gt;EKS - the machine that runs the containers is called a worker node or Kubernetes node&lt;/li&gt;
+  &lt;li&gt;ECS container is called a task&lt;/li&gt;
+  &lt;li&gt;EKS container is called a pod&lt;/li&gt;
+  &lt;li&gt;ECS runs on AWS native technology&lt;/li&gt;
+  &lt;li&gt;EKS runs on Kubernetes&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Kubernetes objects:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Cluster
+    &lt;ul&gt;
+      &lt;li&gt;Set of worker machines (nodes) that rune containerized applications&lt;/li&gt;
+      &lt;li&gt;Every cluster has at least one worker node&lt;/li&gt;
+      &lt;li&gt;A cluster has a control place that runs services that manage the cluster&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Node
+    &lt;ul&gt;
+      &lt;li&gt;A virtual or physical machine that pods are run on&lt;/li&gt;
+      &lt;li&gt;Each node is managed by the control plane and contains the services necessary to run pods&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Pod
+    &lt;ul&gt;
+      &lt;li&gt;A group of one or more containers&lt;/li&gt;
+      &lt;li&gt;Pods are defined by a PodSpec file, a specification for how to run the containers&lt;/li&gt;
+      &lt;li&gt;Basic building block within Kubernetes for deployment, scaling, and replication&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Volume
+    &lt;ul&gt;
+      &lt;li&gt;Ephemeral
+        &lt;ul&gt;
+          &lt;li&gt;Shared volumes to facilitate data sharing in the pod and persistence of data across container restarts&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Persistent
+        &lt;ul&gt;
+          &lt;li&gt;Backed by storage subsystems independent of cluster nodes&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Service
+    &lt;ul&gt;
+      &lt;li&gt;Logical collection of pods and a means to access them&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Namespace
+    &lt;ul&gt;
+      &lt;li&gt;Virtual cluster&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;ReplicaSet
+    &lt;ul&gt;
+      &lt;li&gt;Ensures that a specific number of pod replicas are running at any given time&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Deployment
+    &lt;ul&gt;
+      &lt;li&gt;Owns and manages ReplicaSets or individual pods&lt;/li&gt;
+      &lt;li&gt;Desired state in the deployment&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;ConfigMap
+    &lt;ul&gt;
+      &lt;li&gt;API object that stored nonconfidental data as key-value pairs used by other Kubernetes objects such as pods&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Secrets
+    &lt;ul&gt;
+      &lt;li&gt;Confidential data&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Control plane
+    &lt;ul&gt;
+      &lt;li&gt;Control plane nodes manage the worker nodes and the pods in the cluster&lt;/li&gt;
+      &lt;li&gt;Components:
+        &lt;ul&gt;
+          &lt;li&gt;Control plane nodes
+            &lt;ul&gt;
+              &lt;li&gt;Controller manager
+                &lt;ul&gt;
+                  &lt;li&gt;Runs background threads called controllers that detect and respond to cluster events&lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/li&gt;
+              &lt;li&gt;Cloud controller
+                &lt;ul&gt;
+                  &lt;li&gt;Specific controller that interacts with the underlying cloud provider&lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/li&gt;
+              &lt;li&gt;Scheduler
+                &lt;ul&gt;
+                  &lt;li&gt;Selects nodes for newly created containers to run on&lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/li&gt;
+              &lt;li&gt;API server
+                &lt;ul&gt;
+                  &lt;li&gt;Exposes the Kubernetes API and is the frontend for the Kubernetes control plane&lt;/li&gt;
+                  &lt;li&gt;Hands all communication from the cluster to the control plane&lt;/li&gt;
+                  &lt;li&gt;Designed to scale horizontally, deploying more instances as necessary&lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+          &lt;li&gt;Etcd
+            &lt;ul&gt;
+              &lt;li&gt;Core persistence layer for Kubernetes&lt;/li&gt;
+              &lt;li&gt;Highly available distributed key value store&lt;/li&gt;
+              &lt;li&gt;Stores critical cluster data and state&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Data plane
+    &lt;ul&gt;
+      &lt;li&gt;Worker nodes host the pods that are the components of the application workload&lt;/li&gt;
+      &lt;li&gt;Components:
+        &lt;ul&gt;
+          &lt;li&gt;Worker nodes
+            &lt;ul&gt;
+              &lt;li&gt;Kube-proxy
+                &lt;ul&gt;
+                  &lt;li&gt;Maintains network rules on the post and performs any connection forwarding&lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/li&gt;
+              &lt;li&gt;Docker
+                &lt;ul&gt;
+                  &lt;li&gt;Container runtime&lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/li&gt;
+              &lt;li&gt;Kubelet
+                &lt;ul&gt;
+                  &lt;li&gt;Primary agent that runs on the worker nodes&lt;/li&gt;
+                  &lt;li&gt;Makes sure that the right containers are running in a pod and that they are healthy&lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/li&gt;
+              &lt;li&gt;Pod
+                &lt;ul&gt;
+                  &lt;li&gt;Group of one or more containers
+                    &lt;ul&gt;
+                      &lt;li&gt;The containers in a pod are always colocated, scheduled together and managed together&lt;/li&gt;
+                      &lt;li&gt;You cannot split containers in a pod across nodes&lt;/li&gt;
+                    &lt;/ul&gt;
+                  &lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Control and data plane communication
+    &lt;ul&gt;
+      &lt;li&gt;Done through the API server to kubelet&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/k8s.png&quot; alt=&quot;Kubernetes architecture&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Permissions to configure when deploying a new EKS cluster:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Cluster IAM role&lt;/li&gt;
+  &lt;li&gt;Node IAM role&lt;/li&gt;
+  &lt;li&gt;RBAC user&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Three common design metworking patterns:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Only public subnets
+    &lt;ul&gt;
+      &lt;li&gt;Three public subnets at most that are deployed into different Availability Zones in the Region&lt;/li&gt;
+      &lt;li&gt;All worker nodes are assigned public IP addresses and can send and receive internet traffic through an open internet gateway&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Only private subnets
+    &lt;ul&gt;
+      &lt;li&gt;Thee private subnets at most that are deployed into different Availability Zones in the regions&lt;/li&gt;
+      &lt;li&gt;All nodes can optionally send and receive internet traffic through a network address translation (NAT) instance or NAT gateway&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Public and private subnets
+    &lt;ul&gt;
+      &lt;li&gt;This VPC has two public subnets and two private subnets&lt;/li&gt;
+      &lt;li&gt;One public and one private subnet are deployed to the same availability zone&lt;/li&gt;
+      &lt;li&gt;The other public and private subnets are deployed to a second available zone in the same region&lt;/li&gt;
+      &lt;li&gt;Public IP addresses are automatically assigned to resources deployed to one of the public subnets - but not to private ones&lt;/li&gt;
+      &lt;li&gt;The worker nodes in private subnets can communicate with the cluster and other AWS services&lt;/li&gt;
+      &lt;li&gt;Pods can communicate outbound to the internet through a NAT gateway that is deployed in each availability zone&lt;/li&gt;
+      &lt;li&gt;The subnets are tagged so that Kubernetes can deploy load balancers to them&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;ecs&quot;&gt;ECS&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;End-to-end container orchestration service that helps you spin up new containers&lt;/li&gt;
+  &lt;li&gt;You can install ECS container agent so to manage containers on a cluster of EC2 instances&lt;/li&gt;
+  &lt;li&gt;To prepare an application to run on ECS, it’s necessary to create a task definition
+    &lt;ul&gt;
+      &lt;li&gt;Text file in JSON format&lt;/li&gt;
+      &lt;li&gt;Blueprint which describes containers&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Highly scalable, high-performance service&lt;/li&gt;
+  &lt;li&gt;Schedules placement across managed clusters&lt;/li&gt;
+  &lt;li&gt;Amazon ECR - registry&lt;/li&gt;
+  &lt;li&gt;ECS supports service discovery&lt;/li&gt;
+  &lt;li&gt;Blue-green deployments are used for deployment&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Components&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Tasks
+    &lt;ul&gt;
+      &lt;li&gt;Atomic unit of deployment&lt;/li&gt;
+      &lt;li&gt;Made of one or more tightly coupled containers&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Services
+    &lt;ul&gt;
+      &lt;li&gt;Abstraction of top of a task&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Task vs service?
+    &lt;ul&gt;
+      &lt;li&gt;Task is for on-demand workloads, batch jobs or one-time jobs&lt;/li&gt;
+      &lt;li&gt;Service is for long-running containers&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Task definition:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Resources
+    &lt;ul&gt;
+      &lt;li&gt;CPU&lt;/li&gt;
+      &lt;li&gt;memory&lt;/li&gt;
+      &lt;li&gt;networking&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Placement strategies: 
+    * Random
+    * Binpack
+        * Least amount CPU or memory
+        * Minimizes the number of instances used
+    * Spread
+        * Places tasks evenly&lt;/p&gt;
+
+&lt;p&gt;Which AWS services can you integrate ECS with?&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;SQS/SNS for decoupling&lt;/li&gt;
+  &lt;li&gt;Elastic Load Balancing for load balancing&lt;/li&gt;
+  &lt;li&gt;Route 53 for DNS&lt;/li&gt;
+  &lt;li&gt;IAM for authentication and authorization&lt;/li&gt;
+  &lt;li&gt;AWS Secret manager for securing secrets&lt;/li&gt;
+  &lt;li&gt;API Gateway for exposing services&lt;/li&gt;
+  &lt;li&gt;CodePipeline for CI/CD&lt;/li&gt;
+  &lt;li&gt;CloudWatch for monitoring&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Security&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Task definition should have a IAM policy&lt;/li&gt;
+  &lt;li&gt;IAM policy is related to IAM roles&lt;/li&gt;
+  &lt;li&gt;Policies should be assigned to role, roles are then assigned to tasks and it’s applicable for all task instances&lt;/li&gt;
+  &lt;li&gt;Secrets manager
+    &lt;ul&gt;
+      &lt;li&gt;Each task can have its own IAM role with a policy attached&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;storage&quot;&gt;Storage&lt;/h2&gt;
+&lt;p&gt;Storage types:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;File storage&lt;/li&gt;
+  &lt;li&gt;Block storage&lt;/li&gt;
+  &lt;li&gt;Object storage&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/storage-types.png&quot; alt=&quot;Storage types&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;file-storage&quot;&gt;File storage&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Tree-like hierarchy that consists of folders and subfolders&lt;/li&gt;
+  &lt;li&gt;Ideal when is required centralized access to files that must be easily shared and managed by multiple host computers
+    &lt;ul&gt;
+      &lt;li&gt;Typically requires file locking and integration with existing file system communication protocols&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Four categories of use cases for file storage:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Web serving
+    &lt;ul&gt;
+      &lt;li&gt;Integrated into web applications&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Analytics
+    &lt;ul&gt;
+      &lt;li&gt;Analytics workloads interact with data through a file interface&lt;/li&gt;
+      &lt;li&gt;Media and entertainment
+        &lt;ul&gt;
+          &lt;li&gt;Storage of rich media content&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Home directories
+        &lt;ul&gt;
+          &lt;li&gt;For users of businesses&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;block-storage&quot;&gt;Block storage&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Treats files as a singular unit&lt;/li&gt;
+  &lt;li&gt;Splits files into fixed-size chunks of data called blocks that have their own addresses&lt;/li&gt;
+  &lt;li&gt;Each block is an individual piece of data storage&lt;/li&gt;
+  &lt;li&gt;Because blocks are addressable, they can be retrieved efficiently - direct route to access the data
+    &lt;ul&gt;
+      &lt;li&gt;For example - changing one character in a 1 GB file
+        &lt;ul&gt;
+          &lt;li&gt;Only one block needs to be changed&lt;/li&gt;
+          &lt;li&gt;Block storage solutions are therefore fast and use less bandwidth&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Preferred storage choice for high-performance enterprise workloads and transactional, mission-critical and I/O intensive applications&lt;/li&gt;
+  &lt;li&gt;Use cases:
+    &lt;ul&gt;
+      &lt;li&gt;Transactional workloads
+        &lt;ul&gt;
+          &lt;li&gt;Storing time-sensitive and mission-critical transactions&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Containers
+        &lt;ul&gt;
+          &lt;li&gt;Store containerized applications on the cloud&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Virtual machines
+        &lt;ul&gt;
+          &lt;li&gt;Support hypervisors - users can install the OS, file system and other
+resources on a block storage volume by formatting the block storage
+volume and turning it into a VM file system&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;object-storage&quot;&gt;Object storage&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Files stored as objects&lt;/li&gt;
+  &lt;li&gt;Stored in a bucket using a flat structure - no folders, directories or hierarchies&lt;/li&gt;
+  &lt;li&gt;Each object contains a unique identifier and optionally additional metadata&lt;/li&gt;
+  &lt;li&gt;Changing one character in a 1 GB file
+    &lt;ul&gt;
+      &lt;li&gt;The entire object must be updated&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;No limit to the number of objects stored, meaning it’s scalable&lt;/li&gt;
+  &lt;li&gt;Useful when storing large or unstructured data sets&lt;/li&gt;
+  &lt;li&gt;Use cases:
+    &lt;ul&gt;
+      &lt;li&gt;Data archiving&lt;/li&gt;
+      &lt;li&gt;Backup and recovery&lt;/li&gt;
+      &lt;li&gt;Rich media&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;s3&quot;&gt;S3&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Standalone storage solution&lt;/li&gt;
+  &lt;li&gt;Data can be retrieved from anywhere on the web&lt;/li&gt;
+  &lt;li&gt;Object storage service
+    &lt;ul&gt;
+      &lt;li&gt;Flat structure&lt;/li&gt;
+      &lt;li&gt;File combined with metadata&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Objects are stored in containers called buckets
+    &lt;ul&gt;
+      &lt;li&gt;Unique identifier: combination of a bucket name, key and version ID&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Each bucket name must be unique across all AWS accounts in all AWS regions within a partition (grouping of Regions)&lt;/li&gt;
+  &lt;li&gt;If versioning is enabled, S3 automatically generated a unique version ID for the object&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Use cases:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Backup and storage&lt;/li&gt;
+  &lt;li&gt;Media hosting&lt;/li&gt;
+  &lt;li&gt;Software delivery&lt;/li&gt;
+  &lt;li&gt;Data lakes&lt;/li&gt;
+  &lt;li&gt;Static websites&lt;/li&gt;
+  &lt;li&gt;Static content&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Security principles:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Everything is private by default, meaning it’s visible only to the user or account that created that resource&lt;/li&gt;
+  &lt;li&gt;Buckets and objects can be made public&lt;/li&gt;
+  &lt;li&gt;Three different security policies:
+    &lt;ul&gt;
+      &lt;li&gt;IAM policies
+        &lt;ul&gt;
+          &lt;li&gt;Policies which define which IAM users, groups and roles can access and what can they perform&lt;/li&gt;
+          &lt;li&gt;Two kinds of policies:
+            &lt;ul&gt;
+              &lt;li&gt;Resource-based&lt;/li&gt;
+              &lt;li&gt;User-based&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+          &lt;li&gt;Used for private buckets in two scenarios:
+            &lt;ul&gt;
+              &lt;li&gt;Many buckets with different permission requirements&lt;/li&gt;
+              &lt;li&gt;Requirement to have all policies in a centralized location, so all policy information are managed in one location&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;S3 bucket policies
+        &lt;ul&gt;
+          &lt;li&gt;Defined in a JSON format&lt;/li&gt;
+          &lt;li&gt;Attached to S3 buckets and apply to every object in the bucket&lt;/li&gt;
+          &lt;li&gt;Specify what actions are allowed or denied on the bucket&lt;/li&gt;
+          &lt;li&gt;Used for following scenarios:
+            &lt;ul&gt;
+              &lt;li&gt;Simple way to do cross-account access to Amazon S3 without using IAM roles&lt;/li&gt;
+              &lt;li&gt;IAM policies bump up against the defined size limit - S3 policies have a larged size limit&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;S3 encryption
+        &lt;ul&gt;
+          &lt;li&gt;S3 reinformes encryption to and from S3&lt;/li&gt;
+          &lt;li&gt;All objects are automatically encrypted on upload and server-side encryption is applied with S3-managed keys as the base level of encryption&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Server-side encryption in S3&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Header x-amz-server-side-encryption&lt;/li&gt;
+  &lt;li&gt;When you upload an object, S3 uses the encryption key you provide and removes the encryption key from memory
+    &lt;ul&gt;
+      &lt;li&gt;Doesn’t store the encryption key&lt;/li&gt;
+      &lt;li&gt;It’s stored in a randomly salted HMAC value of the key in order to validate future requests&lt;/li&gt;
+      &lt;li&gt;HMAC cannot be used to derive the value of the encryption key nor to decrypt the contents of the encrypted object - if you lose the encryption key, you lose the object&lt;/li&gt;
+      &lt;li&gt;Next time request is sent, encryption key is checked - HMAC can’t be used&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Encrypt data in S3&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;At rest
+    &lt;ul&gt;
+      &lt;li&gt;Server-side encryption
+        &lt;ul&gt;
+          &lt;li&gt;amazon S3-Managed keys (SSE-S3)&lt;/li&gt;
+          &lt;li&gt;AWS KMS-managed keys&lt;/li&gt;
+          &lt;li&gt;Customer-provided keys&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Client-side encryption
+        &lt;ul&gt;
+          &lt;li&gt;AWS KMS-managed customer master key&lt;/li&gt;
+          &lt;li&gt;Client-side master key&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;In transit
+    &lt;ul&gt;
+      &lt;li&gt;SSL&lt;/li&gt;
+      &lt;li&gt;Client-side encryption&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/s3.png&quot; alt=&quot;S3&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;amazon-elastic-file-system-efs&quot;&gt;Amazon Elastic File System (EFS)&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Set-and-forget file system that automatically grows and shrinks as files are added and removed&lt;/li&gt;
+  &lt;li&gt;No need for provisioning or managing storage capacity or performance&lt;/li&gt;
+  &lt;li&gt;Consistent performance to each compute instance - tens, hundreds, and thousands of
+compute instances can be connected at the same time&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;elastic-block-store-ebs&quot;&gt;Elastic Block Store (EBS)&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Block-level storage that can be attached to an Amazon EC2 instance - same as an external drive can be attached to a laptop&lt;/li&gt;
+  &lt;li&gt;Also called EBS volume&lt;/li&gt;
+  &lt;li&gt;Useful for quick data retrieval and long term data persistence&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Characteristics:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Detachable
+    &lt;ul&gt;
+      &lt;li&gt;EBS volume can be detached from one EC2 instance and attached to another one in the same Availability Zone&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Distinct
+    &lt;ul&gt;
+      &lt;li&gt;External drive is separate from the computer&lt;/li&gt;
+      &lt;li&gt;If an accident occurs and the computer goes down, data is still on the drive&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Size-limited
+    &lt;ul&gt;
+      &lt;li&gt;Limited to the size of the external drive&lt;/li&gt;
+      &lt;li&gt;Fixed limit how scalable it can be&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;1-to-1 connection
+    &lt;ul&gt;
+      &lt;li&gt;Can be connected with one computer at a time&lt;/li&gt;
+      &lt;li&gt;Cannot be shared or attached to multiple instance&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Volumes can be scaled in two ways:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Increase volume size
+    &lt;ul&gt;
+      &lt;li&gt;If it doesn’t increase above the maximum size limit&lt;/li&gt;
+      &lt;li&gt;Maximum volume size at the moment is 64 tebibytes (TIB)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Attach multiple volumes
+    &lt;ul&gt;
+      &lt;li&gt;EC2 has a one-to-many relationships with EBS volumes&lt;/li&gt;
+      &lt;li&gt;One instance can have multiple volumes, but volume can be attached only to one instance at the same time&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Use cases:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Operating systems
+    &lt;ul&gt;
+      &lt;li&gt;The root device for an instance launched from an AMI&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Databases
+    &lt;ul&gt;
+      &lt;li&gt;Storage layer for databases running on EC2&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Enterprise applications&lt;/li&gt;
+  &lt;li&gt;Big data analytics engines size&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Volume types:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;SSD
+    &lt;ul&gt;
+      &lt;li&gt;Transactional workloads with frequent read/write operations with small I/O&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;HDD
+    &lt;ul&gt;
+      &lt;li&gt;Large streaming workloads that need high throughput performance&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Key EBS benefits&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;High availability
+    &lt;ul&gt;
+      &lt;li&gt;When a volume is created, it is automatically replicated in its Availability Zone&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Data persistence&lt;/li&gt;
+  &lt;li&gt;Data encryption
+    &lt;ul&gt;
+      &lt;li&gt;Supports, when activated by the user&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Flexibility
+    &lt;ul&gt;
+      &lt;li&gt;Possible to modify volume type, size and input/output operations per second without stopping the instance&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Backups
+    &lt;ul&gt;
+      &lt;li&gt;Supports to create backups&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Snapshots&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Incremental Backups of data from EC2 instances&lt;/li&gt;
+  &lt;li&gt;Saving only blocks that have changed after the most recent snapshot&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;fsx&quot;&gt;FSx&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Fully managed service to launch, run and scale high-performance file systems in the cloud&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;ec2-instance-store&quot;&gt;EC2 Instance Store&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Temporary block-level storage for an instance&lt;/li&gt;
+  &lt;li&gt;Located on disks that are physically attached to the host computer&lt;/li&gt;
+  &lt;li&gt;If the instance is deleted, the instance store is deleted as well - ephemeral storage&lt;/li&gt;
+  &lt;li&gt;Ideal for hosting applications that replicate data to other EC2 instances such as Hadoop clusters
+    &lt;ul&gt;
+      &lt;li&gt;For cluster-based workloads having the speed of locally attached volumes and the resiliency of replicated data helps to achieve data distribution at high performance&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Also ideal temporary storage of information that changes frequently such as buffers, caches, scratch data etc.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;storage-summary&quot;&gt;Storage Summary&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;EC2 instance store
+    &lt;ul&gt;
+      &lt;li&gt;Temporary storage of information that is constantly changing&lt;/li&gt;
+      &lt;li&gt;Not meant for persistent data&lt;/li&gt;
+      &lt;li&gt;Black storage&lt;/li&gt;
+      &lt;li&gt;Cannot be detached from EC2&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;EBS
+    &lt;ul&gt;
+      &lt;li&gt;For data that changes frequently and must persist through instance stops, terminations or hardware failures&lt;/li&gt;
+      &lt;li&gt;SSD or HDD&lt;/li&gt;
+      &lt;li&gt;Block storage&lt;/li&gt;
+      &lt;li&gt;Replicated&lt;/li&gt;
+      &lt;li&gt;Can be attached to a single EC2 instance at a time&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;S3
+    &lt;ul&gt;
+      &lt;li&gt;Data that doesn’t change often&lt;/li&gt;
+      &lt;li&gt;Scalable solution&lt;/li&gt;
+      &lt;li&gt;ideal for static web content and media, backups and archiving, and data for analytics&lt;/li&gt;
+      &lt;li&gt;Object storage&lt;/li&gt;
+      &lt;li&gt;Replicated across multiple Availability Zones&lt;/li&gt;
+      &lt;li&gt;Not attached to compute&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;EFS
+    &lt;ul&gt;
+      &lt;li&gt;Elastic, can automatically scale&lt;/li&gt;
+      &lt;li&gt;Highly available, highly durable&lt;/li&gt;
+      &lt;li&gt;All files and directories and stored across multiple Availability Zones&lt;/li&gt;
+      &lt;li&gt;For workloads that require the highest level of durability and availability&lt;/li&gt;
+      &lt;li&gt;File storage&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;FSx
+    &lt;ul&gt;
+      &lt;li&gt;Native compatibility&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;databases&quot;&gt;Databases&lt;/h2&gt;
+&lt;h3 id=&quot;rds&quot;&gt;RDS&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Managed database service&lt;/li&gt;
+  &lt;li&gt;Supports most of the popular RDBMSs such as Oracle, SQL Server, MySql, PostgreSQL, MariaDB, Aurora&lt;/li&gt;
+  &lt;li&gt;Amazon RDS is built from compute &amp;amp; storage
+    &lt;ul&gt;
+      &lt;li&gt;Compute - database instance, which runs the DB engine
+        &lt;ul&gt;
+          &lt;li&gt;Instance can contain multiple databases with the same engine and each database can contain multiple tables&lt;/li&gt;
+          &lt;li&gt;Underneath the DB instance is an EC2 instance, but it’s managed through the Amazon RDS console (not through Amazon EC2 console)&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Storage
+        &lt;ul&gt;
+          &lt;li&gt;Elastic black storage volumes for database and log storage&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Applies to MySql, MariaDB, PostgreSQL, Oracle and SQL Server&lt;/li&gt;
+  &lt;li&gt;Aurora - data is stored in cluster volumes
+    &lt;ul&gt;
+      &lt;li&gt;Single, virtual volumes that use SSDs&lt;/li&gt;
+      &lt;li&gt;Cluster volume contains copies of the data across three Availability Zones in a single AWS Region&lt;/li&gt;
+      &lt;li&gt;For temporary files Aurora uses local storage
+        &lt;ul&gt;
+          &lt;li&gt;RDS provides three storage types:&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;General purpose SSD (gp2 and gp3)
+    &lt;ul&gt;
+      &lt;li&gt;Cost-effective&lt;/li&gt;
+      &lt;li&gt;For broad range of workloads running on medium-sized DB instances&lt;/li&gt;
+      &lt;li&gt;For development and testing instances&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Provisioned IOPS SSD (io1)
+    &lt;ul&gt;
+      &lt;li&gt;I/O-intensive workloads&lt;/li&gt;
+      &lt;li&gt;Low I/O latency and consistent I/O throughput&lt;/li&gt;
+      &lt;li&gt;Best suited for production environments&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Magnetic
+    &lt;ul&gt;
+      &lt;li&gt;For backwards compatibility only&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Virtual Private Cloud
+    &lt;ul&gt;
+      &lt;li&gt;When creating an instance, it’s necessary to select the VPC the database will live in and subnets designated for the DB
+        &lt;ul&gt;
+          &lt;li&gt;The subnets in a DB subnet group should be private, so they don’t have a
+route to the internet gateway - in that case the data inside the instance can be reached only by the application backend&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Data Backup&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Automated backups
+    &lt;ul&gt;
+      &lt;li&gt;Turned on by default&lt;/li&gt;
+      &lt;li&gt;Backups the entire DB instance and transaction logs&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Manual snapshots
+    &lt;ul&gt;
+      &lt;li&gt;Can be initiated at any time&lt;/li&gt;
+      &lt;li&gt;Exist until they’re manually deleted&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Security&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;IAM
+    &lt;ul&gt;
+      &lt;li&gt;IAM policies to assign permissions that determine who can manage RDS resources&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Security groups
+    &lt;ul&gt;
+      &lt;li&gt;Control which IP addresses or EC2 instances can connect to databases on a DB instance&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Encryption&lt;/li&gt;
+  &lt;li&gt;SSL or TLS connections with DB instances&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;dynamodb&quot;&gt;DynamoDB&lt;/h3&gt;
+&lt;p&gt;Core components:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Tables
+    &lt;ul&gt;
+      &lt;li&gt;Collection of items&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Items
+    &lt;ul&gt;
+      &lt;li&gt;Collection of attributes&lt;/li&gt;
+      &lt;li&gt;In a Person table each item represents a person&lt;/li&gt;
+      &lt;li&gt;In a Cars table each item represents one vehicle&lt;/li&gt;
+      &lt;li&gt;Items in DynamoDB are similar to rows in relational databases&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Attributes
+    &lt;ul&gt;
+      &lt;li&gt;Fundamental data element&lt;/li&gt;
+      &lt;li&gt;For example PersonID, LastName, FirstName etc.&lt;/li&gt;
+      &lt;li&gt;Columns in relational databases&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Keys:
+    &lt;ul&gt;
+      &lt;li&gt;Primary
+        &lt;ul&gt;
+          &lt;li&gt;Uniquely identify each item in a table&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Secondary index
+        &lt;ul&gt;
+          &lt;li&gt;Provide more querying flexibility&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Use cases:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Scalability problems with other traditional database systems&lt;/li&gt;
+  &lt;li&gt;Mission-critical application that must be highly available at all times without
+manual intervention&lt;/li&gt;
+  &lt;li&gt;High level of data durability regardless of the backup-and-restore strategy&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Security&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Data is redundantly stored on multiple devices across multiple facilities in a DynamoDB Region&lt;/li&gt;
+  &lt;li&gt;All user data is fully encrypted at rest
+    &lt;ul&gt;
+      &lt;li&gt;Uses encryption keys stored in Key Management Service (AWS KMS)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;IAM administrators control who can be authenticated and authorized to use DynamoDB resources by using IAM to manage access permissions and implement security policies
+    &lt;ul&gt;
+      &lt;li&gt;Protected by the AWS global network security procedures&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Keys:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Primary or partition key: a single attribute
+    &lt;ul&gt;
+      &lt;li&gt;DynamoDB uses the partition key’s value as input to an internal hash function to determine where to store the item.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Composite key (partition key + sort key)
+    &lt;ul&gt;
+      &lt;li&gt;Contains two attributes
+        &lt;ul&gt;
+          &lt;li&gt;Partition key - descripes which partition to use&lt;/li&gt;
+          &lt;li&gt;Sort key - store multiple items with the same partition key in a sorted order&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Example - sort by genre and within genre sort alphabetically by title&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Cache Strategies&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Write-through cache - adds data or updates data in the cache whenever data is written to the database, the cache is never stale and data is always current&lt;/li&gt;
+  &lt;li&gt;Write-through cache + TTL - minimizes wasted space by deleting the data that are never read&lt;/li&gt;
+  &lt;li&gt;Lazy-loading cache - load data into the cache only when necessary&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Cache Types:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Item cache
+    &lt;ul&gt;
+      &lt;li&gt;Stores results of GetItem and BatchGetItem&lt;/li&gt;
+      &lt;li&gt;When an item is requested, if it’s present it’s returned, if not then if’s fetched from the DB and cache is updated&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Query cache
+    &lt;ul&gt;
+      &lt;li&gt;Stores results of Query and Scan operations&lt;/li&gt;
+      &lt;li&gt;When a Query or Scan are performed, DAX caches the set of results&lt;/li&gt;
+      &lt;li&gt;Subsequent identical Query or Scan requests can be served directly from the cache&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Query vs Scan operation&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Query
+    &lt;ul&gt;
+      &lt;li&gt;Retrieves data from a table using the table’s primary key or a secondary index - finds items based on the partition key and an optimal sort key&lt;/li&gt;
+      &lt;li&gt;Used when you know the partition key value and optionally the sort one as well - for example all orders from a specific customer&lt;/li&gt;
+      &lt;li&gt;Very efficient, because it targets a specific partition or index&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Scan
+    &lt;ul&gt;
+      &lt;li&gt;Reads every item in the entire table or a secondary index&lt;/li&gt;
+      &lt;li&gt;Doesn’t require a partition key or a sort key&lt;/li&gt;
+      &lt;li&gt;Finding all items that match a certain non-key attribute value&lt;/li&gt;
+      &lt;li&gt;Less efficient, resource-intensive
+        &lt;ul&gt;
+          &lt;li&gt;Can be improved with parallel scans, but this speeds up the process, but increases the consumption of read capacity&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Strong vs eventual consistency&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Strong
+    &lt;ul&gt;
+      &lt;li&gt;real-time data update&lt;/li&gt;
+      &lt;li&gt;All copies of the data are updated before the write is considered successful&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Eventual
+    &lt;ul&gt;
+      &lt;li&gt;Data is later updated&lt;/li&gt;
+      &lt;li&gt;System acknowledges write before the data is fully replicated&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Locking&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Optimistic
+    &lt;ul&gt;
+      &lt;li&gt;Client-side item is the same as the item in DynamoDB, checks a value open save to ensure that it has not changed&lt;/li&gt;
+      &lt;li&gt;The Check before you sit approach - when you try to update the item, you check if it has changed since the last time you read it&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Pessimistic
+    &lt;ul&gt;
+      &lt;li&gt;Not suitable for the multithreaded application, blocks users from reading, updating or deleting an entry&lt;/li&gt;
+      &lt;li&gt;The reserved table approach - even if you’re just looking at the menu and deciding what to eat, no one can sit at your table&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Index&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;You cannot add a local index after the table has been created because local index is another way to reorganize the existing partition&lt;/li&gt;
+  &lt;li&gt;Local secondary index has the same partition key as the base table, but a different sort key - that’s because it’s reorganization of the existing partition&lt;/li&gt;
+  &lt;li&gt;Global Secondary Index
+    &lt;ul&gt;
+      &lt;li&gt;Partition key and sort key can be different
+        &lt;ul&gt;
+          &lt;li&gt;This is because it’s a new way to reorganize data (for example give me all same shapes regardless of their color and size)&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/indices.png&quot; alt=&quot;Indices&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;DynamoDB streams&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Streams are kept for 24 hours, can’t be manually deleted nor kept for longer time&lt;/li&gt;
+  &lt;li&gt;Event types in streams: insert, modify, remove&lt;/li&gt;
+  &lt;li&gt;Stream view types:
+    &lt;ul&gt;
+      &lt;li&gt;KEYS_ONLY - only the key attributes of the modified item&lt;/li&gt;
+      &lt;li&gt;NEW_IMAGE - the entire item as it appears after it was modified&lt;/li&gt;
+      &lt;li&gt;OLD_IMAGE - the entire item as it appear before it was modified&lt;/li&gt;
+      &lt;li&gt;NEW_AND_OLD_IMAGES - both the new and the old images of the item&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;other-purpose-build-databases&quot;&gt;Other Purpose-Build Databases&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;ElastiCache
+    &lt;ul&gt;
+      &lt;li&gt;Fully managed in-memory caching solution&lt;/li&gt;
+      &lt;li&gt;Support for Redis and Memcached&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;MemoryDB for Redis
+    &lt;ul&gt;
+      &lt;li&gt;Redis-compatible, fully-managed, durable, in-memory database that delivers ultra-fast performance
+        &lt;ul&gt;
+          &lt;li&gt;Microsecond read latency, single-digit millisecond write latency, high throughput and Multi-AZ durability&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;DocumentDB
+    &lt;ul&gt;
+      &lt;li&gt;Fully managed document database
+        &lt;ul&gt;
+          &lt;li&gt;Document - you can store and query rich documents&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Has API that’s compatible with MongoDB&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Keyspaces
+    &lt;ul&gt;
+      &lt;li&gt;Scalable, highly available and managed Apache Cassandra compatible service&lt;/li&gt;
+      &lt;li&gt;Popular for high-scale applications that need top-tier performance&lt;/li&gt;
+      &lt;li&gt;Also for high-volume applications with straightforward access patterns&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Neptune
+    &lt;ul&gt;
+      &lt;li&gt;Fully managed graph database&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Timestream
+    &lt;ul&gt;
+      &lt;li&gt;Fast, scalable and serverless time series service for IoT and operational applications&lt;/li&gt;
+      &lt;li&gt;Easy to store and analyze trillions of events per day up to 1000 times faster and for as little as one-tenth of the cost of relational databases&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Quantum Ledger Database (QLDB)
+    &lt;ul&gt;
+      &lt;li&gt;Ledger database that provides a complete and cryptographically verifiable history of all changes made to the application data&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;monitoring&quot;&gt;Monitoring&lt;/h2&gt;
+&lt;h3 id=&quot;cloudwatch&quot;&gt;CloudWatch&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Monitoring and observability service that collects resource data and provides insights&lt;/li&gt;
+  &lt;li&gt;Can do the following:
+    &lt;ul&gt;
+      &lt;li&gt;Detect anomalous behavior in environments&lt;/li&gt;
+      &lt;li&gt;Set alarms to alert when something is not right&lt;/li&gt;
+      &lt;li&gt;Visualiza logs and metrics with the AWS Management Console&lt;/li&gt;
+      &lt;li&gt;Take automated actions like scaling&lt;/li&gt;
+      &lt;li&gt;Troubleshoot issues&lt;/li&gt;
+      &lt;li&gt;Discover insights to keep applications healthy&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;load-balancing&quot;&gt;Load Balancing&lt;/h2&gt;
+
+&lt;h3 id=&quot;elastic-load-balancing&quot;&gt;Elastic Load Balancing&lt;/h3&gt;
+&lt;p&gt;Distributes incoming application traffic across EC2 instances, containers, IP addresses, and Lambda functions.&lt;/p&gt;
+
+&lt;p&gt;Three main components:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Rules
+    &lt;ul&gt;
+      &lt;li&gt;To associate a target group to a listener&lt;/li&gt;
+      &lt;li&gt;Needs source IP address of the client and decides which target group to send the traffic to&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Listeners
+    &lt;ul&gt;
+      &lt;li&gt;The client connects to it&lt;/li&gt;
+      &lt;li&gt;A port must be provided&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Target groups
+    &lt;ul&gt;
+      &lt;li&gt;The backend servers are defined in one or more target groups&lt;/li&gt;
+      &lt;li&gt;Define type of backend to direct traffic to such as EC2 instances, Lambda functions or IP addresses&lt;/li&gt;
+      &lt;li&gt;Health check must be defined for each target group&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Types of load balancers:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Application load balancer (ALB)
+    &lt;ul&gt;
+      &lt;li&gt;Load balancing HTTP and HTTPS traffic&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Network load balancer (NLB)
+    &lt;ul&gt;
+      &lt;li&gt;Load balancing TCP and UDP traffic&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Gateway load balancer (GLB)
+    &lt;ul&gt;
+      &lt;li&gt;Helps to deploy, scale and manage third-party appliances such as firewalls, intrusion detection and prevention systems, and deep packet inspection systems&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/lb.png&quot; alt=&quot;Load Balancers&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;troubleshooting--optimization&quot;&gt;Troubleshooting &amp;amp; Optimization&lt;/h2&gt;
+&lt;p&gt;Hot partition in DynamoDB&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Refactor application to distribute read and write operations as evenly as possible across your table&lt;/li&gt;
+  &lt;li&gt;Implement error retries and exponential backoff&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Important DynamoDB Calculations
+RCU&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;strongly consistent == rps * (item size / 4)&lt;/li&gt;
+  &lt;li&gt;eventually consistent == rps * (item size / 4) / 2&lt;/li&gt;
+  &lt;li&gt;Transactional == rps * (item size / 4) * 2
+WCU&lt;/li&gt;
+  &lt;li&gt;standard == wps * (item size / 4)&lt;/li&gt;
+  &lt;li&gt;transaction == wps * (item size / 4) * 2&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Size of indices in DynamoDB&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Global secondary index’ provisioned WCU should be equal or greater than the WCU of the base table&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Kinesis data stream&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Capacity of the stream - use more shards in the stream
+    &lt;ul&gt;
+      &lt;li&gt;Hot shards receiving more data, split them to increase capacity&lt;/li&gt;
+      &lt;li&gt;Cold shards the opposite, merge them to better utilize the capacity and to reduce cost&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;What to do when DynamoDB transactions are slow?&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Batch operations
+What to do when DynamoDB data by one user overwritten by another?&lt;/li&gt;
+  &lt;li&gt;Implement optimistic locking strategy by designating one property to store the version number in the mapping class for your table&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;What to use when Last writer wins should be used?&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Use global tables&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Lambda&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;An increase in memory size triggers an equivalent increase in CPU available to your function&lt;/li&gt;
+  &lt;li&gt;The concurrent execution limit is enforced against the sum of the concurrent executions of all functions&lt;/li&gt;
+  &lt;li&gt;The unreserved account concurrency can’t go below 100&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Lambda data discrepancies&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Invocations have been running for over 15 minutes and reached the maximum execution
+time&lt;/li&gt;
+  &lt;li&gt;Reuse the same connection string - execution context&lt;/li&gt;
+  &lt;li&gt;Reserved concurrency
+    &lt;ul&gt;
+      &lt;li&gt;Reserving 20 tables at a 100 tables restaurant&lt;/li&gt;
+      &lt;li&gt;No matter how busy it is, there will be 20 tables available
+        &lt;ul&gt;
+          &lt;li&gt;Function will have 20 concurrency executions available and the other functions will share the remaining 80&lt;/li&gt;
+          &lt;li&gt;It doesn’t speed up the service, but in ensures availability&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Provisioned concurrency
+    &lt;ul&gt;
+      &lt;li&gt;Having a team of waiters ready and waiting for guests as soon as they arrive, so they get immediate service&lt;/li&gt;
+      &lt;li&gt;In scenarios where they are sudden spikes in traffic and function needs to respond immediately&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;What to use to prevent function from using too much reserve concurrency?
+    &lt;ul&gt;
+      &lt;li&gt;Reserve concurrency splits the pool of available concurrency into subsets&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;What if an application uses two identical Lambda functions, but they’re performing differently?&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Track metrics through CloudWatch&lt;/li&gt;
+  &lt;li&gt;The unit of scale in Lambda is concurrency&lt;/li&gt;
+  &lt;li&gt;To scale it up, when it doesn’t perform, means to set up higher concurrency limit&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;What is the same Lambda function that needs to be used for multiple stages in your API, but that function needs to read data from different DynamoDB tables depending on which stage is being called?&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Use stage variables, which are configuration attributes in the deployment file of the REST API&lt;/li&gt;
+  &lt;li&gt;Integrate Lambda function with API Gateway using a stage variable and also add the proper mapping configuration too&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;What if you need to process items from a stream or a queue?&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Configure event source mapping, which is a Lambda resource that reads items from an SQS queue, Kinesis Stream or DynamoDB stream and sends items to your function in batches
+    &lt;ul&gt;
+      &lt;li&gt;Can handle errors and retries&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;What kind of errors can occur in Lambda?&lt;/p&gt;
+
+&lt;p&gt;How many times does Lambda retries?&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Twice
+    &lt;ul&gt;
+      &lt;li&gt;It’s possible to configure dead letter queue to capture events that weren’t successfully processed, so they don’t end up waiting in the queue for days&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Invocation types
+    &lt;ul&gt;
+      &lt;li&gt;Sync
+        &lt;ul&gt;
+          &lt;li&gt;Use the invoke command with the AWS CLI&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Async
+        &lt;ul&gt;
+          &lt;li&gt;S3 and SNS services invoke functions asynchronously&lt;/li&gt;
+          &lt;li&gt;You don’t wait for response - Lambda handles everything&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;What service to integrate to help with errors?&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;CloudWatch, X-Ray&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;devops&quot;&gt;DevOPS&lt;/h2&gt;
+&lt;h2 id=&quot;other-services&quot;&gt;Other services&lt;/h2&gt;
+&lt;p&gt;Service for:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Managing containers - elastic container service&lt;/li&gt;
+  &lt;li&gt;Without infrastructure, but providing provisioning, load balancing, scaling, health monitoring - Elastic Beanstalk&lt;/li&gt;
+  &lt;li&gt;Serverless applications - AWS SAM&lt;/li&gt;
+  &lt;li&gt;Cross-device sync - Amazon Cognito Sync
+    &lt;ul&gt;
+      &lt;li&gt;Device farm is a testing app&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Cross-device sync, but real-time with shared state - AppSync&lt;/li&gt;
+  &lt;li&gt;Send traces to multiple different tracing backends without having to re-instrument your code - OpenTelemetry &amp;amp; X-Ray&lt;/li&gt;
+  &lt;li&gt;Hardware security modules for keys that are 3rd party - CloudHSM&lt;/li&gt;
+  &lt;li&gt;Cypress tests - amplify hosting&lt;/li&gt;
+  &lt;li&gt;Signup and signin functionality - cognito user pool&lt;/li&gt;
+  &lt;li&gt;RDS data encryption - Transparent Data Encryption (TDE)&lt;/li&gt;
+  &lt;li&gt;Real-time data from applications, can be triggered by Lambda - EventBridge&lt;/li&gt;
+  &lt;li&gt;Coordinate multiple AWS services into serverless workflows - Step functions
+    &lt;ul&gt;
+      &lt;li&gt;Expressions that enable you to group objects - Clluster Query Language&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;sources&quot;&gt;Sources&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://portal.tutorialsdojo.com&quot;&gt;Tutorials Dojo&lt;/a&gt; for practise exams&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://explore.skillbuilder.aws/learn/course/external/view/elearning/1851/aws-technical-essentials&quot;&gt;AWS Technical Essentials&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://explore.skillbuilder.aws/learn/course/external/view/elearning/106/introduction-to-containers?da=sec&amp;amp;sec=prep&quot;&gt;AWS Introduction to Containers&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://explore.skillbuilder.aws/learn/course/external/view/elearning/37/introduction-to-serverless-development?da=sec&amp;amp;sec=prep&quot;&gt;AWS Introduction to Serverless Computing&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://explore.skillbuilder.aws/learn/course/external/view/elearning/91/amazon-elastic-container-service-ecs-primer?da=sec&amp;amp;sec=prep&quot;&gt;Amazon Elastic Container Service Primer&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://explore.skillbuilder.aws/learn/course/external/view/elearning/57/amazon-elastic-kubernetes-service-eks-primer?da=sec&amp;amp;sec=prep&quot;&gt;Amazon EKS Primer&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+                <pubDate>Wed, 13 Mar 2024 00:00:00 +0000</pubDate>
+                <link>https://clytaemnestra.github.io/tech-blog/all-about-aws</link>
+                <guid isPermaLink="true">https://clytaemnestra.github.io/tech-blog/all-about-aws</guid>
+                
+                <category>infrastructure</category>
+                
+                <category>system-design</category>
+                
+                
+            </item>
+        
+            <item>
+                <title>TIL: Rust &amp; Advent of Code</title>
+                <description>&lt;p&gt;For the first time I’ve decided to try to rewrite some solutions to Rust.&lt;/p&gt;
+
+&lt;h2 id=&quot;data-structres&quot;&gt;Data structres&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;if I have a counter, it has to be &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mut&lt;/code&gt;, because it’s mutable: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;let mut sum = 0;&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;when assigning a value which cannot be &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;None&lt;/code&gt; then we use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Some&lt;/code&gt; to avoid rull referece errors
+    &lt;pre&gt;&lt;code class=&quot;language-Rust&quot;&gt;let mut first = None;
+if first.is_none() {
+  first = Some(ch);
+}
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;iterating&quot;&gt;Iterating&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Rust uses &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;if let&lt;/code&gt; construction for pattern matching and conditional execution:
+    &lt;ul&gt;
+      &lt;li&gt;firstly it checks the condition&lt;/li&gt;
+      &lt;li&gt;then it extraacts values from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Option&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;then it binds them to variables&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-Rust&quot;&gt;if let (Some(first_number), Some(last_number)) = (first, last) {
+    ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;-&amp;gt; is equivalent to Python:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-Python&quot;&gt;if first is not None and last is not None:
+    first_number = first
+    last_number = last
+
+else:
+    ...
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;casting&quot;&gt;Casting&lt;/h2&gt;
+&lt;p&gt;TBA&lt;/p&gt;
+
+&lt;h2 id=&quot;reading-from-a-file&quot;&gt;Reading from a file&lt;/h2&gt;
+&lt;p&gt;TBA&lt;/p&gt;
+</description>
+                <pubDate>Fri, 01 Dec 2023 00:00:00 +0000</pubDate>
+                <link>https://clytaemnestra.github.io/tech-blog/rust-and-aoc</link>
+                <guid isPermaLink="true">https://clytaemnestra.github.io/tech-blog/rust-and-aoc</guid>
+                
+                <category>rust</category>
+                
+                
+            </item>
+        
+            <item>
+                <title>TIL: Concurrent computing in Python</title>
+                <description>&lt;p&gt;For a long time, I’ve struggled with creating a mental map of libraries &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;asyncio&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;threading&lt;/code&gt; &amp;amp; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;multiprocessing&lt;/code&gt; and understanding how they relate to each other. As a result, I decided to spend my weekend researching concurrent computing in the Python world.&lt;/p&gt;
+
+&lt;h2 id=&quot;concurrent-computing&quot;&gt;Concurrent computing&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;an umbrella term for concurrency, parallelism and asynchronous programming&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;concurrency&quot;&gt;Concurrency&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;multiple jobs take turns accessing the same shared resources&lt;/li&gt;
+  &lt;li&gt;its goal is to prevent tasks from blocking each other&lt;/li&gt;
+  &lt;li&gt;example: launch multiple requests at once and switch among them once the responses come back&lt;/li&gt;
+  &lt;li&gt;Python &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;threading&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;asyncio&lt;/code&gt; libraries&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;parallelism&quot;&gt;Parallelism&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;several tasks run side by side on multiple CPU cores&lt;/li&gt;
+  &lt;li&gt;its goal is maximizing the use of hardware resources&lt;/li&gt;
+  &lt;li&gt;Python &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;multiprocessing&lt;/code&gt; library&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/concurrent-computing-graph.jpg&quot; alt=&quot;Concurrent Computing Graph&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;libraries&quot;&gt;Libraries&lt;/h3&gt;
+&lt;h4 id=&quot;threading&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;threading&lt;/code&gt;&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;Python threads are OS threads&lt;/li&gt;
+  &lt;li&gt;does not bypass the GIL, works within the contraints imposed by the GIL (GIL prevents multiple threads executing Python bytecode simultaneously in a single process)&lt;/li&gt;
+  &lt;li&gt;threads shouldn’t be used for CPU-intensive work, but for I/O-bound tasks&lt;/li&gt;
+  &lt;li&gt;threads within a process share the same memory space, meaning sharing data between threads is easier, but it also requires careful handling of shared resources to avoid conflicts&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;asyncio&lt;/code&gt; is the preffered choice for I/O-bound tasks in Python, but &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;threading&lt;/code&gt; is useful when working with blocking libraries that are not designed to work with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;asyncio&lt;/code&gt; (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;requests&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;urllib&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sqlite&lt;/code&gt; etc.)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;asyncio&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;asyncio&lt;/code&gt;&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;coroutines are special programming functions, which can be paused and resumed, allowing other coroutines to run in the meantime - they’re not OS threads, so no thread management and complexity of synchronization&lt;/li&gt;
+  &lt;li&gt;require less memory than threads, it’s easier to manage them than threads, possible to have many of them&lt;/li&gt;
+  &lt;li&gt;code can’t be mixed with synchronous code&lt;/li&gt;
+  &lt;li&gt;couroutines designed I/O-bound opreations, i.e. operations that need to wait for some external operation&lt;/li&gt;
+  &lt;li&gt;the core component that manages and schedules the execution of async tasks, and handles I/O events, timers and signals is event loop&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;multiprocessing&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;multiprocessing&lt;/code&gt;&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;used for CPU-intensive tasks&lt;/li&gt;
+  &lt;li&gt;enables to create separate processes, each with its memory space&lt;/li&gt;
+  &lt;li&gt;bypasses GIL and takes advantage of multiple CPU cores for parallel execution - tasks are launched side by side&lt;/li&gt;
+  &lt;li&gt;relies on inter-process communication and process management mechanisms to distribute tasks among separate processes&lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+                <pubDate>Sun, 30 Apr 2023 00:00:00 +0000</pubDate>
+                <link>https://clytaemnestra.github.io/tech-blog/concurrent-computing</link>
+                <guid isPermaLink="true">https://clytaemnestra.github.io/tech-blog/concurrent-computing</guid>
+                
+                <category>python</category>
+                
+                
+            </item>
+        
+            <item>
+                <title>TIL: Union Operator</title>
+                <description>&lt;p&gt;Today I discovered the dictionaries union operator &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;|&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dict1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;a&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;a&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;b&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;b&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dict2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dict1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;c&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;c&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dict2&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;a&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;a&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;b&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;b&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;c&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;c&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;I found it to be very useful for testing APIs, where I create base payload with data that’s common for all payloads and then I create a specific payload for each request:&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;base_payload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;my base&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;field&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/my/url&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;json&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;base_payload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;my custom&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;field&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;my/second/url&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;json&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;base_payload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;other custom&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;field&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</description>
+                <pubDate>Wed, 12 Apr 2023 00:00:00 +0000</pubDate>
+                <link>https://clytaemnestra.github.io/tech-blog/python-operator</link>
+                <guid isPermaLink="true">https://clytaemnestra.github.io/tech-blog/python-operator</guid>
+                
+                <category>python</category>
+                
+                
+            </item>
+        
+            <item>
+                <title>TIL: Partial Functions</title>
+                <description>&lt;p&gt;Today I discovered partial functions in Python. Partial functions are functions which are derived from general functions. The derived function has default parameters of the general function, unless it’s overwritten.&lt;/p&gt;
+
+&lt;p&gt;Very simple example:&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;functools&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;partial&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;     &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt; 
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bar&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;partial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; 
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Why do they exist and when to use them? The main reason to use them is to improve reusability. I found a real-world example on &lt;a href=&quot;https://stackoverflow.com/a/39598787&quot;&gt;Stack Overflow&lt;/a&gt; when to use them - if we want to use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;re.search&lt;/code&gt; it’s method signature is as follows:&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;search&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pattern&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flags&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;If we use partials, we can have multiple versions of the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;search&lt;/code&gt; function, for example:&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;is_spaced_apart&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;partial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;re&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;search&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;[a-zA-Z]\s\=&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# pattern &apos;[a-zA-Z]\s\=&apos; applied
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;is_grouped_together&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;partial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;re&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;search&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;[a-zA-Z]\=&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# pattern &apos;[a-zA-Z]\=&apos; applied
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Later in the code we could use it as:&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lines&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;is_grouped_together&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;some_action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;elif&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;is_spaced_apart&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;some_other_action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;some_default_action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</description>
+                <pubDate>Sun, 19 Mar 2023 00:00:00 +0000</pubDate>
+                <link>https://clytaemnestra.github.io/tech-blog/partial-functions</link>
+                <guid isPermaLink="true">https://clytaemnestra.github.io/tech-blog/partial-functions</guid>
+                
+                <category>python</category>
+                
+                
+            </item>
+        
+    </channel>
+</rss>
