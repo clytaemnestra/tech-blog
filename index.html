@@ -11,7 +11,7 @@ layout: default
   <article>
       <!-- <time class="post-date" datetime="{{ post.date | date: "%Y-%m-%d" }}">{{post.date | date: "%B %-d, %Y" }}</time>
       <ul class="post-title-home"><a href="{{ site.baseurl }}{{ post.url }}" rel="bookmark">{{post.title}}</a></ul> -->
-      <li><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a> <span class="archive-meta"> — <time class="archive-date" datetime="{{ post.date | date: "%Y-%m-%d" }}">{{ post.date | date: "%B %-d, %Y" }}</time></span></li>
+      <li><a href="{{ post.url }}">{{ post.title }}</a> <span class="archive-meta"> — <time class="archive-date" datetime="{{ post.date | date: "%Y-%m-%d" }}">{{ post.date | date: "%B %-d, %Y" }}</time></span></li>
 
   </article><!-- .post -->
   {% endfor %}
