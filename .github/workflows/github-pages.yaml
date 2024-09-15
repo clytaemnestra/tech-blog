@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - run: git config --global http.postBuffer 524288000
+      - run: git config --global http.version HTTP/1.1
 
       # Use GitHub Actions' cache to cache dependencies on servers
       - uses: actions/cache@v3
