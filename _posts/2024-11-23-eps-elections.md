@@ -96,7 +96,7 @@ If you have any feedback or are interested in collaborating with the EPS, feel f
 
 ## Links
 
-* My nomination: once the list of candidates is released, it will appear here: [https://www.europython-society.org/](https://www.europython-society.org/)
+* My nomination: [https://europython-society.org/list-of-eps-board-candidates-for-2024-2025/](https://europython-society.org/list-of-eps-board-candidates-for-2024-2025/)
 * Call for Candidates & General Assembly announcement: [https://www.europython-society.org/2024-general-assembly-announcement/](https://www.europython-society.org/2024-general-assembly-announcement/)
 
 
