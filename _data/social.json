@@ -9,6 +9,11 @@
       "title": "LinkedIn",
       "icon": "fa-linkedin",
       "url": "https://www.linkedin.com/in/mia-bajic/"
+    },
+    {
+      "title": "bsky",
+      "icon": "fa-bsky",
+      "url": "https://bsky.app/profile/clytaemnestra.bsky.social"
     }
   ]
 }

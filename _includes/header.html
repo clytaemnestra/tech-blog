@@ -11,17 +11,25 @@
         {% for item in site.navigation %}
         {% assign current = nil %}
         {% if page.url == item.url %}
-        {% assign current = 'nav-current' %}
+          {% assign current = 'nav-current' %}
         {% endif %}
         <li class="menu-item {{ current }}">
-          <a class="{{ current }}" href="{{ site.baseurl }}{{ item.url }}">{{ item.text }}</a>
+          {% if item.url contains 'http' %}
+            <!-- External URL -->
+            <a class="{{ current }}" href="{{ item.url }}" target="_blank" rel="noopener noreferrer">{{ item.text }}</a>
+          {% else %}
+            <!-- Internal URL -->
+            <a class="{{ current }}" href="{{ site.baseurl }}{{ item.url }}">{{ item.text }}</a>
+          {% endif %}
         </li>
         {% endfor %}
       </ul><!-- .menu -->
-      <button id="menu-close" class="menu-toggle"><span class="screen-reader-text">Close Menu</span><span
-          class="icon-close" aria-hidden="true"></span></button>
+      <button id="menu-close" class="menu-toggle">
+        <span class="screen-reader-text">Close Menu</span>
+        <span class="icon-close" aria-hidden="true"></span>
+      </button>
     </div><!-- .site-navigation-wrap -->
-  </nav><!-- .site-navigation -->
+    </nav><!-- .site-navigation -->    
   <button id="menu-open" class="menu-toggle"><span class="screen-reader-text">Open Menu</span><span class="icon-menu" aria-hidden="true"></span></button>
 </header>
 

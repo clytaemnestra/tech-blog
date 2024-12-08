@@ -23,10 +23,9 @@ url: https://clytaemnestra.github.io
 
 # Profile settings
 author:
-  name: Mia Bajic # author name
+  name: Mia Bajić # author name
   github: clytaemnestra # github username
   # linkedin: mia-bajic # linkedin username
-  email: miabajic.miabajic@gmail.com # email adress
   avatar: images/author.png # change with your own avatar
 
 
@@ -35,14 +34,12 @@ google_analytics: ""
 
 # Site navigation - each item must have a title and a url.
 navigation:
+  - text: Subscribe
+    url: https://forms.gle/kwXcWp9qSiMcY1nU9
   - text: Home
     url: /
-  # - text: Archieve
-  #   url: /archieve
-  # - text: About 
-  #   url: /about
-  # - text: Style Guide
-  #   url: /style-guide/
+  - text: About 
+    url: /about
   - text: Tags
     url: /tags
   # - text: Download
