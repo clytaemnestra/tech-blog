@@ -12,7 +12,7 @@ lang: en-US
 title: "TIL"
 
 # A description of your site for meta tag, search engine results.
-description: "Hi there! Welcome to my TIL blog."
+description: 'Hi there! Welcome to my TIL blog. I write about my tech learnings and community work. Subscribe <a href="https://forms.gle/kwXcWp9qSiMcY1nU9">here.</a>'
 
 # The subpath of your site, e.g. /blog, for generating urls.
 baseurl: /tech-blog
