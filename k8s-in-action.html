@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="kZa86zQaQuJ1ICcmj-NforLCR2TS6_ftskPHLy8mjqw"/>
+  <title>Notes from Books: K8s In Action</title>
+  <meta name="description" content="Mia Bajic TIL today I learned tech blog">
+  <link rel="canonical" href="https://clytaemnestra.github.io/tech-blog/k8s-in-action">
+  <link rel="alternate" type="application/rss+xml" title="TIL Feed"
+    href="https://clytaemnestra.github.io/tech-blog/feed.xml">
+  <!-- Styles -->
+  <link href="https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i%7CNoto+Serif:400,400i,700,700i&display=swap" rel="stylesheet">
+  <link href="/tech-blog/assets/css/style.css" rel="stylesheet">
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Mia Bajic",
+    "url": "https://clytaemnestra.github.io/tech-blog/",
+    "sameAs": [
+      "https://www.linkedin.com/in/mia-bajic",
+      "https://github.com/clytaemnestra"
+    ]
+  }
+  </script>
+  
+  
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9873VJPWX5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9873VJPWX5');
+</script>
+
+</head>
+<body>
+
+
+  <div id="page" class="site">
+    <div class="inner">
+      <header class="site-header">
+  
+  <p class="site-title"><a class="logo-text" href="/tech-blog/">TIL</a></p>
+  
+  <nav class="site-navigation">
+    <div class="site-navigation-wrap">
+      <h2 class="screen-reader-text">Main navigation</h2>
+      <ul class="menu">
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- External URL -->
+            <a class="" href="https://forms.gle/kwXcWp9qSiMcY1nU9" target="_blank" rel="noopener noreferrer">Subscribe</a>
+          
+        </li>
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- Internal URL -->
+            <a class="" href="/tech-blog/">Home</a>
+          
+        </li>
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- Internal URL -->
+            <a class="" href="/tech-blog/about">About</a>
+          
+        </li>
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- Internal URL -->
+            <a class="" href="/tech-blog/tags">Tags</a>
+          
+        </li>
+        
+      </ul><!-- .menu -->
+      <button id="menu-close" class="menu-toggle">
+        <span class="screen-reader-text">Close Menu</span>
+        <span class="icon-close" aria-hidden="true"></span>
+      </button>
+    </div><!-- .site-navigation-wrap -->
+    </nav><!-- .site-navigation -->    
+  <button id="menu-open" class="menu-toggle"><span class="screen-reader-text">Open Menu</span><span class="icon-menu" aria-hidden="true"></span></button>
+</header>
+
+
+
+      <main class="main-content fadeInDown delay_075s">
+
+  <article class="post">
+    <header class="post-header">
+      <time class="post-date" datetime="2022-01-19">January 19, 2022</time>
+      <h1 class="post-title">Notes from Books: K8s In Action</h1>
+      <div class="post-meta">
+        By <span class="post-author">Mia Bajić</span><span class="post-tags"> in <a href="/tech-blog/tags/#books" rel="tag">books</a>, <a href="/tech-blog/tags/#infrastructure" rel="tag">infrastructure</a></span>
+      </div><!-- .post-meta -->
+      
+    </header><!-- .post-header -->
+    <div class="post-content">
+      <h1 id="kubernetes-resources">Kubernetes Resources</h1>
+
+<h2 id="pod">Pod</h2>
+<ul>
+  <li>all containers of a pod are on the same node -&gt; a pod never spans two nodes</li>
+  <li>why pods and not individual containers? because the principle of Docker &amp; K8s is one process = one container and it’s necessary to have something above containers that’d group containers that host the same app</li>
+  <li>pod of containers allows you to run closely related processes together and pro-
+vide them with (almost) the same environment as if they were all running in a single
+container, but it also keeps them separated</li>
+  <li>all containers are located in the same set of Linux namespaces -&gt; they share the same IP address and port space</li>
+</ul>
+
+<h3 id="logs">Logs</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">docker logs &lt;container id&gt;</code></li>
+  <li><code class="language-plaintext highlighter-rouge">cubectl logs &lt;pod name&gt; -c &lt;container name&gt;</code></li>
+</ul>
+
+<h3 id="replication--controllers">Replication &amp; Controllers</h3>
+<ul>
+  <li>liveness probe
+    <ul>
+      <li>mechanism to check if pods are healthy</li>
+      <li>part of YAML</li>
+    </ul>
+  </li>
+  <li>replication controller (or replica set) -&gt; now deployment
+    <ul>
+      <li>checks, how many replicas of pods are</li>
+      <li>if a pod disappeares, it replication controller creates a new one</li>
+    </ul>
+  </li>
+  <li>horizontal scalling
+    <ul>
+      <li>set up higher amount of pods through command line <code class="language-plaintext highlighter-rouge">$ kubectl scale rc kubia --replicas=10</code> or directly in the YAML</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="service">Service</h2>
+<ul>
+  <li>single, constant point of entry to a group of pods providing the same service</li>
+  <li>points to pods using labels</li>
+  <li>service has a static IP address, which never changes
+    <ul>
+      <li>when POD gets killed/deleted/whatever, ReplicaController creates a new one, which has new IP
+        <ul>
+          <li>service solves issue with pods changing IP addresses and makes sure that pods receive connection</li>
+          <li>multiple pods may provide the same service, hence the same IP is needed (in this case, the service IP)</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>for a service to be accessible from outside, its type has to be set up as NodePort or LoadBalancer</li>
+</ul>
+
+<h3 id="types-of-services">Types Of Services</h3>
+<ul>
+  <li>ClusterIP
+    <ul>
+      <li>accessible only from inside the cluster</li>
+    </ul>
+  </li>
+  <li>NodePort
+    <ul>
+      <li>static port on each node’s IP</li>
+    </ul>
+  </li>
+  <li>LoadBalancer
+    <ul>
+      <li>exploses the service through external load balancer</li>
+    </ul>
+  </li>
+  <li>ExternalName
+    <ul>
+      <li>accessible through CNAME value</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="volumes">Volumes</h2>
+<ul>
+  <li>component of pod</li>
+  <li>a volume is available to all containers in the pod, but it must be mounted in each container that needs to access it</li>
+  <li>volumes are used to share data accross containers</li>
+</ul>
+
+<h1 id="docker">Docker</h1>
+<ul>
+  <li>images are template to create containers, containers are instances created from images</li>
+  <li>images are created from another images, two different images can have same parent image as their base</li>
+  <li>check additinal information about containers:
+    <ul>
+      <li>enter the container -&gt; <code class="language-plaintext highlighter-rouge">docker inspect &lt;container name&gt;</code></li>
+      <li>in the continer -&gt; <code class="language-plaintext highlighter-rouge">ps aux</code></li>
+    </ul>
+  </li>
+</ul>
+
+    </div><!-- .post-content -->
+    <div class="author-box">
+      
+      <div class="author-avatar" style="background-image: url('images/author.png')"><span class="screen-reader-text">Mia Bajić's Picture</span></div>
+      
+      <div class="author-details">
+        <h2 class="author-title">About Mia Bajić</h2>
+        <div class="author-bio"><p>Software engineer and community events organizer.</p>
+</div>
+        
+        
+      </div><!-- .author-details -->
+    </div><!-- .author-box -->
+  </article><!-- .post -->
+
+  
+
+</main><!-- .main-content -->
+
+      <footer class="site-footer">
+  <div class="offsite-links">
+    
+      
+<a href="https://github.com/clytaemnestra" target="_blank" rel="noopener">
+  <span class="fa-github" aria-hidden="true"></span>
+  <span class="screen-reader-text">GitHub</span>
+</a>
+
+<a href="https://www.linkedin.com/in/mia-bajic/" target="_blank" rel="noopener">
+  <span class="fa-linkedin" aria-hidden="true"></span>
+  <span class="screen-reader-text">LinkedIn</span>
+</a>
+
+<a href="https://bsky.app/profile/clytaemnestra.bsky.social" target="_blank" rel="noopener">
+  <span class="fa-bsky" aria-hidden="true"></span>
+  <span class="screen-reader-text">bsky</span>
+</a>
+
+    
+  </div><!-- .offsite-links -->
+  <div class="footer-bottom">
+    <div class="site-info">
+      
+
+    </div><!-- .site-info -->
+    <a href="#page" id="back-to-top" class="back-to-top"><span class="screen-reader-text">Back to the top </span>&#8593;</a>
+  </div><!-- .footer-bottom -->
+</footer><!-- .site-footer -->
+
+    </div><!-- .inner -->
+  </div><!-- .site -->
+
+
+  <script src="/tech-blog/assets/js/plugins.js"></script>
+  <script src="/tech-blog/assets/js/custom.js"></script>
+
+</body>
+</html>

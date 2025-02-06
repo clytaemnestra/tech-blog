@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="kZa86zQaQuJ1ICcmj-NforLCR2TS6_ftskPHLy8mjqw"/>
+  <title>All About AWS</title>
+  <meta name="description" content="Mia Bajic TIL today I learned tech blog">
+  <link rel="canonical" href="https://clytaemnestra.github.io/tech-blog/all-about-aws">
+  <link rel="alternate" type="application/rss+xml" title="TIL Feed"
+    href="https://clytaemnestra.github.io/tech-blog/feed.xml">
+  <!-- Styles -->
+  <link href="https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i%7CNoto+Serif:400,400i,700,700i&display=swap" rel="stylesheet">
+  <link href="/tech-blog/assets/css/style.css" rel="stylesheet">
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Mia Bajic",
+    "url": "https://clytaemnestra.github.io/tech-blog/",
+    "sameAs": [
+      "https://www.linkedin.com/in/mia-bajic",
+      "https://github.com/clytaemnestra"
+    ]
+  }
+  </script>
+  
+  
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9873VJPWX5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9873VJPWX5');
+</script>
+
+</head>
+<body>
+
+
+  <div id="page" class="site">
+    <div class="inner">
+      <header class="site-header">
+  
+  <p class="site-title"><a class="logo-text" href="/tech-blog/">TIL</a></p>
+  
+  <nav class="site-navigation">
+    <div class="site-navigation-wrap">
+      <h2 class="screen-reader-text">Main navigation</h2>
+      <ul class="menu">
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- External URL -->
+            <a class="" href="https://forms.gle/kwXcWp9qSiMcY1nU9" target="_blank" rel="noopener noreferrer">Subscribe</a>
+          
+        </li>
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- Internal URL -->
+            <a class="" href="/tech-blog/">Home</a>
+          
+        </li>
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- Internal URL -->
+            <a class="" href="/tech-blog/about">About</a>
+          
+        </li>
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- Internal URL -->
+            <a class="" href="/tech-blog/tags">Tags</a>
+          
+        </li>
+        
+      </ul><!-- .menu -->
+      <button id="menu-close" class="menu-toggle">
+        <span class="screen-reader-text">Close Menu</span>
+        <span class="icon-close" aria-hidden="true"></span>
+      </button>
+    </div><!-- .site-navigation-wrap -->
+    </nav><!-- .site-navigation -->    
+  <button id="menu-open" class="menu-toggle"><span class="screen-reader-text">Open Menu</span><span class="icon-menu" aria-hidden="true"></span></button>
+</header>
+
+
+
+      <main class="main-content fadeInDown delay_075s">
+
+  <article class="post">
+    <header class="post-header">
+      <time class="post-date" datetime="2024-03-13">March 13, 2024</time>
+      <h1 class="post-title">All About AWS</h1>
+      <div class="post-meta">
+        By <span class="post-author">Mia Bajić</span><span class="post-tags"> in <a href="/tech-blog/tags/#infrastructure" rel="tag">infrastructure</a>, <a href="/tech-blog/tags/#system-design" rel="tag">system-design</a></span>
+      </div><!-- .post-meta -->
+      
+    </header><!-- .post-header -->
+    <div class="post-content">
+      <p>I’ve successfully passed my AWS developer associate exam and these are my notes - everything I’ve learned about AWS.</p>
+
+<h2 id="compute-services">Compute Services</h2>
+<p>There are three main compute options:</p>
+<ul>
+  <li>Virtual machines
+    <ul>
+      <li>VM user hypervisor</li>
+      <li>Partitions the server resources like RAM and CPU into multiple chunks</li>
+      <li>One physical server can turn into multiple servers, each having its dedicated resources</li>
+      <li>Hypervisor provides hardware virtualization</li>
+      <li>VMs have two OS:
+        <ul>
+          <li>Host OS - given by cloud provided</li>
+          <li>Guest OS - chosen by customer</li>
+          <li>Having two OS is a strength and a weakness:
+            <ul>
+              <li>Two OS consume extra resources</li>
+              <li>Alternative to it are containers</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Container service
+    <ul>
+      <li>Operating system virtualization</li>
+      <li>No Guest OS</li>
+      <li>Needs fewer resources, uses Host OS</li>
+      <li>Customers can run applications independently, but share the same Linux kernel</li>
+      <li>Highly portable (can quickly move from one cloud environment to another), highly scalable</li>
+      <li>Cons:
+        <ul>
+          <li>Security concerns (due to same host kernel)</li>
+          <li>Dependency on one type of OS provided by the provider</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Serverless
+    <ul>
+      <li>They solve the problem of the end user that needs to maintain the server part when using VMs or containers</li>
+      <li>No need to manage servers</li>
+      <li>No cost if the functions are not running</li>
+      <li>Cons:
+        <ul>
+          <li>Lack of standards, which can provide a vendor lock-in for a customer</li>
+          <li>Security concerns as apps from different customers run on the same server</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="./images/posts/vms-vs-containers.png" alt="VMs vs containers" style="max-width: 100%; max-height: 100%; display: block;" /></p>
+
+<h2 id="serverless">Serverless</h2>
+<h3 id="lambda">Lambda</h3>
+<p>The idea of Lambda is to be able to run code without provisioning or managing servers.</p>
+
+<p>The main components of Lambda are:</p>
+<ul>
+  <li>Function
+    <ul>
+      <li>Resource to invoke to run code in Lambda</li>
+      <li>Lambda runs instances of the function to process events</li>
+    </ul>
+  </li>
+  <li>Trigger
+    <ul>
+      <li>Describe when a Lambda function should run</li>
+      <li>Integrated Lambda function with other AWS services and event source mappings</li>
+    </ul>
+  </li>
+  <li>Event
+    <ul>
+      <li>JSON document that contains data for a Lambda function to process</li>
+      <li>The runtime converts the event to an object and passes it to the function code</li>
+    </ul>
+  </li>
+  <li>Application environment
+    <ul>
+      <li>Secure and isolated runtime environment for the Lambda function</li>
+      <li>An application environment manages the processes and resources that are required to run the function</li>
+    </ul>
+  </li>
+  <li>Deployment package
+    <ul>
+      <li>Used to deploy Lambda function code</li>
+      <li>Two types of deployment packages:
+        <ul>
+          <li>A .zip file archive
+            <ul>
+              <li>Function code &amp; its dependencies</li>
+              <li>Lambda provides the OS and runtime for the function</li>
+            </ul>
+          </li>
+          <li>A container image
+            <ul>
+              <li>Compatible with the Open Container Initiative (OCI) specification</li>
+              <li>Add function code &amp; dependencies, OS and Lambda runtime to the image</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Runtime
+    <ul>
+      <li>Language-specific environment that runs in an application environment</li>
+    </ul>
+  </li>
+  <li>Lambda function handler
+    <ul>
+      <li>Method in the function code that processes events</li>
+      <li>When the function is invoked, Lambda runs the handler method</li>
+      <li>When the handler exists or reuters a response, it becomes available to handle another event</li>
+    </ul>
+  </li>
+</ul>
+
+<p>How to optimize memory?</p>
+<ul>
+  <li>If it’s CPU, change the memory settings to improve the performance</li>
+  <li>Lambda power tuning tool that uses step functions to run multiple concurrent versions of the functions at different memory allocations and measures memory
+performance</li>
+</ul>
+
+<p>When not to use Lambda function?</p>
+<ul>
+  <li>Functions that acts that orchestrators - use step functions instead</li>
+  <li>Function that transform data from one service to another without business logic - use service integrations (within services)</li>
+  <li>Filtering so to use a smaller subset of events - filter before the function in the service such as S3, SNS etc., EventBridge has content filtering logic which events trigger Lambda function</li>
+</ul>
+
+<h3 id="fargate">Fargate</h3>
+<ul>
+  <li>Purpose-built serverless compute engine for containers</li>
+  <li>Allocates the amount of compute on its own</li>
+  <li>Abstracts the EC2 instance, so there’s no need to manage the underlying compute
+infrastructure</li>
+  <li>APIs and AWS integrations are still available</li>
+  <li>It’s natively integrated with IAM and Amazon Virtual Private Cloud (Amazon VPC)</li>
+  <li>Supports your containers completely managed by AWS as a service</li>
+  <li>Focus on building applications without managing servers</li>
+  <li>Compatible with ECS and EKS</li>
+  <li>Fargate vs ECS cs EKS
+    <ul>
+      <li>ECS and EKS are orchestration services
+        <ul>
+          <li>Manage where and when your containers run</li>
+        </ul>
+      </li>
+      <li>Fargate (and EC2) are compute services
+        <ul>
+          <li>Serverless</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="container-services">Container Services</h2>
+<p>There are multiple container services. Which one to use depends on specific use cases.</p>
+
+<p>Use cases:</p>
+<ul>
+  <li>EKS
+    <ul>
+      <li>Your workload runs on Kubernetes, but you want a managed K8s service to simplify management</li>
+      <li>You need more networking nodes on-demand</li>
+      <li>You have the time and expertise to deploy, run and optimize containers on K8s</li>
+    </ul>
+  </li>
+  <li>ECS
+    <ul>
+      <li>Most of your workloads run on the AWS ecosystem and you want to run containers at scale</li>
+      <li>You need deep integration with AWS services, including code pipeline and ECR</li>
+      <li>You have limited time and expertise to learn, migrate and maintain container workload in Kubernetes</li>
+    </ul>
+  </li>
+  <li>Fargate
+    <ul>
+      <li>Your existing workload is running on serverless technologies</li>
+      <li>Minimal server management strategy is needed</li>
+      <li>Using Docker or Kubernetes-based containers is mostly irrelevant</li>
+      <li>You don’t have a problem using only one networking mode (VPC)</li>
+      <li>Pay only for computing time, not underlying EC2 instances</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="eks">EKS</h3>
+<p>EKS allows you to run Kubernetes on AWS without needing to install, operate, and maintain your own Kubernetes control plane or nodes</p>
+
+<p>EKS vs ECS:</p>
+<ul>
+  <li>ECS - tye machine, that runs the containers, is an EC2 instance that has an ECS agent installed and it’s named a container instance</li>
+  <li>EKS - the machine that runs the containers is called a worker node or Kubernetes node</li>
+  <li>ECS container is called a task</li>
+  <li>EKS container is called a pod</li>
+  <li>ECS runs on AWS native technology</li>
+  <li>EKS runs on Kubernetes</li>
+</ul>
+
+<p>Kubernetes objects:</p>
+<ul>
+  <li>Cluster
+    <ul>
+      <li>Set of worker machines (nodes) that rune containerized applications</li>
+      <li>Every cluster has at least one worker node</li>
+      <li>A cluster has a control place that runs services that manage the cluster</li>
+    </ul>
+  </li>
+  <li>Node
+    <ul>
+      <li>A virtual or physical machine that pods are run on</li>
+      <li>Each node is managed by the control plane and contains the services necessary to run pods</li>
+    </ul>
+  </li>
+  <li>Pod
+    <ul>
+      <li>A group of one or more containers</li>
+      <li>Pods are defined by a PodSpec file, a specification for how to run the containers</li>
+      <li>Basic building block within Kubernetes for deployment, scaling, and replication</li>
+    </ul>
+  </li>
+  <li>Volume
+    <ul>
+      <li>Ephemeral
+        <ul>
+          <li>Shared volumes to facilitate data sharing in the pod and persistence of data across container restarts</li>
+        </ul>
+      </li>
+      <li>Persistent
+        <ul>
+          <li>Backed by storage subsystems independent of cluster nodes</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Service
+    <ul>
+      <li>Logical collection of pods and a means to access them</li>
+    </ul>
+  </li>
+  <li>Namespace
+    <ul>
+      <li>Virtual cluster</li>
+    </ul>
+  </li>
+  <li>ReplicaSet
+    <ul>
+      <li>Ensures that a specific number of pod replicas are running at any given time</li>
+    </ul>
+  </li>
+  <li>Deployment
+    <ul>
+      <li>Owns and manages ReplicaSets or individual pods</li>
+      <li>Desired state in the deployment</li>
+    </ul>
+  </li>
+  <li>ConfigMap
+    <ul>
+      <li>API object that stored nonconfidental data as key-value pairs used by other Kubernetes objects such as pods</li>
+    </ul>
+  </li>
+  <li>Secrets
+    <ul>
+      <li>Confidential data</li>
+    </ul>
+  </li>
+  <li>Control plane
+    <ul>
+      <li>Control plane nodes manage the worker nodes and the pods in the cluster</li>
+      <li>Components:
+        <ul>
+          <li>Control plane nodes
+            <ul>
+              <li>Controller manager
+                <ul>
+                  <li>Runs background threads called controllers that detect and respond to cluster events</li>
+                </ul>
+              </li>
+              <li>Cloud controller
+                <ul>
+                  <li>Specific controller that interacts with the underlying cloud provider</li>
+                </ul>
+              </li>
+              <li>Scheduler
+                <ul>
+                  <li>Selects nodes for newly created containers to run on</li>
+                </ul>
+              </li>
+              <li>API server
+                <ul>
+                  <li>Exposes the Kubernetes API and is the frontend for the Kubernetes control plane</li>
+                  <li>Hands all communication from the cluster to the control plane</li>
+                  <li>Designed to scale horizontally, deploying more instances as necessary</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li>Etcd
+            <ul>
+              <li>Core persistence layer for Kubernetes</li>
+              <li>Highly available distributed key value store</li>
+              <li>Stores critical cluster data and state</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Data plane
+    <ul>
+      <li>Worker nodes host the pods that are the components of the application workload</li>
+      <li>Components:
+        <ul>
+          <li>Worker nodes
+            <ul>
+              <li>Kube-proxy
+                <ul>
+                  <li>Maintains network rules on the post and performs any connection forwarding</li>
+                </ul>
+              </li>
+              <li>Docker
+                <ul>
+                  <li>Container runtime</li>
+                </ul>
+              </li>
+              <li>Kubelet
+                <ul>
+                  <li>Primary agent that runs on the worker nodes</li>
+                  <li>Makes sure that the right containers are running in a pod and that they are healthy</li>
+                </ul>
+              </li>
+              <li>Pod
+                <ul>
+                  <li>Group of one or more containers
+                    <ul>
+                      <li>The containers in a pod are always colocated, scheduled together and managed together</li>
+                      <li>You cannot split containers in a pod across nodes</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Control and data plane communication
+    <ul>
+      <li>Done through the API server to kubelet</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="./images/posts/k8s.png" alt="Kubernetes architecture" style="max-width: 100%; max-height: 100%; display: block;" /></p>
+
+<p>Permissions to configure when deploying a new EKS cluster:</p>
+<ul>
+  <li>Cluster IAM role</li>
+  <li>Node IAM role</li>
+  <li>RBAC user</li>
+</ul>
+
+<p>Three common design metworking patterns:</p>
+<ul>
+  <li>Only public subnets
+    <ul>
+      <li>Three public subnets at most that are deployed into different Availability Zones in the Region</li>
+      <li>All worker nodes are assigned public IP addresses and can send and receive internet traffic through an open internet gateway</li>
+    </ul>
+  </li>
+  <li>Only private subnets
+    <ul>
+      <li>Thee private subnets at most that are deployed into different Availability Zones in the regions</li>
+      <li>All nodes can optionally send and receive internet traffic through a network address translation (NAT) instance or NAT gateway</li>
+    </ul>
+  </li>
+  <li>Public and private subnets
+    <ul>
+      <li>This VPC has two public subnets and two private subnets</li>
+      <li>One public and one private subnet are deployed to the same availability zone</li>
+      <li>The other public and private subnets are deployed to a second available zone in the same region</li>
+      <li>Public IP addresses are automatically assigned to resources deployed to one of the public subnets - but not to private ones</li>
+      <li>The worker nodes in private subnets can communicate with the cluster and other AWS services</li>
+      <li>Pods can communicate outbound to the internet through a NAT gateway that is deployed in each availability zone</li>
+      <li>The subnets are tagged so that Kubernetes can deploy load balancers to them</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="ecs">ECS</h3>
+<ul>
+  <li>End-to-end container orchestration service that helps you spin up new containers</li>
+  <li>You can install ECS container agent so to manage containers on a cluster of EC2 instances</li>
+  <li>To prepare an application to run on ECS, it’s necessary to create a task definition
+    <ul>
+      <li>Text file in JSON format</li>
+      <li>Blueprint which describes containers</li>
+    </ul>
+  </li>
+  <li>Highly scalable, high-performance service</li>
+  <li>Schedules placement across managed clusters</li>
+  <li>Amazon ECR - registry</li>
+  <li>ECS supports service discovery</li>
+  <li>Blue-green deployments are used for deployment</li>
+</ul>
+
+<p>Components</p>
+<ul>
+  <li>Tasks
+    <ul>
+      <li>Atomic unit of deployment</li>
+      <li>Made of one or more tightly coupled containers</li>
+    </ul>
+  </li>
+  <li>Services
+    <ul>
+      <li>Abstraction of top of a task</li>
+    </ul>
+  </li>
+  <li>Task vs service?
+    <ul>
+      <li>Task is for on-demand workloads, batch jobs or one-time jobs</li>
+      <li>Service is for long-running containers</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Task definition:</p>
+<ul>
+  <li>Resources
+    <ul>
+      <li>CPU</li>
+      <li>memory</li>
+      <li>networking</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Placement strategies: 
+    * Random
+    * Binpack
+        * Least amount CPU or memory
+        * Minimizes the number of instances used
+    * Spread
+        * Places tasks evenly</p>
+
+<p>Which AWS services can you integrate ECS with?</p>
+<ul>
+  <li>SQS/SNS for decoupling</li>
+  <li>Elastic Load Balancing for load balancing</li>
+  <li>Route 53 for DNS</li>
+  <li>IAM for authentication and authorization</li>
+  <li>AWS Secret manager for securing secrets</li>
+  <li>API Gateway for exposing services</li>
+  <li>CodePipeline for CI/CD</li>
+  <li>CloudWatch for monitoring</li>
+</ul>
+
+<p>Security</p>
+<ul>
+  <li>Task definition should have a IAM policy</li>
+  <li>IAM policy is related to IAM roles</li>
+  <li>Policies should be assigned to role, roles are then assigned to tasks and it’s applicable for all task instances</li>
+  <li>Secrets manager
+    <ul>
+      <li>Each task can have its own IAM role with a policy attached</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="storage">Storage</h2>
+<p>Storage types:</p>
+<ul>
+  <li>File storage</li>
+  <li>Block storage</li>
+  <li>Object storage</li>
+</ul>
+
+<p><img src="./images/posts/storage-types.png" alt="Storage types" style="max-width: 100%; max-height: 100%; display: block;" /></p>
+
+<h3 id="file-storage">File storage</h3>
+<ul>
+  <li>Tree-like hierarchy that consists of folders and subfolders</li>
+  <li>Ideal when is required centralized access to files that must be easily shared and managed by multiple host computers
+    <ul>
+      <li>Typically requires file locking and integration with existing file system communication protocols</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Four categories of use cases for file storage:</p>
+<ul>
+  <li>Web serving
+    <ul>
+      <li>Integrated into web applications</li>
+    </ul>
+  </li>
+  <li>Analytics
+    <ul>
+      <li>Analytics workloads interact with data through a file interface</li>
+      <li>Media and entertainment
+        <ul>
+          <li>Storage of rich media content</li>
+        </ul>
+      </li>
+      <li>Home directories
+        <ul>
+          <li>For users of businesses</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="block-storage">Block storage</h3>
+<ul>
+  <li>Treats files as a singular unit</li>
+  <li>Splits files into fixed-size chunks of data called blocks that have their own addresses</li>
+  <li>Each block is an individual piece of data storage</li>
+  <li>Because blocks are addressable, they can be retrieved efficiently - direct route to access the data
+    <ul>
+      <li>For example - changing one character in a 1 GB file
+        <ul>
+          <li>Only one block needs to be changed</li>
+          <li>Block storage solutions are therefore fast and use less bandwidth</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Preferred storage choice for high-performance enterprise workloads and transactional, mission-critical and I/O intensive applications</li>
+  <li>Use cases:
+    <ul>
+      <li>Transactional workloads
+        <ul>
+          <li>Storing time-sensitive and mission-critical transactions</li>
+        </ul>
+      </li>
+      <li>Containers
+        <ul>
+          <li>Store containerized applications on the cloud</li>
+        </ul>
+      </li>
+      <li>Virtual machines
+        <ul>
+          <li>Support hypervisors - users can install the OS, file system and other
+resources on a block storage volume by formatting the block storage
+volume and turning it into a VM file system</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="object-storage">Object storage</h3>
+<ul>
+  <li>Files stored as objects</li>
+  <li>Stored in a bucket using a flat structure - no folders, directories or hierarchies</li>
+  <li>Each object contains a unique identifier and optionally additional metadata</li>
+  <li>Changing one character in a 1 GB file
+    <ul>
+      <li>The entire object must be updated</li>
+    </ul>
+  </li>
+  <li>No limit to the number of objects stored, meaning it’s scalable</li>
+  <li>Useful when storing large or unstructured data sets</li>
+  <li>Use cases:
+    <ul>
+      <li>Data archiving</li>
+      <li>Backup and recovery</li>
+      <li>Rich media</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="s3">S3</h3>
+<ul>
+  <li>Standalone storage solution</li>
+  <li>Data can be retrieved from anywhere on the web</li>
+  <li>Object storage service
+    <ul>
+      <li>Flat structure</li>
+      <li>File combined with metadata</li>
+    </ul>
+  </li>
+  <li>Objects are stored in containers called buckets
+    <ul>
+      <li>Unique identifier: combination of a bucket name, key and version ID</li>
+    </ul>
+  </li>
+  <li>Each bucket name must be unique across all AWS accounts in all AWS regions within a partition (grouping of Regions)</li>
+  <li>If versioning is enabled, S3 automatically generated a unique version ID for the object</li>
+</ul>
+
+<p>Use cases:</p>
+<ul>
+  <li>Backup and storage</li>
+  <li>Media hosting</li>
+  <li>Software delivery</li>
+  <li>Data lakes</li>
+  <li>Static websites</li>
+  <li>Static content</li>
+</ul>
+
+<p>Security principles:</p>
+<ul>
+  <li>Everything is private by default, meaning it’s visible only to the user or account that created that resource</li>
+  <li>Buckets and objects can be made public</li>
+  <li>Three different security policies:
+    <ul>
+      <li>IAM policies
+        <ul>
+          <li>Policies which define which IAM users, groups and roles can access and what can they perform</li>
+          <li>Two kinds of policies:
+            <ul>
+              <li>Resource-based</li>
+              <li>User-based</li>
+            </ul>
+          </li>
+          <li>Used for private buckets in two scenarios:
+            <ul>
+              <li>Many buckets with different permission requirements</li>
+              <li>Requirement to have all policies in a centralized location, so all policy information are managed in one location</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>S3 bucket policies
+        <ul>
+          <li>Defined in a JSON format</li>
+          <li>Attached to S3 buckets and apply to every object in the bucket</li>
+          <li>Specify what actions are allowed or denied on the bucket</li>
+          <li>Used for following scenarios:
+            <ul>
+              <li>Simple way to do cross-account access to Amazon S3 without using IAM roles</li>
+              <li>IAM policies bump up against the defined size limit - S3 policies have a larged size limit</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>S3 encryption
+        <ul>
+          <li>S3 reinformes encryption to and from S3</li>
+          <li>All objects are automatically encrypted on upload and server-side encryption is applied with S3-managed keys as the base level of encryption</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>Server-side encryption in S3</p>
+<ul>
+  <li>Header x-amz-server-side-encryption</li>
+  <li>When you upload an object, S3 uses the encryption key you provide and removes the encryption key from memory
+    <ul>
+      <li>Doesn’t store the encryption key</li>
+      <li>It’s stored in a randomly salted HMAC value of the key in order to validate future requests</li>
+      <li>HMAC cannot be used to derive the value of the encryption key nor to decrypt the contents of the encrypted object - if you lose the encryption key, you lose the object</li>
+      <li>Next time request is sent, encryption key is checked - HMAC can’t be used</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Encrypt data in S3</p>
+<ul>
+  <li>At rest
+    <ul>
+      <li>Server-side encryption
+        <ul>
+          <li>amazon S3-Managed keys (SSE-S3)</li>
+          <li>AWS KMS-managed keys</li>
+          <li>Customer-provided keys</li>
+        </ul>
+      </li>
+      <li>Client-side encryption
+        <ul>
+          <li>AWS KMS-managed customer master key</li>
+          <li>Client-side master key</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>In transit
+    <ul>
+      <li>SSL</li>
+      <li>Client-side encryption</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="./images/posts/s3.png" alt="S3" style="max-width: 100%; max-height: 100%; display: block;" /></p>
+
+<h3 id="amazon-elastic-file-system-efs">Amazon Elastic File System (EFS)</h3>
+<ul>
+  <li>Set-and-forget file system that automatically grows and shrinks as files are added and removed</li>
+  <li>No need for provisioning or managing storage capacity or performance</li>
+  <li>Consistent performance to each compute instance - tens, hundreds, and thousands of
+compute instances can be connected at the same time</li>
+</ul>
+
+<h3 id="elastic-block-store-ebs">Elastic Block Store (EBS)</h3>
+<ul>
+  <li>Block-level storage that can be attached to an Amazon EC2 instance - same as an external drive can be attached to a laptop</li>
+  <li>Also called EBS volume</li>
+  <li>Useful for quick data retrieval and long term data persistence</li>
+</ul>
+
+<p>Characteristics:</p>
+<ul>
+  <li>Detachable
+    <ul>
+      <li>EBS volume can be detached from one EC2 instance and attached to another one in the same Availability Zone</li>
+    </ul>
+  </li>
+  <li>Distinct
+    <ul>
+      <li>External drive is separate from the computer</li>
+      <li>If an accident occurs and the computer goes down, data is still on the drive</li>
+    </ul>
+  </li>
+  <li>Size-limited
+    <ul>
+      <li>Limited to the size of the external drive</li>
+      <li>Fixed limit how scalable it can be</li>
+    </ul>
+  </li>
+  <li>1-to-1 connection
+    <ul>
+      <li>Can be connected with one computer at a time</li>
+      <li>Cannot be shared or attached to multiple instance</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Volumes can be scaled in two ways:</p>
+<ul>
+  <li>Increase volume size
+    <ul>
+      <li>If it doesn’t increase above the maximum size limit</li>
+      <li>Maximum volume size at the moment is 64 tebibytes (TIB)</li>
+    </ul>
+  </li>
+  <li>Attach multiple volumes
+    <ul>
+      <li>EC2 has a one-to-many relationships with EBS volumes</li>
+      <li>One instance can have multiple volumes, but volume can be attached only to one instance at the same time</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Use cases:</p>
+<ul>
+  <li>Operating systems
+    <ul>
+      <li>The root device for an instance launched from an AMI</li>
+    </ul>
+  </li>
+  <li>Databases
+    <ul>
+      <li>Storage layer for databases running on EC2</li>
+    </ul>
+  </li>
+  <li>Enterprise applications</li>
+  <li>Big data analytics engines size</li>
+</ul>
+
+<p>Volume types:</p>
+<ul>
+  <li>SSD
+    <ul>
+      <li>Transactional workloads with frequent read/write operations with small I/O</li>
+    </ul>
+  </li>
+  <li>HDD
+    <ul>
+      <li>Large streaming workloads that need high throughput performance</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Key EBS benefits</p>
+<ul>
+  <li>High availability
+    <ul>
+      <li>When a volume is created, it is automatically replicated in its Availability Zone</li>
+    </ul>
+  </li>
+  <li>Data persistence</li>
+  <li>Data encryption
+    <ul>
+      <li>Supports, when activated by the user</li>
+    </ul>
+  </li>
+  <li>Flexibility
+    <ul>
+      <li>Possible to modify volume type, size and input/output operations per second without stopping the instance</li>
+    </ul>
+  </li>
+  <li>Backups
+    <ul>
+      <li>Supports to create backups</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Snapshots</p>
+<ul>
+  <li>Incremental Backups of data from EC2 instances</li>
+  <li>Saving only blocks that have changed after the most recent snapshot</li>
+</ul>
+
+<h3 id="fsx">FSx</h3>
+<ul>
+  <li>Fully managed service to launch, run and scale high-performance file systems in the cloud</li>
+</ul>
+
+<h3 id="ec2-instance-store">EC2 Instance Store</h3>
+<ul>
+  <li>Temporary block-level storage for an instance</li>
+  <li>Located on disks that are physically attached to the host computer</li>
+  <li>If the instance is deleted, the instance store is deleted as well - ephemeral storage</li>
+  <li>Ideal for hosting applications that replicate data to other EC2 instances such as Hadoop clusters
+    <ul>
+      <li>For cluster-based workloads having the speed of locally attached volumes and the resiliency of replicated data helps to achieve data distribution at high performance</li>
+    </ul>
+  </li>
+  <li>Also ideal temporary storage of information that changes frequently such as buffers, caches, scratch data etc.</li>
+</ul>
+
+<h3 id="storage-summary">Storage Summary</h3>
+<ul>
+  <li>EC2 instance store
+    <ul>
+      <li>Temporary storage of information that is constantly changing</li>
+      <li>Not meant for persistent data</li>
+      <li>Black storage</li>
+      <li>Cannot be detached from EC2</li>
+    </ul>
+  </li>
+  <li>EBS
+    <ul>
+      <li>For data that changes frequently and must persist through instance stops, terminations or hardware failures</li>
+      <li>SSD or HDD</li>
+      <li>Block storage</li>
+      <li>Replicated</li>
+      <li>Can be attached to a single EC2 instance at a time</li>
+    </ul>
+  </li>
+  <li>S3
+    <ul>
+      <li>Data that doesn’t change often</li>
+      <li>Scalable solution</li>
+      <li>ideal for static web content and media, backups and archiving, and data for analytics</li>
+      <li>Object storage</li>
+      <li>Replicated across multiple Availability Zones</li>
+      <li>Not attached to compute</li>
+    </ul>
+  </li>
+  <li>EFS
+    <ul>
+      <li>Elastic, can automatically scale</li>
+      <li>Highly available, highly durable</li>
+      <li>All files and directories and stored across multiple Availability Zones</li>
+      <li>For workloads that require the highest level of durability and availability</li>
+      <li>File storage</li>
+    </ul>
+  </li>
+  <li>FSx
+    <ul>
+      <li>Native compatibility</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="databases">Databases</h2>
+<h3 id="rds">RDS</h3>
+<ul>
+  <li>Managed database service</li>
+  <li>Supports most of the popular RDBMSs such as Oracle, SQL Server, MySql, PostgreSQL, MariaDB, Aurora</li>
+  <li>Amazon RDS is built from compute &amp; storage
+    <ul>
+      <li>Compute - database instance, which runs the DB engine
+        <ul>
+          <li>Instance can contain multiple databases with the same engine and each database can contain multiple tables</li>
+          <li>Underneath the DB instance is an EC2 instance, but it’s managed through the Amazon RDS console (not through Amazon EC2 console)</li>
+        </ul>
+      </li>
+      <li>Storage
+        <ul>
+          <li>Elastic black storage volumes for database and log storage</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Applies to MySql, MariaDB, PostgreSQL, Oracle and SQL Server</li>
+  <li>Aurora - data is stored in cluster volumes
+    <ul>
+      <li>Single, virtual volumes that use SSDs</li>
+      <li>Cluster volume contains copies of the data across three Availability Zones in a single AWS Region</li>
+      <li>For temporary files Aurora uses local storage
+        <ul>
+          <li>RDS provides three storage types:</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>General purpose SSD (gp2 and gp3)
+    <ul>
+      <li>Cost-effective</li>
+      <li>For broad range of workloads running on medium-sized DB instances</li>
+      <li>For development and testing instances</li>
+    </ul>
+  </li>
+  <li>Provisioned IOPS SSD (io1)
+    <ul>
+      <li>I/O-intensive workloads</li>
+      <li>Low I/O latency and consistent I/O throughput</li>
+      <li>Best suited for production environments</li>
+    </ul>
+  </li>
+  <li>Magnetic
+    <ul>
+      <li>For backwards compatibility only</li>
+    </ul>
+  </li>
+  <li>Virtual Private Cloud
+    <ul>
+      <li>When creating an instance, it’s necessary to select the VPC the database will live in and subnets designated for the DB
+        <ul>
+          <li>The subnets in a DB subnet group should be private, so they don’t have a
+route to the internet gateway - in that case the data inside the instance can be reached only by the application backend</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>Data Backup</p>
+<ul>
+  <li>Automated backups
+    <ul>
+      <li>Turned on by default</li>
+      <li>Backups the entire DB instance and transaction logs</li>
+    </ul>
+  </li>
+  <li>Manual snapshots
+    <ul>
+      <li>Can be initiated at any time</li>
+      <li>Exist until they’re manually deleted</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Security</p>
+<ul>
+  <li>IAM
+    <ul>
+      <li>IAM policies to assign permissions that determine who can manage RDS resources</li>
+    </ul>
+  </li>
+  <li>Security groups
+    <ul>
+      <li>Control which IP addresses or EC2 instances can connect to databases on a DB instance</li>
+    </ul>
+  </li>
+  <li>Encryption</li>
+  <li>SSL or TLS connections with DB instances</li>
+</ul>
+
+<h3 id="dynamodb">DynamoDB</h3>
+<p>Core components:</p>
+<ul>
+  <li>Tables
+    <ul>
+      <li>Collection of items</li>
+    </ul>
+  </li>
+  <li>Items
+    <ul>
+      <li>Collection of attributes</li>
+      <li>In a Person table each item represents a person</li>
+      <li>In a Cars table each item represents one vehicle</li>
+      <li>Items in DynamoDB are similar to rows in relational databases</li>
+    </ul>
+  </li>
+  <li>Attributes
+    <ul>
+      <li>Fundamental data element</li>
+      <li>For example PersonID, LastName, FirstName etc.</li>
+      <li>Columns in relational databases</li>
+    </ul>
+  </li>
+  <li>Keys:
+    <ul>
+      <li>Primary
+        <ul>
+          <li>Uniquely identify each item in a table</li>
+        </ul>
+      </li>
+      <li>Secondary index
+        <ul>
+          <li>Provide more querying flexibility</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>Use cases:</p>
+<ul>
+  <li>Scalability problems with other traditional database systems</li>
+  <li>Mission-critical application that must be highly available at all times without
+manual intervention</li>
+  <li>High level of data durability regardless of the backup-and-restore strategy</li>
+</ul>
+
+<p>Security</p>
+<ul>
+  <li>Data is redundantly stored on multiple devices across multiple facilities in a DynamoDB Region</li>
+  <li>All user data is fully encrypted at rest
+    <ul>
+      <li>Uses encryption keys stored in Key Management Service (AWS KMS)</li>
+    </ul>
+  </li>
+  <li>IAM administrators control who can be authenticated and authorized to use DynamoDB resources by using IAM to manage access permissions and implement security policies
+    <ul>
+      <li>Protected by the AWS global network security procedures</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Keys:</p>
+<ul>
+  <li>Primary or partition key: a single attribute
+    <ul>
+      <li>DynamoDB uses the partition key’s value as input to an internal hash function to determine where to store the item.</li>
+    </ul>
+  </li>
+  <li>Composite key (partition key + sort key)
+    <ul>
+      <li>Contains two attributes
+        <ul>
+          <li>Partition key - descripes which partition to use</li>
+          <li>Sort key - store multiple items with the same partition key in a sorted order</li>
+        </ul>
+      </li>
+      <li>Example - sort by genre and within genre sort alphabetically by title</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Cache Strategies</p>
+<ul>
+  <li>Write-through cache - adds data or updates data in the cache whenever data is written to the database, the cache is never stale and data is always current</li>
+  <li>Write-through cache + TTL - minimizes wasted space by deleting the data that are never read</li>
+  <li>Lazy-loading cache - load data into the cache only when necessary</li>
+</ul>
+
+<p>Cache Types:</p>
+<ul>
+  <li>Item cache
+    <ul>
+      <li>Stores results of GetItem and BatchGetItem</li>
+      <li>When an item is requested, if it’s present it’s returned, if not then if’s fetched from the DB and cache is updated</li>
+    </ul>
+  </li>
+  <li>Query cache
+    <ul>
+      <li>Stores results of Query and Scan operations</li>
+      <li>When a Query or Scan are performed, DAX caches the set of results</li>
+      <li>Subsequent identical Query or Scan requests can be served directly from the cache</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Query vs Scan operation</p>
+<ul>
+  <li>Query
+    <ul>
+      <li>Retrieves data from a table using the table’s primary key or a secondary index - finds items based on the partition key and an optimal sort key</li>
+      <li>Used when you know the partition key value and optionally the sort one as well - for example all orders from a specific customer</li>
+      <li>Very efficient, because it targets a specific partition or index</li>
+    </ul>
+  </li>
+  <li>Scan
+    <ul>
+      <li>Reads every item in the entire table or a secondary index</li>
+      <li>Doesn’t require a partition key or a sort key</li>
+      <li>Finding all items that match a certain non-key attribute value</li>
+      <li>Less efficient, resource-intensive
+        <ul>
+          <li>Can be improved with parallel scans, but this speeds up the process, but increases the consumption of read capacity</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>Strong vs eventual consistency</p>
+<ul>
+  <li>Strong
+    <ul>
+      <li>real-time data update</li>
+      <li>All copies of the data are updated before the write is considered successful</li>
+    </ul>
+  </li>
+  <li>Eventual
+    <ul>
+      <li>Data is later updated</li>
+      <li>System acknowledges write before the data is fully replicated</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Locking</p>
+<ul>
+  <li>Optimistic
+    <ul>
+      <li>Client-side item is the same as the item in DynamoDB, checks a value open save to ensure that it has not changed</li>
+      <li>The Check before you sit approach - when you try to update the item, you check if it has changed since the last time you read it</li>
+    </ul>
+  </li>
+  <li>Pessimistic
+    <ul>
+      <li>Not suitable for the multithreaded application, blocks users from reading, updating or deleting an entry</li>
+      <li>The reserved table approach - even if you’re just looking at the menu and deciding what to eat, no one can sit at your table</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Index</p>
+<ul>
+  <li>You cannot add a local index after the table has been created because local index is another way to reorganize the existing partition</li>
+  <li>Local secondary index has the same partition key as the base table, but a different sort key - that’s because it’s reorganization of the existing partition</li>
+  <li>Global Secondary Index
+    <ul>
+      <li>Partition key and sort key can be different
+        <ul>
+          <li>This is because it’s a new way to reorganize data (for example give me all same shapes regardless of their color and size)</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="./images/posts/indices.png" alt="Indices" style="max-width: 100%; max-height: 100%; display: block;" /></p>
+
+<p>DynamoDB streams</p>
+<ul>
+  <li>Streams are kept for 24 hours, can’t be manually deleted nor kept for longer time</li>
+  <li>Event types in streams: insert, modify, remove</li>
+  <li>Stream view types:
+    <ul>
+      <li>KEYS_ONLY - only the key attributes of the modified item</li>
+      <li>NEW_IMAGE - the entire item as it appears after it was modified</li>
+      <li>OLD_IMAGE - the entire item as it appear before it was modified</li>
+      <li>NEW_AND_OLD_IMAGES - both the new and the old images of the item</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="other-purpose-build-databases">Other Purpose-Build Databases</h3>
+<ul>
+  <li>ElastiCache
+    <ul>
+      <li>Fully managed in-memory caching solution</li>
+      <li>Support for Redis and Memcached</li>
+    </ul>
+  </li>
+  <li>MemoryDB for Redis
+    <ul>
+      <li>Redis-compatible, fully-managed, durable, in-memory database that delivers ultra-fast performance
+        <ul>
+          <li>Microsecond read latency, single-digit millisecond write latency, high throughput and Multi-AZ durability</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>DocumentDB
+    <ul>
+      <li>Fully managed document database
+        <ul>
+          <li>Document - you can store and query rich documents</li>
+        </ul>
+      </li>
+      <li>Has API that’s compatible with MongoDB</li>
+    </ul>
+  </li>
+  <li>Keyspaces
+    <ul>
+      <li>Scalable, highly available and managed Apache Cassandra compatible service</li>
+      <li>Popular for high-scale applications that need top-tier performance</li>
+      <li>Also for high-volume applications with straightforward access patterns</li>
+    </ul>
+  </li>
+  <li>Neptune
+    <ul>
+      <li>Fully managed graph database</li>
+    </ul>
+  </li>
+  <li>Timestream
+    <ul>
+      <li>Fast, scalable and serverless time series service for IoT and operational applications</li>
+      <li>Easy to store and analyze trillions of events per day up to 1000 times faster and for as little as one-tenth of the cost of relational databases</li>
+    </ul>
+  </li>
+  <li>Quantum Ledger Database (QLDB)
+    <ul>
+      <li>Ledger database that provides a complete and cryptographically verifiable history of all changes made to the application data</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="monitoring">Monitoring</h2>
+<h3 id="cloudwatch">CloudWatch</h3>
+<ul>
+  <li>Monitoring and observability service that collects resource data and provides insights</li>
+  <li>Can do the following:
+    <ul>
+      <li>Detect anomalous behavior in environments</li>
+      <li>Set alarms to alert when something is not right</li>
+      <li>Visualiza logs and metrics with the AWS Management Console</li>
+      <li>Take automated actions like scaling</li>
+      <li>Troubleshoot issues</li>
+      <li>Discover insights to keep applications healthy</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="load-balancing">Load Balancing</h2>
+
+<h3 id="elastic-load-balancing">Elastic Load Balancing</h3>
+<p>Distributes incoming application traffic across EC2 instances, containers, IP addresses, and Lambda functions.</p>
+
+<p>Three main components:</p>
+<ul>
+  <li>Rules
+    <ul>
+      <li>To associate a target group to a listener</li>
+      <li>Needs source IP address of the client and decides which target group to send the traffic to</li>
+    </ul>
+  </li>
+  <li>Listeners
+    <ul>
+      <li>The client connects to it</li>
+      <li>A port must be provided</li>
+    </ul>
+  </li>
+  <li>Target groups
+    <ul>
+      <li>The backend servers are defined in one or more target groups</li>
+      <li>Define type of backend to direct traffic to such as EC2 instances, Lambda functions or IP addresses</li>
+      <li>Health check must be defined for each target group</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Types of load balancers:</p>
+<ul>
+  <li>Application load balancer (ALB)
+    <ul>
+      <li>Load balancing HTTP and HTTPS traffic</li>
+    </ul>
+  </li>
+  <li>Network load balancer (NLB)
+    <ul>
+      <li>Load balancing TCP and UDP traffic</li>
+    </ul>
+  </li>
+  <li>Gateway load balancer (GLB)
+    <ul>
+      <li>Helps to deploy, scale and manage third-party appliances such as firewalls, intrusion detection and prevention systems, and deep packet inspection systems</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="./images/posts/lb.png" alt="Load Balancers" style="max-width: 100%; max-height: 100%; display: block;" /></p>
+
+<h2 id="troubleshooting--optimization">Troubleshooting &amp; Optimization</h2>
+<p>Hot partition in DynamoDB</p>
+<ul>
+  <li>Refactor application to distribute read and write operations as evenly as possible across your table</li>
+  <li>Implement error retries and exponential backoff</li>
+</ul>
+
+<p>Important DynamoDB Calculations
+RCU</p>
+<ul>
+  <li>strongly consistent == rps * (item size / 4)</li>
+  <li>eventually consistent == rps * (item size / 4) / 2</li>
+  <li>Transactional == rps * (item size / 4) * 2
+WCU</li>
+  <li>standard == wps * (item size / 4)</li>
+  <li>transaction == wps * (item size / 4) * 2</li>
+</ul>
+
+<p>Size of indices in DynamoDB</p>
+<ul>
+  <li>Global secondary index’ provisioned WCU should be equal or greater than the WCU of the base table</li>
+</ul>
+
+<p>Kinesis data stream</p>
+<ul>
+  <li>Capacity of the stream - use more shards in the stream
+    <ul>
+      <li>Hot shards receiving more data, split them to increase capacity</li>
+      <li>Cold shards the opposite, merge them to better utilize the capacity and to reduce cost</li>
+    </ul>
+  </li>
+</ul>
+
+<p>What to do when DynamoDB transactions are slow?</p>
+<ul>
+  <li>Batch operations
+What to do when DynamoDB data by one user overwritten by another?</li>
+  <li>Implement optimistic locking strategy by designating one property to store the version number in the mapping class for your table</li>
+</ul>
+
+<p>What to use when Last writer wins should be used?</p>
+<ul>
+  <li>Use global tables</li>
+</ul>
+
+<p>Lambda</p>
+<ul>
+  <li>An increase in memory size triggers an equivalent increase in CPU available to your function</li>
+  <li>The concurrent execution limit is enforced against the sum of the concurrent executions of all functions</li>
+  <li>The unreserved account concurrency can’t go below 100</li>
+</ul>
+
+<p>Lambda data discrepancies</p>
+<ul>
+  <li>Invocations have been running for over 15 minutes and reached the maximum execution
+time</li>
+  <li>Reuse the same connection string - execution context</li>
+  <li>Reserved concurrency
+    <ul>
+      <li>Reserving 20 tables at a 100 tables restaurant</li>
+      <li>No matter how busy it is, there will be 20 tables available
+        <ul>
+          <li>Function will have 20 concurrency executions available and the other functions will share the remaining 80</li>
+          <li>It doesn’t speed up the service, but in ensures availability</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Provisioned concurrency
+    <ul>
+      <li>Having a team of waiters ready and waiting for guests as soon as they arrive, so they get immediate service</li>
+      <li>In scenarios where they are sudden spikes in traffic and function needs to respond immediately</li>
+    </ul>
+  </li>
+  <li>What to use to prevent function from using too much reserve concurrency?
+    <ul>
+      <li>Reserve concurrency splits the pool of available concurrency into subsets</li>
+    </ul>
+  </li>
+</ul>
+
+<p>What if an application uses two identical Lambda functions, but they’re performing differently?</p>
+<ul>
+  <li>Track metrics through CloudWatch</li>
+  <li>The unit of scale in Lambda is concurrency</li>
+  <li>To scale it up, when it doesn’t perform, means to set up higher concurrency limit</li>
+</ul>
+
+<p>What is the same Lambda function that needs to be used for multiple stages in your API, but that function needs to read data from different DynamoDB tables depending on which stage is being called?</p>
+<ul>
+  <li>Use stage variables, which are configuration attributes in the deployment file of the REST API</li>
+  <li>Integrate Lambda function with API Gateway using a stage variable and also add the proper mapping configuration too</li>
+</ul>
+
+<p>What if you need to process items from a stream or a queue?</p>
+<ul>
+  <li>Configure event source mapping, which is a Lambda resource that reads items from an SQS queue, Kinesis Stream or DynamoDB stream and sends items to your function in batches
+    <ul>
+      <li>Can handle errors and retries</li>
+    </ul>
+  </li>
+</ul>
+
+<p>What kind of errors can occur in Lambda?</p>
+
+<p>How many times does Lambda retries?</p>
+<ul>
+  <li>Twice
+    <ul>
+      <li>It’s possible to configure dead letter queue to capture events that weren’t successfully processed, so they don’t end up waiting in the queue for days</li>
+    </ul>
+  </li>
+  <li>Invocation types
+    <ul>
+      <li>Sync
+        <ul>
+          <li>Use the invoke command with the AWS CLI</li>
+        </ul>
+      </li>
+      <li>Async
+        <ul>
+          <li>S3 and SNS services invoke functions asynchronously</li>
+          <li>You don’t wait for response - Lambda handles everything</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>What service to integrate to help with errors?</p>
+<ul>
+  <li>CloudWatch, X-Ray</li>
+</ul>
+
+<h2 id="devops">DevOPS</h2>
+<h2 id="other-services">Other services</h2>
+<p>Service for:</p>
+<ul>
+  <li>Managing containers - elastic container service</li>
+  <li>Without infrastructure, but providing provisioning, load balancing, scaling, health monitoring - Elastic Beanstalk</li>
+  <li>Serverless applications - AWS SAM</li>
+  <li>Cross-device sync - Amazon Cognito Sync
+    <ul>
+      <li>Device farm is a testing app</li>
+    </ul>
+  </li>
+  <li>Cross-device sync, but real-time with shared state - AppSync</li>
+  <li>Send traces to multiple different tracing backends without having to re-instrument your code - OpenTelemetry &amp; X-Ray</li>
+  <li>Hardware security modules for keys that are 3rd party - CloudHSM</li>
+  <li>Cypress tests - amplify hosting</li>
+  <li>Signup and signin functionality - cognito user pool</li>
+  <li>RDS data encryption - Transparent Data Encryption (TDE)</li>
+  <li>Real-time data from applications, can be triggered by Lambda - EventBridge</li>
+  <li>Coordinate multiple AWS services into serverless workflows - Step functions
+    <ul>
+      <li>Expressions that enable you to group objects - Clluster Query Language</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="sources">Sources</h2>
+<ul>
+  <li><a href="https://portal.tutorialsdojo.com">Tutorials Dojo</a> for practise exams</li>
+  <li><a href="https://explore.skillbuilder.aws/learn/course/external/view/elearning/1851/aws-technical-essentials">AWS Technical Essentials</a></li>
+  <li><a href="https://explore.skillbuilder.aws/learn/course/external/view/elearning/106/introduction-to-containers?da=sec&amp;sec=prep">AWS Introduction to Containers</a></li>
+  <li><a href="https://explore.skillbuilder.aws/learn/course/external/view/elearning/37/introduction-to-serverless-development?da=sec&amp;sec=prep">AWS Introduction to Serverless Computing</a></li>
+  <li><a href="https://explore.skillbuilder.aws/learn/course/external/view/elearning/91/amazon-elastic-container-service-ecs-primer?da=sec&amp;sec=prep">Amazon Elastic Container Service Primer</a></li>
+  <li><a href="https://explore.skillbuilder.aws/learn/course/external/view/elearning/57/amazon-elastic-kubernetes-service-eks-primer?da=sec&amp;sec=prep">Amazon EKS Primer</a></li>
+</ul>
+
+    </div><!-- .post-content -->
+    <div class="author-box">
+      
+      <div class="author-avatar" style="background-image: url('images/author.png')"><span class="screen-reader-text">Mia Bajić's Picture</span></div>
+      
+      <div class="author-details">
+        <h2 class="author-title">About Mia Bajić</h2>
+        <div class="author-bio"><p>Software engineer and community events organizer.</p>
+</div>
+        
+        
+      </div><!-- .author-details -->
+    </div><!-- .author-box -->
+  </article><!-- .post -->
+
+  
+
+</main><!-- .main-content -->
+
+      <footer class="site-footer">
+  <div class="offsite-links">
+    
+      
+<a href="https://github.com/clytaemnestra" target="_blank" rel="noopener">
+  <span class="fa-github" aria-hidden="true"></span>
+  <span class="screen-reader-text">GitHub</span>
+</a>
+
+<a href="https://www.linkedin.com/in/mia-bajic/" target="_blank" rel="noopener">
+  <span class="fa-linkedin" aria-hidden="true"></span>
+  <span class="screen-reader-text">LinkedIn</span>
+</a>
+
+<a href="https://bsky.app/profile/clytaemnestra.bsky.social" target="_blank" rel="noopener">
+  <span class="fa-bsky" aria-hidden="true"></span>
+  <span class="screen-reader-text">bsky</span>
+</a>
+
+    
+  </div><!-- .offsite-links -->
+  <div class="footer-bottom">
+    <div class="site-info">
+      
+
+    </div><!-- .site-info -->
+    <a href="#page" id="back-to-top" class="back-to-top"><span class="screen-reader-text">Back to the top </span>&#8593;</a>
+  </div><!-- .footer-bottom -->
+</footer><!-- .site-footer -->
+
+    </div><!-- .inner -->
+  </div><!-- .site -->
+
+
+  <script src="/tech-blog/assets/js/plugins.js"></script>
+  <script src="/tech-blog/assets/js/custom.js"></script>
+
+</body>
+</html>

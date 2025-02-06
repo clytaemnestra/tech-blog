@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="kZa86zQaQuJ1ICcmj-NforLCR2TS6_ftskPHLy8mjqw"/>
+  <title>Notes from Books: Designing Data Intensive Applications</title>
+  <meta name="description" content="Mia Bajic TIL today I learned tech blog">
+  <link rel="canonical" href="https://clytaemnestra.github.io/tech-blog/data-intensive-applications">
+  <link rel="alternate" type="application/rss+xml" title="TIL Feed"
+    href="https://clytaemnestra.github.io/tech-blog/feed.xml">
+  <!-- Styles -->
+  <link href="https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i%7CNoto+Serif:400,400i,700,700i&display=swap" rel="stylesheet">
+  <link href="/tech-blog/assets/css/style.css" rel="stylesheet">
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Mia Bajic",
+    "url": "https://clytaemnestra.github.io/tech-blog/",
+    "sameAs": [
+      "https://www.linkedin.com/in/mia-bajic",
+      "https://github.com/clytaemnestra"
+    ]
+  }
+  </script>
+  
+  
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9873VJPWX5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9873VJPWX5');
+</script>
+
+</head>
+<body>
+
+
+  <div id="page" class="site">
+    <div class="inner">
+      <header class="site-header">
+  
+  <p class="site-title"><a class="logo-text" href="/tech-blog/">TIL</a></p>
+  
+  <nav class="site-navigation">
+    <div class="site-navigation-wrap">
+      <h2 class="screen-reader-text">Main navigation</h2>
+      <ul class="menu">
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- External URL -->
+            <a class="" href="https://forms.gle/kwXcWp9qSiMcY1nU9" target="_blank" rel="noopener noreferrer">Subscribe</a>
+          
+        </li>
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- Internal URL -->
+            <a class="" href="/tech-blog/">Home</a>
+          
+        </li>
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- Internal URL -->
+            <a class="" href="/tech-blog/about">About</a>
+          
+        </li>
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- Internal URL -->
+            <a class="" href="/tech-blog/tags">Tags</a>
+          
+        </li>
+        
+      </ul><!-- .menu -->
+      <button id="menu-close" class="menu-toggle">
+        <span class="screen-reader-text">Close Menu</span>
+        <span class="icon-close" aria-hidden="true"></span>
+      </button>
+    </div><!-- .site-navigation-wrap -->
+    </nav><!-- .site-navigation -->    
+  <button id="menu-open" class="menu-toggle"><span class="screen-reader-text">Open Menu</span><span class="icon-menu" aria-hidden="true"></span></button>
+</header>
+
+
+
+      <main class="main-content fadeInDown delay_075s">
+
+  <article class="post">
+    <header class="post-header">
+      <time class="post-date" datetime="2022-10-26">October 26, 2022</time>
+      <h1 class="post-title">Notes from Books: Designing Data Intensive Applications</h1>
+      <div class="post-meta">
+        By <span class="post-author">Mia Bajić</span><span class="post-tags"> in <a href="/tech-blog/tags/#books" rel="tag">books</a>, <a href="/tech-blog/tags/#system-design" rel="tag">system-design</a></span>
+      </div><!-- .post-meta -->
+      
+    </header><!-- .post-header -->
+    <div class="post-content">
+      <h2 id="data-models--query-languages">Data models &amp; query languages</h2>
+<p>Historical representation of data:</p>
+<ul>
+  <li>hierarchical model (one big tree) - wasn’t good for representing many-to-many relationships</li>
+  <li>relational model</li>
+  <li>NoSQL nonrelational model</li>
+</ul>
+
+<p><br /></p>
+
+<p>Two main directions of nonrelational NoSQL databases:</p>
+<ul>
+  <li>document databases - data comes in self-contained documents and relationships between one document and another are rare</li>
+  <li>graph databases - targeting use case, where anything is potentially related to everything</li>
+</ul>
+
+<p><br /></p>
+
+<h2 id="storage--retrieval">Storage &amp; retrieval</h2>
+<p>On high level storage engines fall into two broad categories:</p>
+<ul>
+  <li>OLTP
+    <ul>
+      <li>user-facing - huge volume of requests</li>
+      <li>the applications requests records using some kind of key and the storage engine uses an index to find the data for the requested key</li>
+      <li>disk seek time is often the bottleneck</li>
+    </ul>
+  </li>
+  <li>OLAP
+    <ul>
+      <li>data warehouses and analytic systems used by business analysts</li>
+      <li>lower volume of requests, but each query is typically very demanging</li>
+      <li>disk bandwidth is often the bottleneck</li>
+      <li>column-oriented storage is an increasingly popular solution</li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Transaction processing systems (OLTP)</th>
+      <th>Analytic systems (OLAP)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Main read pattern</td>
+      <td>Small number of records per query fetched by key</td>
+      <td>Aggregate over large number of records</td>
+    </tr>
+    <tr>
+      <td>Main write pattern</td>
+      <td>Random-access, low-latency writes from user input</td>
+      <td>Bulk import (ETL) or event stream</td>
+    </tr>
+    <tr>
+      <td>Primarily used by</td>
+      <td>End user/customer, via web application</td>
+      <td>Internal analyst, for decision support</td>
+    </tr>
+    <tr>
+      <td>What data represents</td>
+      <td>Latest state of data (current point in time)</td>
+      <td>History of events that happened over time</td>
+    </tr>
+    <tr>
+      <td>Dataset size</td>
+      <td>Gigabytes to terabytes</td>
+      <td>Terabytes to petabytes</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br /></p>
+
+<h3 id="oltp">OLTP</h3>
+<p>OLTP two main schools of thought:</p>
+<ul>
+  <li>the long-structured school
+    <ul>
+      <li>only permits appending to files and deleting obsolete files, but never updates a file</li>
+      <li>LevelDB, Cassandra, Lucene, HBase, SSTables, Bitcask etc.</li>
+    </ul>
+  </li>
+  <li>the update-in-place school
+    <ul>
+      <li>treats the disk as a set of fixed-size pages that can be overwritten</li>
+      <li>B-Trees used in all major relational databases</li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<p>B-Tree</p>
+<ul>
+  <li>break the database down into fixed-size blocks or segments (typically 4 KB) and read or write one page at a time</li>
+  <li>each page can be identified using an address or location, which allows one page to refer to another</li>
+  <li>one page is designated as the root of the B-tree - whenever you want to look up a key in the index you start here</li>
+  <li>the first page contains several keys and references to child pages</li>
+  <li>depth O(log n)</li>
+  <li>
+    <p>most databases can fit into a B-tree that is three or four levels deep (a four level tree of 4 KB pages with a branching factor of 500 can store up to 250 TB)</p>
+
+    <p><img src="https://user-images.githubusercontent.com/38294198/194752603-a09d3bda-8b86-45f0-a1ea-72785543325f.png" width="500" /></p>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="olap">OLAP</h3>
+
+<p><img src="https://user-images.githubusercontent.com/38294198/194752380-843302c0-7005-43fa-8685-595b941ce84e.png" width="500" /></p>
+
+<p>Schemas for analytics:</p>
+<ul>
+  <li>star schema - consists of dimension tables and fact table (foreign key references to dimension tables)</li>
+  <li>snowflake schema</li>
+</ul>
+
+<p><br /></p>
+
+<p>Column-oriented storage</p>
+<ul>
+  <li>the idea behind: don’t store all the values from one row rogether, but store all the values from each column together instead</li>
+  <li>if each column is stored in a separate file, a query only needs to read and parse those columns that are used in that query, which can save a lot of work</li>
+  <li>as column values are often repearing, it’s possible to compress it with bitmax indexes</li>
+</ul>
+
+<p><img src="https://user-images.githubusercontent.com/38294198/194752961-d531dfa9-4ccc-43d8-9eb1-d7cd4c62f4f5.png" width="500" /></p>
+
+<p><br /></p>
+
+<h2 id="encoding--evolution">Encoding &amp; evolution</h2>
+<p>Programs usually work with data in at least two different representations:</p>
+<ul>
+  <li>data structures in memory, they are optimized for efficient access and manipulation by the CPU</li>
+  <li>encoded self-contained sequence of bytes (for example JSON) for sending over the network</li>
+</ul>
+
+<p><br /></p>
+
+<p>Models of dataflow:</p>
+<ul>
+  <li>through databases</li>
+  <li>through services (REST &amp; RPC)</li>
+  <li>through message brokers</li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="rest">REST</h3>
+<ul>
+  <li>philosophy built upon the principles of HTTP</li>
+  <li>simple data formats</li>
+  <li>URLs for identifying resources</li>
+  <li>HTTP features for cache control, authentication and content type negotiation</li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="soap">SOAP</h3>
+<ul>
+  <li>XML-based protocol</li>
+  <li>it aims to be independent from HTTP</li>
+  <li>it comes with complex multitude of related standards (the web service framework)</li>
+  <li>the API of a SOAP web service is described using the web services description language (WSDL)</li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="message-brokers">Message brokers</h3>
+<ul>
+  <li>one process sends a message to a named queue or topic andthe broker ensures that the mesage is delivered to one r nore consumers or subscribers to that queue or topic</li>
+  <li>RabbitMQ, Apache Kafka, ActiveMQ, HornetQ, NATS etc.</li>
+</ul>
+
+<p><br /></p>
+
+<p>Advantages of message brokers:</p>
+<ul>
+  <li>it can act as a buffer if the recipient is unavailable or overloaded</li>
+  <li>it can automatically redeliever messages to a process that has crashed</li>
+  <li>avoids the sender needing to know the IP address and port number of the recipient</li>
+  <li>logically decouples the sender from the recipient</li>
+</ul>
+
+<p><br /></p>
+
+<h2 id="derived-data">Derived Data</h2>
+<p>On a high level, systems that store and process data can be grouped into two broad categories:</p>
+<ul>
+  <li>Systems of record
+    <ul>
+      <li>also known as <em>source of truth</em></li>
+      <li>holds the authoritative version of your data</li>
+      <li>when new data comes in, e.g., as user input, it is first written here</li>
+      <li>each fact is prepresented exactly once, the representation is typically normalized</li>
+    </ul>
+  </li>
+  <li>Derived data systems
+    <ul>
+      <li>data in a derived system is the result of taking some existing data from another system and transforming or processing it in some way</li>
+      <li>if you lose derived data, you can recreate it from the original source</li>
+      <li>a classic example is a cache - data can be served from the cache if present, but if the cache doesn’t contain what you need, you can fall back to the underlying database</li>
+      <li>denormalized values, indexes, and materialized views also fall into this category</li>
+      <li>in recommendation systems, predictive summary data is often derived from usage logs</li>
+      <li>this data is technically speaking <em>redundant</em>, in teh sense that it duplicates existing information, but it is often essential for getting good performance on read queries</li>
+      <li>it is commonly denormalized</li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="batch-processing">Batch Processing</h3>
+<p>The two main problems that distributed batch processing frameworks need to solve:</p>
+<ul>
+  <li>partitioning
+    <ul>
+      <li>in MapReduce mappers are partitioned according to input file blocks</li>
+      <li>the output of mappers is repartitioned, sorted, and merged into a configurable number of reducer partitions</li>
+      <li>the purpose of this process is to bring all the related data, e.g., all the records with the same key - together in the same place</li>
+      <li>Post-MapReduce dataflow engineers try to avoid sorting unless it is required, but they otherwise take a broadly similar approach to partitioning</li>
+    </ul>
+  </li>
+  <li>fault tolerance
+    <ul>
+      <li>MapReduce frequently writes to disk, which makes it easy to recover from an individual failed task without restarting the entire job, but slows down execution in the failure-free case</li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<p>How do partitioned algorithms work?</p>
+<ul>
+  <li>sort-merge joins
+    <ul>
+      <li>each of the inputs being joined goes through a mapper that extracts the join key</li>
+      <li>by partitioning, sorting, and merging, all the records with the same key end up going to the same call of the reducer</li>
+      <li>this function can then output the joined records</li>
+    </ul>
+  </li>
+  <li>broadcast hash joins
+    <ul>
+      <li>one of the two join inputs is small, so it is not partitioned and it can be entirely loaded into a hash table</li>
+      <li>thus, you can start a mapper for each partition of the large join input, load the hash table for the small input into each mapper, and then scan over the large input one record at a time, querying the hash table for each record</li>
+    </ul>
+  </li>
+  <li>partitioned hash joins
+    <ul>
+      <li>if the two join inputs are partitioned in the same way (using the same key, same hash function, and same number of partitions), then the hash table approach can be used independently for each partition</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Two common ways data is distributed accross multiple nodes:</p>
+<ul>
+  <li>replication - keeping a copy of the same data on several different nodes, potentially in different locations</li>
+  <li>partitioning (sharding) - splitting a big database into smaller subsets called partitions so that different partitions can be assigned to different nodes</li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="replication">Replication</h3>
+<p>Purporses of replication:</p>
+<ul>
+  <li>high availability - the system is running even when one machine or several machines go down</li>
+  <li>latency - data is geographically close to users, thus user interaction is faster</li>
+  <li>disconnected operation - application is working even when there is a network interruption</li>
+  <li>scalability - being able to handle a higher volume of reads</li>
+</ul>
+
+<p><br /></p>
+
+<p>Three main approaches to replication:</p>
+<ul>
+  <li>single-leader replication
+    <ul>
+      <li>client send all writes to a single node (the leader), which sends a stream of data change events to the other replicas (followers)</li>
+      <li>reads cna be performed on any replica, but reads from followers might be stale</li>
+      <li>popular, easy to understand, no conflict resolution to worry about</li>
+    </ul>
+  </li>
+  <li>multi-leader replication
+    <ul>
+      <li>clients send each write to one of several leader nodes, any of which can accept writes</li>
+      <li>the leaders send streams of data change events to each other and to any follower nodes</li>
+      <li>more robust, but weak consistency guarantees</li>
+    </ul>
+  </li>
+  <li>leaderless replication
+    <ul>
+      <li>clients send each write to several nodes, and read from several nodes in parallel in order to detect and correct nodes with stale data</li>
+      <li>same as MLR - weak consistency guarantees</li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<p>Techniques how an application should behave under replication lag:</p>
+<ul>
+  <li>read-after-write consistency - users should always see data that they submitted themselves</li>
+  <li>monotonic reads - after users have seen the data at one point in time,they shouldn’t later see the data from some earlier point in time</li>
+  <li>consistent prefix reads - users should see the data in a state that makes casual sense: for example, seeing a question and its reply in the correct order</li>
+</ul>
+
+<p><br /></p>
+
+<p>Techniques to implement read-after-write consistency in a system with leader-based replication:</p>
+<ul>
+  <li>When reading something something that the user may have modified, read it from the leader, otherwise read it from a follower. This required that you have some way of knowing whether something might have been modified, without actually querying it. FOr example, user profile information on a social network is normally editable only by the owner of the profile, not by anybody else. Thus, a simple rule is: always read the user’s own profile from the leader, and any other users’ profiles from a follower.</li>
+  <li>If most things in the application are potentially editable by the user, that approach won’t be effective, as most things would have to be read from the leader (negating the benefit of read scaling). In that case, other criteria may be used to decide whether to read from the leader. You could also monitor the time of the last update and, for one minute after the last update, make all reads from the leader. You could also monitor the replication lag on followers and prevent queries on any follower that is more than one minute behind the leader.</li>
+  <li>The client can remember the timestapm of the its most recent write - then the system can ensure that the replica serving any reads from that user reflects updates at least until that timestamp. If a replica is not sufficiently up to date, either the read can be handled by another replica or the query can wait until the replica has caught up. The timestamp could be a logical timestamp (something that indicates ordering of writes, such as the log sequence number) or the actual system clock (in which case clock synchronization becomes critical).</li>
+</ul>
+
+<p><br /></p>
+
+<p>Additional issue to consider:</p>
+<ul>
+  <li>if user is accessing service from multiple devices, you may want to provide cross-device read-after-write consistency</li>
+  <li>metadata (timestamp of the user’s last update) will need to be centralized, so to be seen from all devices</li>
+  <li>if your replicas are distributed accross different datacenters, there is no guarantee that connections from different devices will be routed to the same datacenter</li>
+</ul>
+
+<p><br /></p>
+
+<p>Monotonic reads</p>
+<ul>
+  <li>if one user makes several reads in sequence, they will not see time go backwrd - i.e., they will not read older data after having previously read newer data</li>
+  <li>one way of achieving it is making sure that each user always makes their reads from the same replica</li>
+  <li>the replica can be chosed based on a hash of the user ID, rather than randomly</li>
+  <li>if that replica fails, the user’s queries will need to be rerouted to another replica</li>
+</ul>
+
+<p><img src="https://user-images.githubusercontent.com/38294198/195819008-4afe50cf-bca4-46bf-a8ed-161b048bd3ed.png" width="550" /></p>
+
+<p><br /></p>
+
+<p>Consistent prefix reads</p>
+<ul>
+  <li>if a sequence of writes happens in a certain order, then anyone regarding those writes will see them appear in the same order</li>
+</ul>
+
+<h4 id="multi-leader-replication">Multi-Leader Replication</h4>
+<p>Advantages of multi-reader replication:</p>
+<ul>
+  <li>better performance</li>
+  <li>better tolerance of datacenter outages</li>
+  <li>better tolerance of network problems</li>
+</ul>
+
+<p><br /></p>
+
+<p>Problems:</p>
+<ul>
+  <li>autoincrementing keys, triggers and integrity constraints can be problematic</li>
+  <li>multi-reader replication is often considered dangerous territory that should be avoided if possible</li>
+</ul>
+
+<p><br /></p>
+
+<p>Common use case when multi-leader replication is appropriate:</p>
+<ul>
+  <li>apps on mobile phone, laptop and other decies - every device has a local database that acts as a leader (it accepts write requests) and there is an asynchronous multi-leader replication process (sync) between the replicas of all devices</li>
+  <li>real-time collaborative editing applications, which allow several people to edit a document simultaneously</li>
+</ul>
+
+<p><br /></p>
+
+<p>Ways of achieving convergent conflict resolution:</p>
+<ul>
+  <li>give each write a unique ID (e.g., a timestamp, a long random number, a UUID, or a hash of the key and value), prick the write with the highest ID as the winner and throw away the other writes</li>
+  <li>if a timestamp is used, this technique is known as last write wins (LWW) -&gt; popular approach, but dangerously prone to data loss</li>
+  <li>give each replica a unique ID and let writes that originated at a higher-numbered replica always take precedence over writes that originated at a lower-numbered replica -&gt; this approach implies data loss</li>
+  <li>merge values together - for example order them alphabeticallz and then concatenate them</li>
+  <li>record the conflict in an explicit data structure that preserves all information, and write application code that resolves the conflict at some later time (perhaps by prompting the user)</li>
+</ul>
+
+<p><br /></p>
+
+<p>Multi-Leader Topologies</p>
+<ul>
+  <li>the most general is all-to-all</li>
+  <li>however, more restricted topologies are also used - MySQL by default supports only a circular topology</li>
+  <li>a problem with circular and star topologies is that if just one node fails, it can interrupt the flow of replication messages between other nodes</li>
+  <li>the fault tolerance of a more densely connected topology (such as all-to-all) is better because it allows messages to travel along different paths, avoiding a single point of failure</li>
+</ul>
+
+<p><img src="https://user-images.githubusercontent.com/38294198/195837268-c8eda8bb-71c6-4675-a659-de27c3598589.png" width="550" /></p>
+
+<p><br /></p>
+
+<p>Leaderless Replication</p>
+<ul>
+  <li>systems allows any replica to directly accept writes from clients</li>
+  <li>in some implementations the client directly sends its writes to several replicas, while in others, a coordinator node does this on behalf of the client (the coordinator doesn’t enfore a particular ordering of writes, unlike a leader database)</li>
+  <li>the problem with node being offline is solved by sending a read request to sevelar nodes in patallel</li>
+  <li>version numbers are used to determin which value is newer</li>
+  <li>approach to achieving eventual convergence is to declare that each replica need only store the most recent value and allow older values to be overwritten and discarded (last write wins)</li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="partitioning">Partitioning</h3>
+<ul>
+  <li>the goal of partitioning is t ospread the data and query load evenly across multiple machines, avoiding hot spots (nodes with disproportionately high load)</li>
+</ul>
+
+<p><br /></p>
+
+<p>Two main approaches to partitioning:</p>
+<ul>
+  <li>key range partitioning</li>
+  <li>keys are sorted, and a partition owns all the keys from some minimum up to some maximum</li>
+  <li>sorting has the advantage that efficient range queries are possible, but there is a risk of hot spots if the application often accesses keys that are close together in the sorted order</li>
+  <li>in this approach, partitions are typically rebalanced dynamically by splitting the range into two subranges when a partition gets too big</li>
+  <li>hash partitioning</li>
+  <li>a hash function is applied to each keyy, and a partition owns a range of hashes</li>
+  <li>this method destroys the ordering of keys, making range queries inefficient, but may distribute load more evenly</li>
+  <li>when partitioning by hash, it is common to create a fixed number of partitions in advance, to assign several partitions to each node, and to move entire partitions from one node to another when nodes are added or removed</li>
+  <li>dynamic partitioning can also be used</li>
+</ul>
+
+<p><br /></p>
+
+<p>Approaches to the problem of finding out to which partition to route a request (service discovery problem):</p>
+<ul>
+  <li>allow client to contact any node (e.g., via a round-robin load balancer) - if that node coincidentally owns the partition to which the request applies, it can handle the request directly; otherwise, it forwards the request to the appropriate node, receives the reply, and passes the reply along to the client</li>
+  <li>send all requests from clients to a routing tier first, which determines the node that should handle each request and forwards it accordingly - this routing tier does not itself handle any requests, it only acts as a partition-aware load balancer</li>
+  <li>require that clients be aware of the partitioning and the assignment of partitions to nodes - in this case, a client can connect directly to the appropriate node, without any intermediary</li>
+</ul>
+
+<p><img src="https://user-images.githubusercontent.com/38294198/196003489-26a431c5-7980-4cf0-be4b-3ec932fb2a69.png" width="550" /></p>
+
+<p><br /></p>
+
+<h3 id="transactions">Transactions</h3>
+<p>Race conditions:</p>
+<ul>
+  <li>dirty reads</li>
+  <li>one client reads another client’s writes before they have been committed</li>
+  <li>the read committed isolation level and stronger levels prevent dirty reads</li>
+  <li>dirty writes</li>
+  <li>one client overwrites data that another client has written, but not yet committed</li>
+  <li>almost all transaction implementations prevent dirty writes</li>
+  <li>read skew</li>
+  <li>a client sees different parts of the database at different points in time</li>
+  <li>some cases on read skew are also known as <em>nonrepeatable reads</em></li>
+  <li>this issue is most commonly prevented with snapshop isolation, which allows a transaction to read from a consistent snapshot corresponding to one particular point in time - it’s usually implemented with <em>multi-version concurrency control</em> (MVCC)</li>
+  <li>lost updates</li>
+  <li>two clients concurrently perform a read-modify-write cycle</li>
+  <li>one overwrites the other’s write without incorporating its changes, so data is lost</li>
+  <li>some implementations of snapshot isolation prevent this anomaly automatically, while other require a manual lock (SELECT FOR UPDATE)</li>
+  <li>write skew</li>
+  <li>a transaction reads something, makes a decision based on the value it saw, and writes the decision to the database</li>
+  <li>however, by the time the write is made, the premise of the decision is no longer true</li>
+  <li>only serializable isolation prevents this anomaly</li>
+  <li>phantom reads</li>
+  <li>a transaction reads objects that match some search condition</li>
+  <li>another client makes a write that affects the results of that search</li>
+  <li>snapshot isolation prevents straight forward phantom reads, but phantoms inthe context of write skew require special treatment, such as index/range locks</li>
+</ul>
+
+<p><br /></p>
+
+<p>Solution to all of these issues isserializable isolation. Three different approaches:</p>
+<ul>
+  <li>literally executing transactions in a serial order</li>
+  <li>simple and effective option, if you can make each transaction very fast to execute, and the transaction throughput is low enough to process on a single CPU core</li>
+  <li>two-phase locking</li>
+  <li>for decades this has been the standard way of implementing serializability, but many applications avoid using it because of its performance characteristics</li>
+  <li>serializable snapshot isolation (SSI)</li>
+  <li>new algorithm that avoids omst of the downsides of the previous approaches</li>
+  <li>uses an optimistic approach, allowing transactions to proceed without blocking</li>
+  <li>when a transaction wants to commit, it is chacked, and it is aborted if the execution was not serializable</li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="the-trouble-with-distributed-systems">The trouble with distributed systems</h3>
+<p>Building a system from unreliable components</p>
+<ul>
+  <li>in computing there is an idea to contruct a more reliable system from a less reliable underlying base</li>
+  <li>for example, IP is unreliable, but TCP built on top of IP ensures that missing packets are retransmitted, duplicates are eliminated, and packets are reassembled into the order in which they were sent</li>
+  <li>it is thus not the case that a system can only be as reliable as its least reliable component (its weakest link)</li>
+</ul>
+
+<p><br /></p>
+
+<p>Common problems which can occur in distributed system:</p>
+<ul>
+  <li>whenever you try to send a packet over the network, it may be lost or arbitary delayed - likewise, the reply may be lost or delayed, so if you don’t get a reply, you have no idea whether the message got through</li>
+  <li>a node’s slock may be significantly out of sync with other nodes (despite your best efforts to set up NTP), it may suddenly jump forward or back in time, and relying on it is dangerous because you most likely don’t have a good measure of your clock’s confidence interval</li>
+  <li>a process may pause for a substantial amount of time at any point in its execution (perhaps due to a stop-the-world garbage collector), be declared dead by other nodes, and then come back to life again without realizing that it was paused</li>
+</ul>
+
+<p><br /></p>
+
+<p>Two different kinds of clocks:</p>
+<ul>
+  <li>a time-of-day clock</li>
+  <li>returns the current date and time according to some calendar (for example the number of seconds since the epoch - midnight UTC on January 1, 1970, according to the Gregorian calendar, not counting leap seconds)</li>
+  <li>some of these clocks are usually synchronized with NTP - timestamp on one machine means the same as a timestamp on another machine</li>
+  <li>the issue with it may appear if the local clock is too far ahead of the NTP server, then it may be forcibly reset and appear to jump back to a previous point in time - these jumps, as well as similar jumps caused by leap seconds, make time0of0dat clocks unsuitable for measuring elapsed time</li>
+  <li>monotonic clock</li>
+  <li>suitable for measuring a duration, such as a timeout or a service’s response time</li>
+</ul>
+
+
+    </div><!-- .post-content -->
+    <div class="author-box">
+      
+      <div class="author-avatar" style="background-image: url('images/author.png')"><span class="screen-reader-text">Mia Bajić's Picture</span></div>
+      
+      <div class="author-details">
+        <h2 class="author-title">About Mia Bajić</h2>
+        <div class="author-bio"><p>Software engineer and community events organizer.</p>
+</div>
+        
+        
+      </div><!-- .author-details -->
+    </div><!-- .author-box -->
+  </article><!-- .post -->
+
+  
+
+</main><!-- .main-content -->
+
+      <footer class="site-footer">
+  <div class="offsite-links">
+    
+      
+<a href="https://github.com/clytaemnestra" target="_blank" rel="noopener">
+  <span class="fa-github" aria-hidden="true"></span>
+  <span class="screen-reader-text">GitHub</span>
+</a>
+
+<a href="https://www.linkedin.com/in/mia-bajic/" target="_blank" rel="noopener">
+  <span class="fa-linkedin" aria-hidden="true"></span>
+  <span class="screen-reader-text">LinkedIn</span>
+</a>
+
+<a href="https://bsky.app/profile/clytaemnestra.bsky.social" target="_blank" rel="noopener">
+  <span class="fa-bsky" aria-hidden="true"></span>
+  <span class="screen-reader-text">bsky</span>
+</a>
+
+    
+  </div><!-- .offsite-links -->
+  <div class="footer-bottom">
+    <div class="site-info">
+      
+
+    </div><!-- .site-info -->
+    <a href="#page" id="back-to-top" class="back-to-top"><span class="screen-reader-text">Back to the top </span>&#8593;</a>
+  </div><!-- .footer-bottom -->
+</footer><!-- .site-footer -->
+
+    </div><!-- .inner -->
+  </div><!-- .site -->
+
+
+  <script src="/tech-blog/assets/js/plugins.js"></script>
+  <script src="/tech-blog/assets/js/custom.js"></script>
+
+</body>
+</html>

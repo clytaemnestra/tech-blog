@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="kZa86zQaQuJ1ICcmj-NforLCR2TS6_ftskPHLy8mjqw"/>
+  <title>Notes from Conferences: Deep Inside Django&#39;s ORM: How Django Builds Queries</title>
+  <meta name="description" content="Mia Bajic TIL today I learned tech blog">
+  <link rel="canonical" href="https://clytaemnestra.github.io/tech-blog/inside-django-orm">
+  <link rel="alternate" type="application/rss+xml" title="TIL Feed"
+    href="https://clytaemnestra.github.io/tech-blog/feed.xml">
+  <!-- Styles -->
+  <link href="https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i%7CNoto+Serif:400,400i,700,700i&display=swap" rel="stylesheet">
+  <link href="/tech-blog/assets/css/style.css" rel="stylesheet">
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Mia Bajic",
+    "url": "https://clytaemnestra.github.io/tech-blog/",
+    "sameAs": [
+      "https://www.linkedin.com/in/mia-bajic",
+      "https://github.com/clytaemnestra"
+    ]
+  }
+  </script>
+  
+  
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9873VJPWX5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9873VJPWX5');
+</script>
+
+</head>
+<body>
+
+
+  <div id="page" class="site">
+    <div class="inner">
+      <header class="site-header">
+  
+  <p class="site-title"><a class="logo-text" href="/tech-blog/">TIL</a></p>
+  
+  <nav class="site-navigation">
+    <div class="site-navigation-wrap">
+      <h2 class="screen-reader-text">Main navigation</h2>
+      <ul class="menu">
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- External URL -->
+            <a class="" href="https://forms.gle/kwXcWp9qSiMcY1nU9" target="_blank" rel="noopener noreferrer">Subscribe</a>
+          
+        </li>
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- Internal URL -->
+            <a class="" href="/tech-blog/">Home</a>
+          
+        </li>
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- Internal URL -->
+            <a class="" href="/tech-blog/about">About</a>
+          
+        </li>
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- Internal URL -->
+            <a class="" href="/tech-blog/tags">Tags</a>
+          
+        </li>
+        
+      </ul><!-- .menu -->
+      <button id="menu-close" class="menu-toggle">
+        <span class="screen-reader-text">Close Menu</span>
+        <span class="icon-close" aria-hidden="true"></span>
+      </button>
+    </div><!-- .site-navigation-wrap -->
+    </nav><!-- .site-navigation -->    
+  <button id="menu-open" class="menu-toggle"><span class="screen-reader-text">Open Menu</span><span class="icon-menu" aria-hidden="true"></span></button>
+</header>
+
+
+
+      <main class="main-content fadeInDown delay_075s">
+
+  <article class="post">
+    <header class="post-header">
+      <time class="post-date" datetime="2022-10-25">October 25, 2022</time>
+      <h1 class="post-title">Notes from Conferences: Deep Inside Django's ORM: How Django Builds Queries</h1>
+      <div class="post-meta">
+        By <span class="post-author">Mia Bajić</span><span class="post-tags"> in <a href="/tech-blog/tags/#conferences" rel="tag">conferences</a>, <a href="/tech-blog/tags/#django" rel="tag">django</a></span>
+      </div><!-- .post-meta -->
+      
+    </header><!-- .post-header -->
+    <div class="post-content">
+      <p>Talk: https://www.youtube.com/watch?v=OEN5wONsaYU</p>
+
+<p><br /></p>
+
+<h3 id="orm-structure">ORM Structure</h3>
+
+<ul>
+  <li>example query: <code class="language-plaintext highlighter-rouge">blogs = Blog.objects.all()</code></li>
+  <li>behind the scenes:
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#               Manager     
+#         Model    |    Filter
+#          _|_   __|__   |
+#         /   \ /     \ / \ 
+</span><span class="n">blogs</span> <span class="o">=</span> <span class="n">Blog</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="nb">all</span><span class="p">()</span>
+<span class="c1"># \___/
+#   |
+# Queryset
+</span></code></pre></div>    </div>
+  </li>
+  <li>design goals of ORM:
+    <ul>
+      <li>no SQL like words</li>
+      <li>no SQL strings</li>
+      <li>purely function calls</li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="call-chain">Call Chain</h3>
+<ul>
+  <li>classes which play role in the whole process:
+    <ul>
+      <li>Manager</li>
+      <li>QuerySet</li>
+      <li>Query</li>
+      <li>SQLCompiler</li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="process">Process</h3>
+<p>Manager creates QuerySet</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># manager.py
+</span>
+<span class="k">class</span> <span class="nc">BaseManager</span><span class="p">:</span>
+  <span class="p">...</span>
+  <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="s">"""
+    Return a new QuerySet object. Sublasses can
+    override this method to customize the behavior
+    of the Manager.
+    """</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">_queryset_class</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">model</span><span class="p">,</span>
+                                <span class="n">using</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">_db</span><span class="p">,</span>
+                                <span class="n">hints</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">_hints</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>QuerySet creates Query</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># query.py
+</span>
+<span class="k">class</span> <span class="nc">QuerySet</span><span class="p">:</span>
+  <span class="s">"""Represent a lazy database lookup
+  for a set of objects."""</span>
+  <span class="p">...</span>
+  <span class="o">@</span><span class="nb">property</span>
+  <span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">_deferred_filter</span><span class="p">:</span>
+          <span class="n">negate</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">_deferred_filter</span>
+          <span class="bp">self</span><span class="p">.</span><span class="n">_filter_or_exclude_inplace</span><span class="p">(</span><span class="n">negate</span><span class="p">,</span>
+                                          <span class="n">args</span><span class="p">,</span>
+                                          <span class="n">kwargs</span><span class="p">)</span>
+          <span class="bp">self</span><span class="p">.</span><span class="n">_deferred_filter</span> <span class="o">=</span> <span class="bp">None</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">_query</span> 
+</code></pre></div></div>
+
+<p>Query passes Query to SQLCompiler</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># query.py
+</span>
+<span class="k">class</span> <span class="nc">Query</span><span class="p">:</span>
+    <span class="p">...</span>
+    <span class="k">def</span> <span class="nf">sql_with_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="s">"""
+    Return the query as an SQL string and the parameters
+    that will be substituted into the query.
+    """</span>
+    <span class="n">compiler</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_compiler</span><span class="p">(</span><span class="n">DEFAULT_DB_ALIAS</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">compiler</span><span class="p">.</span><span class="n">as_sql</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>What does the compiler do?</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># compiler.py
+</span>
+<span class="k">class</span> <span class="nc">SQLCompiler</span><span class="p">:</span>
+    <span class="p">...</span>
+    <span class="k">def</span> <span class="nf">get_select</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="s">"""
+    Return three values:
+    - a list of 3-tuples of 
+      (expression, (sql, params), alias)
+    - a klass_info structure,
+    - a dictionary of annotations
+    
+    The (sql, params) is what the expression will 
+    produce, and alias is the "AS alias" for the 
+    column (possible None).
+    
+    The klass_info structure contains the following information
+    - The base model of the query.
+    - Which columns for that model are present in the query (by
+      position of the select clause).
+    - related_klass_infos: [f, klass_info] to decent into
+    
+    The annotations is a dictionary of {'attname': column proposition} values.
+    """</span>
+</code></pre></div></div>
+<ul>
+  <li><em>the base model of the query</em> -&gt; table</li>
+  <li><em>Which columns for that model are present in the query</em> -&gt; important also for ordering, 
+ as results from the database are enumerated nad not hashed like in a dictionary</li>
+  <li><em>related_klass_infos</em> -&gt; important for compiling joins</li>
+</ul>
+
+<h4 id="the-query-object">The Query Object</h4>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">qs</span> <span class="o">=</span> <span class="n">Blog</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="nb">all</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">qs</span><span class="p">.</span><span class="n">query</span><span class="p">)</span>
+<span class="c1"># SELECT "demo_blog"."id", "demo_blog"."title" FROM "demo_blog"
+</span><span class="k">print</span><span class="p">(</span><span class="n">qs</span><span class="p">.</span><span class="n">query</span><span class="p">.</span><span class="n">alias_map</span><span class="p">)</span>
+<span class="c1"># {'demo_blog': &lt;django.db.models.sql.datastructures.BaseTable&gt;}
+</span><span class="k">print</span><span class="p">(</span><span class="n">qs</span><span class="p">.</span><span class="n">query</span><span class="p">.</span><span class="n">alias_refcount</span><span class="p">)</span>
+<span class="c1"># {'demo_blog': 0}
+</span><span class="k">print</span><span class="p">(</span><span class="n">qs</span><span class="p">.</span><span class="n">query</span><span class="p">.</span><span class="n">table_map</span><span class="p">)</span>
+<span class="c1"># {'demo_blog': ['demo_blog']}
+</span><span class="k">print</span><span class="p">(</span><span class="n">qs</span><span class="p">.</span><span class="n">query</span><span class="p">.</span><span class="n">base_table</span><span class="p">)</span>
+<span class="c1"># demo_blog
+</span></code></pre></div></div>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">alias_map</code> -&gt; points to the data structure <code class="language-plaintext highlighter-rouge">BaseTable</code> to reference the actual table</li>
+  <li><code class="language-plaintext highlighter-rouge">alias_refcount</code> -&gt; gets increased if we add another joint tables</li>
+  <li><code class="language-plaintext highlighter-rouge">base_table</code> -&gt; derived from the models meta class</li>
+</ul>
+
+<p><br /></p>
+
+<h4 id="what-triggers-the-execution-of-the-query">What triggers the execution of the query?</h4>
+<ul>
+  <li>as long as you don’t call any of the methods <code class="language-plaintext highlighter-rouge">QuerySet</code> does nothing with the database</li>
+  <li>most of the time the methods that trigger the execution as special Python methods (<em>dunder</em>)
+    <ul>
+      <li>example of these methods on the <code class="language-plaintext highlighter-rouge">QuerySet</code>:
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">__iter__</code> (e.g. <code class="language-plaintext highlighter-rouge">for blog in qs</code>)</li>
+          <li><code class="language-plaintext highlighter-rouge">__len__</code> (returns count of instances)</li>
+          <li><code class="language-plaintext highlighter-rouge">__getitem__</code> (e.g. <code class="language-plaintext highlighter-rouge">qs[:10]) - implements </code>LIMIT`</li>
+          <li>couple of others like <code class="language-plaintext highlighter-rouge">__bool__</code>, <code class="language-plaintext highlighter-rouge">__nonzero__</code></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h4 id="how-does-querysetfilter-work">How does <code class="language-plaintext highlighter-rouge">QuerySet.filter()</code> work?</h4>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># query.py
+</span>
+<span class="k">class</span> <span class="nc">QuerySet</span><span class="p">:</span>
+    <span class="p">...</span>
+    <span class="k">def</span> <span class="nf">_filter_or_exclude_inplace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">negate</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">negate</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">_query</span><span class="p">.</span><span class="n">add_q</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">_query</span><span class="p">.</span><span class="n">add_q</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+    <span class="p">...</span>
+</code></pre></div></div>
+<ul>
+  <li>everything that’s put in the filter (and exclude) ends up as a regular Q object</li>
+  <li>out of the Q objects the Django ORM builds something called the WhereNode</li>
+  <li>example of the WhereNode tree:
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">blogs</span> <span class="o">=</span> <span class="n">Blog</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="nb">filter</span><span class="p">(</span><span class="n">title__istartswith</span><span class="o">=</span><span class="s">"A"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">blogs</span><span class="p">.</span><span class="n">query</span><span class="p">.</span><span class="n">where</span><span class="p">)</span>
+  
+<span class="c1"># (AND: IStartsWith(Col(demo_blog, demo.Blog.title), 'A'))
+</span></code></pre></div>    </div>
+  </li>
+  <li>example of a bit more complex filter (everything that has <code class="language-plaintext highlighter-rouge">id</code> 1 or starts with <code class="language-plaintext highlighter-rouge">A</code>):
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">blogs</span> <span class="o">=</span> <span class="n">Blog</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="nb">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">title__istartswith</span><span class="o">=</span><span class="s">"A"</span><span class="p">)))</span>
+ <span class="k">print</span><span class="p">(</span><span class="n">blogs</span><span class="p">.</span><span class="n">query</span><span class="p">.</span><span class="n">where</span><span class="p">)</span>
+   
+ <span class="c1"># (AND:
+</span> <span class="c1">#     (OR: Exact(Col(demo_blog, demo.Blog.id), 1),
+</span> <span class="c1">#       IStartsWith(Col(demo_blog, demo.Blog.title), 'A')))
+</span></code></pre></div>    </div>
+    <ul>
+      <li>two combined filters -&gt; one exact and one IStartsWith</li>
+      <li><code class="language-plaintext highlighter-rouge">AND</code> -&gt; a preparation for the next filter to be added</li>
+      <li>how does <code class="language-plaintext highlighter-rouge">AND</code> work?
+ ```python
+def _add_q(
+   self,
+   …
+   branch_negated=False,
+   current_negated=False,
+   …
+ ):
+ “"”Add a Q-object to the current filter.”””
+ connector = q_object.connector
+ current_negated = current_negated ^ q_object.negated
+ branch_negated = branch_negated or q_object.negated
+ …
+ for child in q_object.children:
+   …</li>
+    </ul>
+
+    <p>```</p>
+
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">connector</code> -&gt; the <code class="language-plaintext highlighter-rouge">AND</code> connector to the next query</li>
+      <li><code class="language-plaintext highlighter-rouge">current_negated</code>, <code class="language-plaintext highlighter-rouge">branch_negated</code> -&gt; figures out if I have a branch in my current
+ tree which is negated and which is not negated</li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h4 id="what-about-views">What about views?</h4>
+<ul>
+  <li>we have a model</li>
+  <li>but we also have a view, which might be accessed faster</li>
+  <li>how to query that view but still get our model?</li>
+</ul>
+
+<p><br /></p>
+
+<h5 id="monkey-patch-the-query-object">Monkey patch the query object</h5>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">django.db.models.sql.datastructures</span> <span class="kn">import</span> <span class="n">BaseTable</span> 
+<span class="n">bt</span> <span class="o">=</span> <span class="n">BaseTable</span><span class="p">(</span><span class="s">"demo_secondblog"</span><span class="p">,</span> <span class="s">"demo_secondblog"</span><span class="p">)</span>
+
+<span class="n">blogs</span><span class="p">.</span><span class="n">query</span><span class="p">.</span><span class="n">alias_map</span> <span class="o">=</span> <span class="p">{</span><span class="s">'demo_secondblog'</span><span class="p">:</span> <span class="n">bt</span><span class="p">}</span>
+<span class="n">blogs</span><span class="p">.</span><span class="n">query</span><span class="p">.</span><span class="n">alias_refcount</span> <span class="o">=</span> <span class="p">{</span><span class="s">'demo_secondblog'</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+<span class="n">blogs</span><span class="p">.</span><span class="n">query</span><span class="p">.</span><span class="n">table_map</span> <span class="o">=</span> <span class="p">{</span><span class="s">'demo_secondblog'</span><span class="p">:</span> <span class="p">[</span><span class="s">"demp_secondblog"</span><span class="p">]}</span>
+<span class="n">blogs</span><span class="p">.</span><span class="n">query</span><span class="p">.</span><span class="n">base_table</span> <span class="o">=</span> <span class="s">"demo_secondblog"</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">blogs</span><span class="p">.</span><span class="n">query</span><span class="p">)</span>
+<span class="c1"># SELECT "demo_secondblog"."id",
+# "demo_secondblog"."title" FROM
+# "demo_secondblog"
+</span></code></pre></div></div>
+<ul>
+  <li>the principle is to overwrite the attributes and change the compiler in that way
+but still end up with a instance of a blog and not of a second blog</li>
+  <li>the worst solution</li>
+</ul>
+
+<p><br /></p>
+
+<h5 id="use-unmanaged-models">Use Unmanaged Models</h5>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">UnmanagedBlog</span><span class="p">(</span><span class="n">Blog</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">managed</span> <span class="o">=</span> <span class="bp">False</span> 
+        <span class="n">db_table</span> <span class="o">=</span> <span class="s">"demo_secondblog"</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h3 id="how-do-values-flow-back-from-compiler-to-the-model-instance">How do values flow back from compiler to the model instance?</h3>
+<p>Call chain:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">QuerySet.__iter__</code></li>
+  <li><code class="language-plaintext highlighter-rouge">QuerySet.iterator</code></li>
+  <li><code class="language-plaintext highlighter-rouge">Query.get_compiler</code></li>
+  <li><code class="language-plaintext highlighter-rouge">SQLCompiler.results_iter</code></li>
+  <li><code class="language-plaintext highlighter-rouge">SQLCompiler.as_sql</code></li>
+</ul>
+
+<p><br /></p>
+
+<p>Iter</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># query.py
+</span>
+<span class="k">class</span> <span class="nc">ModelIterable</span><span class="p">:</span>
+    <span class="p">...</span>
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="p">...</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">compiler</span><span class="p">.</span><span class="n">results_iter</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+                <span class="n">obj</span> <span class="o">=</span> <span class="n">model_cls</span><span class="p">.</span><span class="n">from_db</span><span class="p">(</span>
+                    <span class="n">db</span><span class="p">,</span> <span class="n">init_list</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="n">model_fields_start</span><span class="p">:</span><span class="n">model_fields_end</span><span class="p">]</span>
+                <span class="p">)</span>
+        <span class="p">...</span>
+    <span class="p">...</span>
+</code></pre></div></div>
+<ul>
+  <li>takes the results from the compiler and instantiates the model class</li>
+  <li><code class="language-plaintext highlighter-rouge">init_list, row</code> -&gt; the database returns the data in an array and it’s neccessary
+ to have a correspondence between the name of the field and the actual position of the field</li>
+</ul>
+
+<h3 id="the-main-takeaways">The Main Takeaways</h3>
+<ul>
+  <li>the call chain:
+    <ul>
+      <li>Manager</li>
+      <li>QuerySet</li>
+      <li>Query</li>
+      <li>SQLCompiler</li>
+    </ul>
+  </li>
+  <li>each of these classed add one leyer of abstactions</li>
+  <li>almost every need you might have for custom queries can be met by writting with a custom manager
+    <ul>
+      <li>example of soft delete manager, where you don’t delete data, but set flag <code class="language-plaintext highlighter-rouge">deleted</code> and
+don’t want this data to end up in the <code class="language-plaintext highlighter-rouge">SELECT</code> queries:
+        <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">BlogManager</span><span class="p">(</span><span class="n">models</span><span class="p">.</span><span class="n">Manager</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">().</span><span class="n">get_queryset</span><span class="p">().</span><span class="nb">filter</span><span class="p">(</span><span class="n">deleted</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Blog</span><span class="p">(</span><span class="n">models</span><span class="p">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">objects</span> <span class="o">=</span> <span class="n">BlogManager</span><span class="p">()</span>
+
+    <span class="n">title</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">255</span><span class="p">)</span>
+    <span class="n">deleted</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+    </div><!-- .post-content -->
+    <div class="author-box">
+      
+      <div class="author-avatar" style="background-image: url('images/author.png')"><span class="screen-reader-text">Mia Bajić's Picture</span></div>
+      
+      <div class="author-details">
+        <h2 class="author-title">About Mia Bajić</h2>
+        <div class="author-bio"><p>Software engineer and community events organizer.</p>
+</div>
+        
+        
+      </div><!-- .author-details -->
+    </div><!-- .author-box -->
+  </article><!-- .post -->
+
+  
+
+</main><!-- .main-content -->
+
+      <footer class="site-footer">
+  <div class="offsite-links">
+    
+      
+<a href="https://github.com/clytaemnestra" target="_blank" rel="noopener">
+  <span class="fa-github" aria-hidden="true"></span>
+  <span class="screen-reader-text">GitHub</span>
+</a>
+
+<a href="https://www.linkedin.com/in/mia-bajic/" target="_blank" rel="noopener">
+  <span class="fa-linkedin" aria-hidden="true"></span>
+  <span class="screen-reader-text">LinkedIn</span>
+</a>
+
+<a href="https://bsky.app/profile/clytaemnestra.bsky.social" target="_blank" rel="noopener">
+  <span class="fa-bsky" aria-hidden="true"></span>
+  <span class="screen-reader-text">bsky</span>
+</a>
+
+    
+  </div><!-- .offsite-links -->
+  <div class="footer-bottom">
+    <div class="site-info">
+      
+
+    </div><!-- .site-info -->
+    <a href="#page" id="back-to-top" class="back-to-top"><span class="screen-reader-text">Back to the top </span>&#8593;</a>
+  </div><!-- .footer-bottom -->
+</footer><!-- .site-footer -->
+
+    </div><!-- .inner -->
+  </div><!-- .site -->
+
+
+  <script src="/tech-blog/assets/js/plugins.js"></script>
+  <script src="/tech-blog/assets/js/custom.js"></script>
+
+</body>
+</html>
