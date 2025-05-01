@@ -2,7 +2,7 @@
 layout: post
 title: "Keynoting DjangoCon EU"
 description: "Behind the scenes of my DjangoCon EU keynote"
-date: 2025-05-02
+date: 2025-05-01
 tags: [conferences]
 ---
 
