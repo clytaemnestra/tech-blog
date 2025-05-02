@@ -35,13 +35,11 @@ The rest of the week was much better! No rain, just lively evenings and packed p
 </div>
 
 ## Guinness
-The first time I tried Guinness was years ago in Bratislava. We were wandering around with old colleagues, and the only open place after midnight was a shabby pub filled with old men shouting at football players on a TV. They served maybe three kinds of beer. A colleague told me to try Guinness.
+The first time I tried Guinness was years ago in Bratislava. We were wandering around with old colleagues, and the only open place after midnight was a shabby pub filled with old men shouting at football players on a TV. They served maybe three kinds of beer. A colleague told me to try Guinness. Worst. Beer. Of. My. Life. And I’ve tried many. (Not exactly proud of that.)
 
-Worst. Beer. Of. My. Life.
+I tried a few in Dublin, and they were completely different! Very creamy and tasty. Apparently, they use nitrogen instead of CO₂ in Ireland, and that’s why they taste so different.
 
-And I’ve tried many. (Not exactly proud of that.)
-
-But all the ones I had in Dublin were completely different and very tasty! I’m writing this post while sipping my last pint at the airport. Definitely leaving on a high note.
+Whenever I was out, I mostly drank Guinness. Even now, I’m writing this post while sipping my last pint at the airport. Definitely leaving on a high note.
 
 <div class="image-row">
   <img src="./images/posts/djangocon2/guinness2.jpg" alt="Wrocław at night with fog and illuminated streets" style="max-width: 45%;">
@@ -61,7 +59,7 @@ So I started thinking about the topic. I wanted something technical but also fun
 <br>
 
 
-Working on the talk was so much fun! I have an arts background, and I love how public speaking blends technical research with storytelling, visuals, and performance all into one!
+Working on the talk was so much fun! I’ve always loved the arts (and even have some formal education in it), and I really enjoy how public speaking brings together technical research, storytelling, visuals, and performance all in one.
 
 Some examples were space-themed, and I love reading more about spacecraft or planes, like NASA’s Mars Climate Orbiter crash or the Boeing Max disaster (hint: yes, it was software!).
 
@@ -82,12 +80,12 @@ After dinner, we went to a nearby pub for a pint of Guinness. Paolo took a photo
   <img src="./images/posts/djangocon2/paolo.jpg" alt="Large mural depicting historical scenes in Wrocław" style="max-width: 99%; height: auto;">
 </div>
 
-## The Day D
+## The Talk Day
 I fell asleep at 3 am and woke up at 6. I went to the auditorium expecting maybe ten people to show up, since it was 9 am after all. To my biggest surprise, the room was so packed that people were standing, with no empty seats left!
 
 I thought a few of my slides might be funny, but the audience laughed and followed my stories the whole way. It felt amazing!
 
-Afterwards, many folks came up and shared more bizarre bug stories with me. Might have to do a second part next year.
+Afterwards, many folks came up and shared more bizarre bug stories with me. Might have to do a second part next year! Big thanks to everyone for sharing your stories with me!
 
 <div class="image-row">
   <img src="./images/posts/djangocon2/talk2.png" alt="Wrocław at night with fog and illuminated streets" style="max-width: 64%;">
@@ -128,7 +126,7 @@ After day one of sprints, there's a tradition: swim in the ocean. I totally forg
 
 I went with [Thibaud](https://thib.me/about/) and [Tom](https://carrick.eu/) who did go in, and standing there watching them made me want to join. I walked into the ocean up to my knees. It was so cold that my legs went instantly numb. Which is good, because then you don’t feel the pain.
 
-For a second, I seriously considered jumping in. Luckily, I decided not to, since I didn't have any clothes to swim in. If it had been later in the night, though, you might be reading now about my dead body being found in the ocean...
+Next year, I’m bringing swimwear and going in for the full challenge!
 
 <div style="display: flex; justify-content: space-between;">
   <img src="./images/posts/djangocon2/ocean.jpg" alt="Large mural depicting historical scenes in Wrocław" style="max-width: 99%; height: auto;">
