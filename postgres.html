@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="kZa86zQaQuJ1ICcmj-NforLCR2TS6_ftskPHLy8mjqw"/>
+  <title>PostgreSQL: About Internals &amp; Tuning</title>
+  <meta name="description" content="Mia Bajic TIL today I learned tech blog">
+  <link rel="canonical" href="https://clytaemnestra.github.io/tech-blog/postgres">
+  <link rel="alternate" type="application/rss+xml" title="TIL Feed"
+    href="https://clytaemnestra.github.io/tech-blog/feed.xml">
+  <!-- Styles -->
+  <link href="https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i%7CNoto+Serif:400,400i,700,700i&display=swap" rel="stylesheet">
+  <link href="/tech-blog/assets/css/style.css" rel="stylesheet">
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Mia Bajic",
+    "url": "https://clytaemnestra.github.io/tech-blog/",
+    "sameAs": [
+      "https://www.linkedin.com/in/mia-bajic",
+      "https://github.com/clytaemnestra"
+    ]
+  }
+  </script>
+  
+  
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9873VJPWX5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9873VJPWX5');
+</script>
+
+</head>
+<body>
+
+
+  <div id="page" class="site">
+    <div class="inner">
+      <header class="site-header">
+  
+  <p class="site-title"><a class="logo-text" href="/tech-blog/">TIL</a></p>
+  
+  <nav class="site-navigation">
+    <div class="site-navigation-wrap">
+      <h2 class="screen-reader-text">Main navigation</h2>
+      <ul class="menu">
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- External URL -->
+            <a class="" href="https://forms.gle/kwXcWp9qSiMcY1nU9" target="_blank" rel="noopener noreferrer">Subscribe</a>
+          
+        </li>
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- Internal URL -->
+            <a class="" href="/tech-blog/">Home</a>
+          
+        </li>
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- Internal URL -->
+            <a class="" href="/tech-blog/about">About</a>
+          
+        </li>
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- Internal URL -->
+            <a class="" href="/tech-blog/tags">Tags</a>
+          
+        </li>
+        
+      </ul><!-- .menu -->
+      <button id="menu-close" class="menu-toggle">
+        <span class="screen-reader-text">Close Menu</span>
+        <span class="icon-close" aria-hidden="true"></span>
+      </button>
+    </div><!-- .site-navigation-wrap -->
+    </nav><!-- .site-navigation -->    
+  <button id="menu-open" class="menu-toggle"><span class="screen-reader-text">Open Menu</span><span class="icon-menu" aria-hidden="true"></span></button>
+</header>
+
+
+
+      <main class="main-content fadeInDown delay_075s">
+
+  <article class="post">
+    <header class="post-header">
+      <time class="post-date" datetime="2024-09-15">September 15, 2024</time>
+      <h1 class="post-title">PostgreSQL: About Internals & Tuning</h1>
+      <div class="post-meta">
+        By <span class="post-author">Mia Bajić</span><span class="post-tags"> in <a href="/tech-blog/tags/#conferences" rel="tag">conferences</a>, <a href="/tech-blog/tags/#system-design" rel="tag">system-design</a></span>
+      </div><!-- .post-meta -->
+      
+    </header><!-- .post-header -->
+    <div class="post-content">
+      <p>I attended Karen Jex’s <a href="https://www.youtube.com/watch?v=7CnqVoMxoeo">talk on databases</a> at DjangoCon in Edinburgh 2023. That sparked my curiousity. I find databases fascinating—they don’t change as fast and as much as other software, such as frameworks, yet they’re used in nearly every system we rely on.</p>
+
+<p>I decided to spend this rainy weekend in Prague exploring the internals of PostgreSQL and writing down some notes from my learnings.</p>
+
+<h2 id="how-is-data-stored">How Is Data Stored?</h2>
+<p>As someone who regularly works with databases, I know data is stored in tables, but how exactly are these tables stored?</p>
+
+<ul>
+  <li><strong>Tables</strong>: Stored as heap files on disk.</li>
+  <li><strong>Heap Files</strong>: Consist of data pages (also called blocks), each typically 8 KB in size.</li>
+  <li><strong>Data Pages</strong>: The basic unit of storage in PostgreSQL, containing tuples (rows) and header information.</li>
+  <li><strong>Tuples</strong>: Each tuple consists of a header (metadata) and the actual data (column values). Tuples are not stored in any particular order.</li>
+</ul>
+
+<h3 id="structure-of-a-data-page">Structure of a Data Page</h3>
+
+<p>A data page has the following components:</p>
+
+<ol>
+  <li><strong>Page Header:</strong> Contains metadata about the page.</li>
+  <li><strong>Line Pointer (Item Identifier) Array:</strong> An array of pointers to the tuples stored within the page.</li>
+  <li><strong>Tuple Data Area:</strong> The actual storage area where tuples (rows) are stored.</li>
+  <li><strong>Free Space:</strong> Unused space available for new tuples.</li>
+</ol>
+
+<figure>
+  <img src="./images/posts/postgres/page.png" alt="Page architecture" style="max-width: 100%; max-height: 100%; display: block;" />
+  <figcaption style="text-align: center;">Page architecture. Source: interdb.jp/pg</figcaption>
+</figure>
+
+<p><br /></p>
+
+<figure>
+<img src="./images/posts/postgres/tuple.png" alt="Tuple architecture" style="max-width: 100%; max-height: 100%; display: block;" />
+  <figcaption style="text-align: center;">Tuple architecture. Source: interdb.jp/pg</figcaption>
+</figure>
+
+<h3 id="line-pointer-array">Line Pointer Array</h3>
+<p>Now that we’ve introduced data pages, we can explain the <strong>line pointer array</strong>:</p>
+<ul>
+  <li>An array of pointers located immediately after the page header in each data page.</li>
+  <li>Each entry in this array is called a “line pointer.”</li>
+  <li>Each line pointer corresponds to a tuple (row) stored within the data range.</li>
+  <li>It points to the offset within the page where a tuple starts.</li>
+</ul>
+
+<h4 id="what-happens-when-a-new-row-is-inserted">What Happens When a New Row is Inserted?</h4>
+<ol>
+  <li>PostgreSQL places the new row into a data page.</li>
+  <li>The tuple for this row has a header (metadata) and the data itself (column values).</li>
+  <li>The line pointer array contains a pointer to this tuple’s location within the page.</li>
+</ol>
+
+<figure>
+  <img src="./images/posts/postgres/tuple-insertion.png" alt="Tuple insertion" style="max-width: 100%; max-height: 100%; display: block;" />
+  <figcaption style="text-align: center;">Tuple insertion. Source: interdb.jp/pg</figcaption>
+</figure>
+
+<h4 id="what-happens-when-a-row-is-deleted">What Happens When a Row is Deleted?</h4>
+<ol>
+  <li>The row is marked as logically deleted (dead) by updating its metadata.</li>
+  <li>Its visibility is changed so future transactions cannot see it.</li>
+  <li>The line pointer still points to the row’s location, but it is marked as ‘dead.’</li>
+  <li>The data remains on the page until a cleanup process (VACUUM) occurs.</li>
+</ol>
+
+<h4 id="what-happens-when-a-row-is-updated">What Happens When a Row is Updated?</h4>
+<ol>
+  <li>A new version of the tuple is created and may be placed in a different part of the page or even a different page.</li>
+  <li>The line pointer array is updated to point to the new location of the tuple.</li>
+</ol>
+
+<h2 id="internals">Internals</h2>
+<p>With an understanding of how data is stored, let’s check out other key concepts of PostgreSQL internals.</p>
+
+<p>PostgreSQL follows a client-server architecture where each client connection is handled by a separate backend process. The database consists of various subsystems responsible for processing queries, managing memory, storing data, and many more.</p>
+
+<figure>
+  <img src="./images/posts/postgres/process-architecture.png" alt="Process architecture" style="max-width: 100%; max-height: 100%; display: block;" />
+  <figcaption style="text-align: center;">Process architecture. Source: interdb.jp/pg</figcaption>
+</figure>
+
+<p><br /></p>
+
+<h3 id="memory-architecture">Memory Architecture</h3>
+<p>PostgreSQL’s memory architecture consists of:</p>
+<ul>
+  <li><strong>Local Memory:</strong> Allocated by each backend process for its own use.</li>
+  <li><strong>Shared Memory:</strong> Used by all processes.</li>
+</ul>
+
+<figure>
+  <img src="./images/posts/postgres/memory-architecture.png" alt="Memory architecture" style="max-width: 100%; max-height: 100%; display: block;" />
+  <figcaption style="text-align: center;">Memory architecture. Source: interdb.jp/pg</figcaption>
+</figure>
+
+<p><br /></p>
+
+<h3 id="indexes">Indexes</h3>
+<p>Indexes improve data retrieval speed by providing quick access paths to data. The most commonly used underlying structure is a B-Tree.</p>
+
+<p>Index Lookup Process:</p>
+<ol>
+  <li><strong>Search Index:</strong> Find matching keys.</li>
+  <li><strong>Retrieve CTIDs:</strong> Get the physical locations.</li>
+  <li><strong>Access Data Pages:</strong> Use CTIDs to fetch tuples directly.</li>
+</ol>
+
+<p>Without an index, PostgreSQL performs a sequential scan, checking each row in every page.</p>
+
+<h4 id="difference-between-an-index-and-a-line-pointer">Difference Between an Index and a Line Pointer</h4>
+<ul>
+  <li>Index is an external structure to the table while a line pointer is internal to each data page.</li>
+  <li>Index provides a mapping from column values to CTIDs, while line pointer points to the physical offset of tuples within the page</li>
+</ul>
+
+<h3 id="query-path">Query Path</h3>
+<p>Let’s see how a query is processed:</p>
+<ol>
+  <li><strong>Connection Established:</strong> A process is created per user.</li>
+  <li><strong>Query Sent:</strong> The client sends a plain text query to the backend.</li>
+  <li><strong>Parsing:</strong> The parser checks the query syntax and creates a query tree. It performs semantic analysis to understand the tables, functions, and operators referenced.</li>
+  <li><strong>Rewrite System:</strong> Applies rules to the query tree.</li>
+  <li><strong>Planning:</strong> The planner generates a query plan, choosing the optimal execution path.</li>
+  <li><strong>Execution:</strong> The executor steps through the plan tree and retrieves rows in the way represented by the plan.</li>
+</ol>
+
+<h2 id="vacuum">VACUUM</h2>
+<p>Maintains database health by:</p>
+<ul>
+  <li>Removing dead tuples.</li>
+  <li>Freezing transaction IDs.</li>
+</ul>
+
+<p>Two types of VACUUM:</p>
+<ol>
+  <li><strong>Concurrent VACUUM:</strong> Removes dead tuples while allowing other transactions to read the table.</li>
+  <li><strong>Full VACUUM:</strong> Removes dead tuples and defragments live tuples in the entire file, blocking access to the table during the process.</li>
+</ol>
+
+<h3 id="write-ahead-logging-wal">Write-Ahead Logging (WAL)</h3>
+<ul>
+  <li>Ensures no data is lost even in case of system failure.</li>
+  <li>WAL records (XLOG records) are written to in-memory buffers and then immediately to a WAL segment file upon transaction commit or abort.</li>
+  <li>PostgreSQL starts recovery from the <strong>REDO point</strong>, the location of the latest checkpoint.</li>
+</ul>
+
+<h3 id="how-does-replication-work">How Does Replication Work?</h3>
+<p>The primary server continuously sends WAL data to standby servers, which then replay the received data.</p>
+
+<h2 id="how-to-tune-postgres">How to Tune Postgres?</h2>
+<p>Now that you know the basics, you might be wondering if there’s anything you need to tune or if PostgreSQL just works as is. If you look at the documentation, you’ll find over 300 parameters, which can be pretty overwhelming. I came across <a href="https://www.youtube.com/watch?v=7CnqVoMxoeo">Karen’s talk</a> at DjangoCon, where she shared a list of the most important parameters to change from their default values. Here are my notes from her talk. If you’re interested in tuning PostgreSQL, I recommend watching the full talk!</p>
+
+<h3 id="setting-parameters">Setting Parameters</h3>
+<ul>
+  <li><strong>Cluster level:</strong> <code class="language-plaintext highlighter-rouge">postgresql.conf</code> or <code class="language-plaintext highlighter-rouge">ALTER SYSTEM SET parameter=value;</code></li>
+  <li><strong>Database level:</strong> <code class="language-plaintext highlighter-rouge">ALTER DATABASE db1 SET parameter=value;</code></li>
+  <li><strong>User/Role level:</strong> <code class="language-plaintext highlighter-rouge">ALTER ROLE bob SET parameter=value;</code></li>
+  <li><strong>Session level:</strong> <code class="language-plaintext highlighter-rouge">SET parameter=value;</code></li>
+  <li><strong>Transaction level:</strong> <code class="language-plaintext highlighter-rouge">SET LOCAL parameter=value;</code></li>
+</ul>
+
+<h3 id="contexts">Contexts</h3>
+<ul>
+  <li><strong>Internal:</strong> Set during cluster creation, can’t be changed.</li>
+  <li><strong>Postmaster:</strong> Requires server restart.</li>
+  <li><strong>SIGHUP:</strong> Requires config file reload.</li>
+  <li><strong>Superuser-backend:</strong> Affects only new connections.</li>
+  <li><strong>Backend:</strong> Affects existing connections.</li>
+  <li><strong>Superuser/User:</strong> Can be set in the session.</li>
+</ul>
+
+<h3 id="where-to-find-information-about-parameters">Where to Find Information About Parameters?</h3>
+<ul>
+  <li>Documentation.</li>
+  <li>Default <code class="language-plaintext highlighter-rouge">postgresql.conf</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">pg_settings</code> view. Example query: <code class="language-plaintext highlighter-rouge">SELECT * FROM pg_settings WHERE name=’max_connections’;</code>.</li>
+</ul>
+
+<h3 id="connection-and-session-parameters">Connection and Session Parameters</h3>
+<ul>
+  <li><strong>listen_addresses:</strong>
+    <ul>
+      <li><strong>Description:</strong> Addresses allowed to connect.</li>
+      <li><strong>Default:</strong> <code class="language-plaintext highlighter-rouge">localhost</code></li>
+      <li><strong>Suggested:</strong> <code class="language-plaintext highlighter-rouge">*</code> or <code class="language-plaintext highlighter-rouge">0.0.0.0</code> (all IPv4), <code class="language-plaintext highlighter-rouge">::</code> (all IPv6)</li>
+    </ul>
+  </li>
+  <li><strong>max_connections:</strong>
+    <ul>
+      <li><strong>Description:</strong> Maximum concurrent connections.</li>
+      <li><strong>Default:</strong> <code class="language-plaintext highlighter-rouge">100</code></li>
+      <li><strong>Suggested:</strong> No more than <code class="language-plaintext highlighter-rouge">500</code>. Use connection pooling if you have over hundreds of connections.</li>
+    </ul>
+  </li>
+  <li><strong>idle_in_transaction_session_timeout:</strong>
+    <ul>
+      <li><strong>Description:</strong> Max idle time between queries in a transaction.</li>
+      <li><strong>Default:</strong> <code class="language-plaintext highlighter-rouge">0</code> (disabled)</li>
+      <li><strong>Suggested:</strong> <code class="language-plaintext highlighter-rouge">30 minutes</code></li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="memory-parameters">Memory Parameters</h3>
+<ul>
+  <li><strong>shared_buffers:</strong>
+    <ul>
+      <li><strong>Description:</strong> Memory for caching data.</li>
+      <li><strong>Default:</strong> <code class="language-plaintext highlighter-rouge">128MB</code></li>
+      <li><strong>Suggested:</strong> <code class="language-plaintext highlighter-rouge">25-40%</code> of available memory.</li>
+    </ul>
+  </li>
+  <li><strong>work_mem:</strong>
+    <ul>
+      <li><strong>Description:</strong> Max memory per operation before spilling to disk.</li>
+      <li><strong>Default:</strong> <code class="language-plaintext highlighter-rouge">4MB</code></li>
+      <li><strong>Suggested:</strong> <code class="language-plaintext highlighter-rouge">10MB</code>. Adjust per session for large operations.</li>
+    </ul>
+  </li>
+  <li><strong>maintenance_work_mem:</strong>
+    <ul>
+      <li><strong>Description:</strong> Memory for maintenance tasks like VACUUM.</li>
+      <li><strong>Default:</strong> <code class="language-plaintext highlighter-rouge">64MB</code></li>
+      <li><strong>Suggested:</strong> <code class="language-plaintext highlighter-rouge">~5%</code> of total RAM.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="logging-parameters">Logging Parameters</h3>
+<ul>
+  <li><strong>log_min_duration_statement:</strong>
+    <ul>
+      <li><strong>Description:</strong> Logs statements exceeding a duration.</li>
+      <li><strong>Default:</strong> <code class="language-plaintext highlighter-rouge">-1</code> (disabled)</li>
+      <li><strong>Suggested:</strong> <code class="language-plaintext highlighter-rouge">1s</code> or as per system needs.</li>
+    </ul>
+  </li>
+  <li><strong>log_line_prefix:</strong>
+    <ul>
+      <li><strong>Description:</strong> Information prefixed to each log line.</li>
+      <li><strong>Default:</strong> <code class="language-plaintext highlighter-rouge">%m [%p]</code> (timestamp and process ID)</li>
+      <li><strong>Suggested:</strong> <code class="language-plaintext highlighter-rouge">%t:%r:%u@%d:[%p]:</code> (timestamp, host, user, database, process ID).</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="wal-parameters">WAL Parameters</h3>
+<ul>
+  <li><strong>wal_buffers:</strong>
+    <ul>
+      <li><strong>Description:</strong> Memory for WAL before syncing to disk.</li>
+      <li><strong>Default:</strong> <code class="language-plaintext highlighter-rouge">-1</code> (auto-calculated)</li>
+      <li><strong>Suggested:</strong> <code class="language-plaintext highlighter-rouge">32MB</code> for many concurrent connections.</li>
+    </ul>
+  </li>
+  <li><strong>checkpoint_timeout:</strong>
+    <ul>
+      <li><strong>Description:</strong> Max time between automatic WAL checkpoints.</li>
+      <li><strong>Default:</strong> <code class="language-plaintext highlighter-rouge">5 minutes</code></li>
+      <li><strong>Suggested:</strong> <code class="language-plaintext highlighter-rouge">10-30 minutes</code> to balance crash recovery and IO intensity.</li>
+    </ul>
+  </li>
+  <li><strong>max_wal_size:</strong>
+    <ul>
+      <li><strong>Description:</strong> Sets WAL size that triggers a checkpoint.</li>
+      <li><strong>Default:</strong> <code class="language-plaintext highlighter-rouge">1GB</code></li>
+      <li><strong>Suggested:</strong> <code class="language-plaintext highlighter-rouge">½ to ⅔</code> of disk space in the WAL directory.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="query-tuning">Query Tuning</h3>
+<ul>
+  <li><strong>effective_cache_size:</strong>
+    <ul>
+      <li><strong>Description:</strong> Approximate memory available for operations.</li>
+      <li><strong>Default:</strong> <code class="language-plaintext highlighter-rouge">4GB</code></li>
+      <li><strong>Suggested:</strong> <code class="language-plaintext highlighter-rouge">50-70%</code> of total memory.</li>
+    </ul>
+  </li>
+  <li><strong>random_page_cost:</strong>
+    <ul>
+      <li><strong>Description:</strong> Cost estimate for fetching a disk page.</li>
+      <li><strong>Default:</strong> <code class="language-plaintext highlighter-rouge">4</code></li>
+      <li><strong>Suggested:</strong> <code class="language-plaintext highlighter-rouge">1.1</code> for SSDs, <code class="language-plaintext highlighter-rouge">2.0</code> for fast spinning disks.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="parameters-to-avoid-changing">Parameters to Avoid Changing</h3>
+<ul>
+  <li><strong>fsync:</strong>
+    <ul>
+      <li>Can cause database corruption if disabled.</li>
+    </ul>
+  </li>
+  <li><strong>synchronous_commit:</strong>
+    <ul>
+      <li>Risk of data loss.</li>
+    </ul>
+  </li>
+  <li><strong>autovacuum:</strong>
+    <ul>
+      <li>Essential for cleaning up dead tuples. Monitor with <code class="language-plaintext highlighter-rouge">log_autovacuum_min_duration=0</code>.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="what-more-to-pay-attention-to">What More to Pay Attention to?</h2>
+<p>I recently attended <a href="https://www.youtube.com/watch?v=G7glaoEa9WQ">another one of Karen’s talks</a> at PyCon UK called “How to Make Your Database Happy.” In addition to the parameters from above, she mentioned the importance of backups and high availability. Here are my notes from the talk.</p>
+
+<h3 id="backups">Backups</h3>
+<p>If your data is important and you want to be able to recover it, you need:</p>
+<ul>
+  <li><strong>Somewhere to store it:</strong> A backup repository (preferably on a different server).</li>
+  <li><strong>Backup tool:</strong> Use tools like <code class="language-plaintext highlighter-rouge">pgBackRest</code> or <code class="language-plaintext highlighter-rouge">Barman</code>.</li>
+  <li><strong>Scheduling:</strong> Ensure regular backups.</li>
+  <li><strong>Online backups:</strong> Implement WAL archiving to save WAL files in a separate location.
+    <ul>
+      <li>Enable archive mode and set up an archive command.</li>
+      <li>Use <code class="language-plaintext highlighter-rouge">pgBackRest</code> to take regular backups.</li>
+      <li>Backup = Copy of data + WAL.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="high-availability">High Availability</h3>
+<ul>
+  <li><strong>Streaming Replication:</strong> Use PostgreSQL streaming replication to push data from the primary to replicas.</li>
+  <li><strong>Failover Management:</strong> Use tools like <code class="language-plaintext highlighter-rouge">Patroni</code> to monitor your cluster. If the primary fails, a standby can take over as the new primary.</li>
+</ul>
+
+<h2 id="sources">Sources</h2>
+<ul>
+  <li>How to make you database happy?, Karen Jex: <a href="https://www.youtube.com/watch?v=G7glaoEa9WQ">https://www.youtube.com/watch?v=G7glaoEa9WQ</a></li>
+  <li>Tuning PostgreSQL to work even better, Karen Jex: <a href="https://www.youtube.com/watch?v=7CnqVoMxoeo">https://www.youtube.com/watch?v=7CnqVoMxoeo</a></li>
+  <li>The internals of PostgreSQL, Hironobu Suzuki: <a href="https://www.interdb.jp/pg/index.html">https://www.interdb.jp/pg/index.html</a></li>
+  <li>PostgreSQL documentation: <a href="https://www.postgresql.org/docs/current/index.html">https://www.postgresql.org/docs/current/index.html</a></li>
+</ul>
+
+    </div><!-- .post-content -->
+    <div class="author-box">
+      
+      <div class="author-avatar" style="background-image: url('images/author.png')"><span class="screen-reader-text">Mia Bajić's Picture</span></div>
+      
+      <div class="author-details">
+        <h2 class="author-title">About Mia Bajić</h2>
+        <div class="author-bio"><p>Software engineer and community events organizer.</p>
+</div>
+        
+        
+      </div><!-- .author-details -->
+    </div><!-- .author-box -->
+  </article><!-- .post -->
+
+  
+
+</main><!-- .main-content -->
+
+      <footer class="site-footer">
+  <div class="offsite-links">
+    
+      
+<a href="https://github.com/clytaemnestra" target="_blank" rel="noopener">
+  <span class="fa-github" aria-hidden="true"></span>
+  <span class="screen-reader-text">GitHub</span>
+</a>
+
+<a href="https://www.linkedin.com/in/mia-bajic/" target="_blank" rel="noopener">
+  <span class="fa-linkedin" aria-hidden="true"></span>
+  <span class="screen-reader-text">LinkedIn</span>
+</a>
+
+<a href="https://bsky.app/profile/clytaemnestra.bsky.social" target="_blank" rel="noopener">
+  <span class="fa-bsky" aria-hidden="true"></span>
+  <span class="screen-reader-text">bsky</span>
+</a>
+
+    
+  </div><!-- .offsite-links -->
+  <div class="footer-bottom">
+    <div class="site-info">
+      
+
+    </div><!-- .site-info -->
+    <a href="#page" id="back-to-top" class="back-to-top"><span class="screen-reader-text">Back to the top </span>&#8593;</a>
+  </div><!-- .footer-bottom -->
+</footer><!-- .site-footer -->
+
+    </div><!-- .inner -->
+  </div><!-- .site -->
+
+
+  <script src="/tech-blog/assets/js/plugins.js"></script>
+  <script src="/tech-blog/assets/js/custom.js"></script>
+
+</body>
+</html>
