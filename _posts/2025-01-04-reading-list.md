@@ -16,9 +16,6 @@ I decided to list all the books I read in 2024 below, starting with my absolute 
 At the end of this article, you can find out what my favorite book was, which one I disliked the most, and which surprised me in an unexpected way.
 
 <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-  <div style="flex: 0.9; margin-right: 10px;">
-    <img src="./images/books.jpg" alt="Colorful mural of abstract faces in Wrocław" style="width: 100%; height: auto;">
-  </div>
 
   <div style="display: flex; flex-direction: column; gap: 12px; flex: 0.5;">
     <img src="./images/books1.jpg" alt="Graffiti of a woman's face in Wrocław" style="width: 100%; height: auto;">
