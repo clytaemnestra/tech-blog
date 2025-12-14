@@ -70,8 +70,7 @@ Some of the things I worked on that I’m proud of:
 * UX research with open source contributors. We ran UX research calls where we talked to open source contributors about how we could make the conference better for them. This was mostly about listening. People were very open about what they’re missing at conferences, and a lot of the direction we took came directly from those conversations. The idea is that if we attract more OSS contributors, they can collaborate with each other, work on their tools, and also create workshops and talks for developers, who are our main audience. More OSS contributors also means richer and better content for everyone. We also launched an open-ended questionnaire to collect ideas from the community. One clear theme that came out of the research was interest in more core CPython topics and more open spaces. Based on this, the chair and I decided to gently push the conference in that direction. We asked the program team to aim for CPython-related keynotes and proactively worked on reaching out to interesting speakers asking them to submit a proposal. We received feedback from attendees after the conference that they were very happy with the technical keynotes. We also had a screening of a documentary featuring core developers and other community members, which was super cool.  
 * I’m especially happy that after so many years, [it looks like the CPython Language Summit will take place at EuroPython instead of PyCon US](https://discuss.python.org/t/poll-alternating-the-language-summit-between-pycon-us-and-europython/104527). The idea is to alternate between the two events and give people a chance to attend if traveling to the US is difficult.  
 * Last but not least, we had the biggest conference ever, and it took the least effort to put together. I’m incredibly proud of what the team managed to pull off together. 
-
-## 
+ 
 
 ## Looking ahead
 
