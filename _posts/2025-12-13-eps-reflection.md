@@ -13,7 +13,7 @@ Most of what happened this year was the result of many people contributing their
 
 Over the past year, I took on two major roles: leading the design and comms team, and vice-chairing the non-profit itself. I tracked my time in my calendar, which is open to the whole EuroPython Society organization. Below is a breakdown of my time.
 
-<img src="./images/timesheet.svg" alt="" style="max-width: 50%; max-height: 100%; display: block;">
+<img src="./images/timesheet.svg" alt="" style="max-width: 100%; max-height: 100%; display: block;">
 
 As you can see, there are a few clear peaks:
 
