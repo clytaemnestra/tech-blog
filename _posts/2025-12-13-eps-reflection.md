@@ -5,7 +5,7 @@ description: "A Year on the EuroPython Society Board"
 date: 2025-12-13
 tags: [community]
 ---
-Last year I announced that I’d be running for the EuroPython Society board in this article. My main goals were simple: to learn, to grow, and to give back to the community that gave me so much. 
+Last year I announced that I’d be running for the EuroPython Society board in [this article](https://clytaemnestra.github.io/tech-blog/eps-elections). My main goals were simple: to learn, to grow, and to give back to the community that gave me so much. 
 
 Most of what happened this year was the result of many people contributing their time, ideas, and energy, so this is as much a reflection on working together as it is on my own role.
 
