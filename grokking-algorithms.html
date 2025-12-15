@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="kZa86zQaQuJ1ICcmj-NforLCR2TS6_ftskPHLy8mjqw"/>
+  <title>Notes from Books: Grokking Algorithms</title>
+  <meta name="description" content="Mia Bajic TIL today I learned tech blog">
+  <link rel="canonical" href="https://clytaemnestra.github.io/tech-blog/grokking-algorithms">
+  <link rel="alternate" type="application/rss+xml" title="TIL Feed"
+    href="https://clytaemnestra.github.io/tech-blog/feed.xml">
+  <!-- Styles -->
+  <link href="https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i%7CNoto+Serif:400,400i,700,700i&display=swap" rel="stylesheet">
+  <link href="/tech-blog/assets/css/style.css" rel="stylesheet">
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Mia Bajic",
+    "url": "https://clytaemnestra.github.io/tech-blog/",
+    "sameAs": [
+      "https://www.linkedin.com/in/mia-bajic",
+      "https://github.com/clytaemnestra"
+    ]
+  }
+  </script>
+  
+  
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9873VJPWX5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9873VJPWX5');
+</script>
+
+</head>
+<body>
+
+
+  <div id="page" class="site">
+    <div class="inner">
+      <header class="site-header">
+  
+  <p class="site-title"><a class="logo-text" href="/tech-blog/">TIL</a></p>
+  
+  <nav class="site-navigation">
+    <div class="site-navigation-wrap">
+      <h2 class="screen-reader-text">Main navigation</h2>
+      <ul class="menu">
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- External URL -->
+            <a class="" href="https://forms.gle/kwXcWp9qSiMcY1nU9" target="_blank" rel="noopener noreferrer">Subscribe</a>
+          
+        </li>
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- Internal URL -->
+            <a class="" href="/tech-blog/">Home</a>
+          
+        </li>
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- Internal URL -->
+            <a class="" href="/tech-blog/about">About</a>
+          
+        </li>
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- Internal URL -->
+            <a class="" href="/tech-blog/tags">Tags</a>
+          
+        </li>
+        
+      </ul><!-- .menu -->
+      <button id="menu-close" class="menu-toggle">
+        <span class="screen-reader-text">Close Menu</span>
+        <span class="icon-close" aria-hidden="true"></span>
+      </button>
+    </div><!-- .site-navigation-wrap -->
+    </nav><!-- .site-navigation -->    
+  <button id="menu-open" class="menu-toggle"><span class="screen-reader-text">Open Menu</span><span class="icon-menu" aria-hidden="true"></span></button>
+</header>
+
+
+
+      <main class="main-content fadeInDown delay_075s">
+
+  <article class="post">
+    <header class="post-header">
+      <time class="post-date" datetime="2022-08-11">August 11, 2022</time>
+      <h1 class="post-title">Notes from Books: Grokking Algorithms</h1>
+      <div class="post-meta">
+        By <span class="post-author">Mia Bajić</span><span class="post-tags"> in <a href="/tech-blog/tags/#books" rel="tag">books</a>, <a href="/tech-blog/tags/#algorithms" rel="tag">algorithms</a></span>
+      </div><!-- .post-meta -->
+      
+    </header><!-- .post-header -->
+    <div class="post-content">
+      <h1 id="linked-lists--arrays">Linked lists &amp; Arrays</h1>
+<h3 id="access">Access</h3>
+<ul>
+  <li>linked list can only do sequential access
+    <ul>
+      <li>if you want to read the 10th element, you need to read the first 9</li>
+      <li>elements are strewn all over, and one element stores the address of the next one</li>
+      <li>allow fast inserts &amp; deletes</li>
+    </ul>
+  </li>
+  <li>arrays can do random access
+    <ul>
+      <li>you directly jump to the 10th element</li>
+      <li>arrays thus allow fast reads</li>
+      <li>all elements are stored right next to each other</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="runtimes">Runtimes</h3>
+<p><img src="https://user-images.githubusercontent.com/38294198/174497967-b0531a88-b9ae-491a-9357-c6f65a3d005c.png" alt="obrazek" /></p>
+
+<h2 id="creation-of-a-linked-list">Creation of a linked list</h2>
+<h3 id="principle">Principle</h3>
+<ul>
+  <li>create an empty linked list</li>
+  <li>add head and assign to it data (data is in class Node)</li>
+  <li>add second node and assign to it data</li>
+  <li>add third node and assign to it data</li>
+  <li>link head with second node</li>
+  <li>link second with the third node</li>
+  <li>third node has default <code class="language-plaintext highlighter-rouge">None</code>, so no need to do anything with it</li>
+</ul>
+
+<h3 id="code">Code</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">llist</span> <span class="o">=</span> <span class="n">LinkedList</span><span class="p">()</span>
+<span class="n">llist</span><span class="p">.</span><span class="n">head</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">second</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">third</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">llist</span><span class="p">.</span><span class="n">head</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">second</span>
+<span class="n">second</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">third</span>
+</code></pre></div></div>
+<h2 id="insertion">Insertion</h2>
+<h3 id="beginning">Beginning</h3>
+<h3 id="principle-1">Principle</h3>
+<ul>
+  <li>create a new node and add data to it</li>
+  <li>switch head &amp; new node:
+    <ul>
+      <li>as next add there current head</li>
+      <li>move head to the new node</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="code-1">Code</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="n">new_node</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">new_node</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">head</span>
+    <span class="bp">self</span><span class="p">.</span><span class="n">head</span> <span class="o">=</span> <span class="n">new_node</span>
+</code></pre></div></div>
+<h3 id="after-a-given-node">After a given node</h3>
+<h3 id="principle-2">Principle</h3>
+<ul>
+  <li>create a new node and add data do it</li>
+  <li>change next of the previous node</li>
+  <li>set up next to point to the next node</li>
+</ul>
+
+<h3 id="code-2">Code</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">insert_after</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="n">new_node</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">new_node</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">previous</span><span class="p">.</span><span class="nb">next</span>
+    <span class="n">previous</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">new_node</span>
+</code></pre></div></div>
+
+<h3 id="end">End</h3>
+<h3 id="principle-3">Principle</h3>
+<ul>
+  <li>create a new node and add data to it (next is by default <code class="language-plaintext highlighter-rouge">None</code>)</li>
+  <li>set up previous next from <code class="language-plaintext highlighter-rouge">NULL</code> to new node</li>
+</ul>
+
+<h3 id="code-3">Code</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="n">new_node</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="c1"># if the list is empty, make the new node as head
+</span>    <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">head</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">head</span> <span class="o">=</span> <span class="n">new_node</span>
+        <span class="k">return</span>
+    <span class="c1"># else traverse till the last node
+</span>    <span class="c1"># set up first one as 'last'
+</span>    <span class="c1"># while there is node that has 'next' 
+</span>    <span class="c1"># set up last as the current node
+</span>    <span class="n">last</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">head</span> 
+    <span class="k">while</span> <span class="n">last</span><span class="p">.</span><span class="nb">next</span><span class="p">:</span>
+        <span class="n">last</span> <span class="o">=</span> <span class="n">last</span><span class="p">.</span><span class="nb">next</span>
+    
+    <span class="c1"># change the next of last node
+</span>    <span class="n">last</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">new_node</span> 
+    
+</code></pre></div></div>
+
+<h2 id="deletion">Deletion</h2>
+<h3 id="principle-4">Principle</h3>
+<ul>
+  <li>store the head node</li>
+  <li>if head node stores the key to be deleted, then set up the next node as head</li>
+  <li>if not, search for the key to be deleted -&gt; until it’s not <code class="language-plaintext highlighter-rouge">None</code></li>
+  <li>when it finds the key:
+    <ul>
+      <li>save the current node as previous</li>
+      <li>save the next as current</li>
+    </ul>
+  </li>
+  <li>unlink the node from the list</li>
+</ul>
+
+<h3 id="code-4">Code</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="n">to_delete</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">head</span> 
+    <span class="c1"># if head node is to be deleted
+</span>    <span class="k">if</span> <span class="n">to_delete</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">to_delete</span><span class="p">.</span><span class="n">data</span> <span class="o">==</span> <span class="n">key</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">head</span> <span class="o">=</span> <span class="n">to_delete</span><span class="p">.</span><span class="nb">next</span>
+            <span class="n">to_delete</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="k">return</span> 
+
+    <span class="k">while</span> <span class="n">to_delete</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">to_delete</span><span class="p">.</span><span class="n">data</span> <span class="o">==</span> <span class="n">key</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">previous</span> <span class="o">=</span> <span class="n">to_delete</span>
+        <span class="n">to_delete</span> <span class="o">=</span> <span class="n">to_delete</span><span class="p">.</span><span class="nb">next</span>
+
+    <span class="n">previous</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">to_delete</span><span class="p">.</span><span class="nb">next</span>
+    <span class="n">to_delete</span> <span class="o">=</span> <span class="bp">None</span>
+</code></pre></div></div>
+
+<h2 id="reverse">Reverse</h2>
+<h3 id="principle-5">Principle</h3>
+<ul>
+  <li>create a variable previous - at the beginning none</li>
+  <li>create a variable current node - head of the list</li>
+  <li>move temp to the second place</li>
+  <li>update current’s pointer’s value to previous -&gt; here changing value</li>
+  <li>assign the current as previous -&gt; iteration</li>
+  <li>assign the next one temp as current -&gt; iteration</li>
+</ul>
+
+<h3 id="code-5">Code</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">reverse</span><span class="p">(</span><span class="n">head</span><span class="p">):</span>
+    <span class="n">current</span> <span class="o">=</span> <span class="n">head</span>
+    <span class="n">previous</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">while</span> <span class="n">current</span><span class="p">:</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">current</span><span class="p">.</span><span class="nb">next</span>        <span class="c1"># set up the next one as temp 
+</span>        <span class="n">current</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="n">previous</span>   <span class="c1"># changing values of the pointer to the next one!
+</span>        <span class="n">previous</span> <span class="o">=</span> <span class="n">current</span>        <span class="c1"># iteration 
+</span>        <span class="n">current</span> <span class="o">=</span> <span class="n">tmp</span>             <span class="c1"># iteration
+</span>
+    <span class="n">head</span> <span class="o">=</span> <span class="n">previous</span>
+</code></pre></div></div>
+
+<h1 id="big-o">Big-O</h1>
+<h2 id="the-five-most-common-run-times">The five most common run times</h2>
+<p><img src="https://user-images.githubusercontent.com/38294198/174497886-2bee4006-31a5-48cb-b38f-e59f3acf9c72.png" alt="obrazek" /></p>
+
+<ul>
+  <li>fun fact: O(log n) gets a lot faster once the list of items you’re searching through grows</li>
+</ul>
+
+<h2 id="the-travelling-salesperson-problem">The travelling salesperson problem</h2>
+<ul>
+  <li>sales person needs to visit 5 cities</li>
+  <li>for 5 cities it’s 120 permutations</li>
+  <li>n! operations:
+    <ul>
+      <li>for 6 cities - 720 permutations</li>
+      <li>for 7 cities - 5040 permutations</li>
+    </ul>
+  </li>
+  <li>only approximate solution existing</li>
+</ul>
+
+<p>## Pseudocode</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A = sorted array 
+n = length of array 
+x = value to be searched 
+
+set low = 0
+set high = n - 1
+
+while x not found:
+    mid = high - low // 2
+    
+    if x = A[mid]   
+        EXIT: x found at location A[mid]
+       
+    if x &gt; A[mid]
+        low = mid + 1
+       
+    if x &lt; A[mid]
+        high = mid - 1 
+      
+end while
+</code></pre></div></div>
+<h2 id="code-6">Code</h2>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="n">numbers_list</span><span class="p">,</span> <span class="n">guess</span><span class="p">):</span>
+    <span class="n">low</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">high</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">numbers_list</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="k">while</span> <span class="n">low</span> <span class="o">&lt;=</span> <span class="n">high</span><span class="p">:</span>
+        <span class="n">mid</span> <span class="o">=</span> <span class="p">(</span><span class="n">low</span> <span class="o">+</span> <span class="n">high</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+
+        <span class="k">if</span> <span class="n">guess</span> <span class="o">==</span> <span class="n">numbers_list</span><span class="p">[</span><span class="n">mid</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="k">print</span><span class="p">(</span><span class="s">"found the item: "</span><span class="p">,</span> <span class="n">numbers_list</span><span class="p">[</span><span class="n">mid</span><span class="p">])</span>
+
+        <span class="k">elif</span> <span class="n">guess</span> <span class="o">&gt;</span> <span class="n">numbers_list</span><span class="p">[</span><span class="n">mid</span><span class="p">]:</span>
+            <span class="n">low</span> <span class="o">=</span> <span class="n">numbers_list</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="k">elif</span> <span class="n">guess</span> <span class="o">&lt;</span> <span class="n">numbers_list</span><span class="p">[</span><span class="n">mid</span><span class="p">]:</span>
+            <span class="n">high</span> <span class="o">=</span> <span class="n">numbers_list</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="bp">None</span>
+
+
+<span class="n">search</span><span class="p">(</span><span class="n">numbers_list</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">guess</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<h1 id="hashtables">Hashtables</h1>
+<h2 id="principle-6">Principle</h2>
+<p><img src="https://user-images.githubusercontent.com/38294198/177056909-d7b57771-efb4-4055-8f20-644736deb9c9.png" alt="obrazek" /></p>
+
+<h3 id="performance">Performance</h3>
+<p><img src="https://user-images.githubusercontent.com/38294198/177056899-15f3fb0e-23f4-4edb-87aa-217dae1d2a7e.png" alt="obrazek" /></p>
+
+<h3 id="colisions">Colisions</h3>
+<ul>
+  <li>the simplest way: if multiple keys map to the same slot, start a linked list at that slot</li>
+  <li>Python uses open addressing:
+    <ul>
+      <li>linear probing - if collision occurs, find the next slot</li>
+      <li>quadratic probing - find the next slot + x*x</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Linear probing:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>If slot hash(x) % S is full, then we try (hash(x) + 1) % S
+If (hash(x) + 1) % S is also full, then we try (hash(x) + 2) % S
+If (hash(x) + 2) % S is also full, then we try (hash(x) + 3) % S 
+</code></pre></div></div>
+
+<p>Quadratic probing:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let hash(x) be the slot index computed using hash function.  
+If slot hash(x) % S is full, then we try (hash(x) + 1*1) % S
+If (hash(x) + 1*1) % S is also full, then we try (hash(x) + 2*2) % S
+If (hash(x) + 2*2) % S is also full, then we try (hash(x) + 3*3) % S
+</code></pre></div></div>
+
+<h3 id="operations-principle">Operations principle</h3>
+<ul>
+  <li>insert(k): keep probing until an empty slot is found. Once an empty slot is found, insert k</li>
+  <li>search(k): keep probing until slot’s key doesn’t become equal to k or an empty slot is reached</li>
+  <li>slots of deleted keys are marked specially as “deleted”, the insert can insert an item in a deleted slot, but the search doesn’t stop at a deleted slot</li>
+</ul>
+
+<h3 id="load-factor">Load factor</h3>
+<ul>
+  <li>measures how many empty slots remain in the hash table</li>
+  <li>hashes use array for storage, so you count the number of occupied slots in an array, i.e. 2/5 = 0.4</li>
+  <li>resize when your load factor is greater than 0.7</li>
+</ul>
+
+<h1 id="trees">Trees</h1>
+<h3 id="binary-search-tree">Binary Search Tree</h3>
+<p><img src="https://user-images.githubusercontent.com/38294198/179522822-56fdf0c4-2622-4625-b7a0-e8ee14058783.png" alt="image" /></p>
+<ul>
+  <li>cons - don’t have random access</li>
+  <li>performance times are on average and rely on the tree being balanced</li>
+</ul>
+
+<p>Unbalanced tree:
+<img src="https://user-images.githubusercontent.com/38294198/179523066-8eac29b8-1b84-4829-8da0-0420f0080cd8.png" alt="image" /></p>
+
+<h3 id="b-trees">B-Trees</h3>
+<ul>
+  <li>self-balancing search tree</li>
+  <li>time complexity of all operations is O(log n)</li>
+  <li>insertion happens only at leaf node</li>
+  <li>shrinks from the root (binary search tree grows downward and also shrinks from downward)
+<img src="https://user-images.githubusercontent.com/38294198/179523576-fe09d4e2-a061-45ca-ac19-59ecb8f30238.png" alt="image" /></li>
+</ul>
+
+<h3 id="red-black-trees">Red-black trees</h3>
+<ul>
+  <li>self-balancing binary search tree</li>
+  <li>search time - O(log n)</li>
+  <li>every node has an extra bit, which is either red or black - used for balance</li>
+  <li>1 bit to store the colour information, identical memory footprints to the classic binary search tree</li>
+  <li>root is always black</li>
+  <li>a red node cannot have a red parent or red child</li>
+  <li>every path from a node (including root) to any of its descendants NULL nodes has the same number of black nodes</li>
+  <li>all leaf nodes are black nodes</li>
+  <li>used in KNN for reducing time complexity</li>
+  <li>MySQL uses B+ trees fot data indexing in database engine</li>
+</ul>
+
+<h3 id="heaps">Heaps</h3>
+<ul>
+  <li>similar to the binary tree with the difference that heap has in the root either minimum or maximum values</li>
+  <li>it’s possible to have duplicates in heap</li>
+</ul>
+
+<h1 id="quicksort">Quicksort</h1>
+<h2 id="principle-7">Principle</h2>
+<ul>
+  <li>figure out the base case - &gt; very often it’s an array with 0 or 1 element</li>
+  <li>more closer to an empty array, reduce the size by using recursion</li>
+</ul>
+
+<h2 id="steps">Steps</h2>
+<ul>
+  <li>pick an element (pivot) from the array</li>
+  <li>find elements smaller than the pivot and the elements larger than the pivot - partitioning</li>
+  <li>call quicksort on both sub-arrays</li>
+  <li>if sub-arrays are sorted, then you can combine the whole thing like left array + pivot + right array</li>
+</ul>
+
+<h2 id="code-7">Code</h2>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quicksort</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">array</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">array</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pivot</span> <span class="o">=</span> <span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">left_array</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">array</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">pivot</span><span class="p">]</span>
+        <span class="n">right_array</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">array</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">pivot</span><span class="p">]</span>
+    
+    <span class="k">return</span> <span class="n">quicksort</span><span class="p">(</span><span class="n">left_array</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">pivot</span><span class="p">]</span> <span class="o">+</span> <span class="n">quicksort</span><span class="p">(</span><span class="n">right_array</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h1 id="breath-first-search">Breath-first Search</h1>
+<h2 id="principle-8">Principle</h2>
+<ul>
+  <li>used to answer the following 2 questions:
+    <ul>
+      <li>is there a path from node A to node B?</li>
+      <li>what is the shortest path from node A to node B?</li>
+    </ul>
+  </li>
+  <li>running time: O(V+E) - number of vertices + number of edges</li>
+  <li>once you check an edge, make sure not to check it again - otherwise you might end up in an infinite loop</li>
+</ul>
+
+<p><img src="https://user-images.githubusercontent.com/38294198/178215601-fa82ad9a-1315-49eb-9424-cc00dc81dd02.png" alt="image" /></p>
+
+<h3 id="pseudocode">Pseudocode</h3>
+<ul>
+  <li>create a queue Q</li>
+  <li>mark v as visited and put v into Q</li>
+  <li>while Q is non-empty
+    <ul>
+      <li>remove the head u of Q</li>
+      <li>mark and enqueue all (unvisited) neighbours of u</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="https://user-images.githubusercontent.com/38294198/178245559-f5dd169a-0efa-41aa-8e56-72decf862c3f.png" width="500" />
+<img src="https://user-images.githubusercontent.com/38294198/178245559-f5dd169a-0efa-41aa-8e56-72decf862c3f.png" width="500" />
+<img src="https://user-images.githubusercontent.com/38294198/178245596-5a37a33b-918d-439b-a428-5068e86e8483.png" width="500" />
+<img src="https://user-images.githubusercontent.com/38294198/178245628-661d1909-d37e-4c81-8817-6bfacb7b834e.png" width="500" />
+<img src="https://user-images.githubusercontent.com/38294198/178245652-bff1417b-0795-4da7-bbb3-50607043ad4d.png" width="500" />
+<img src="https://user-images.githubusercontent.com/38294198/178245679-a88ececa-8ff6-471f-9b8a-c266a6e74466.png" width="500" />
+<img src="https://user-images.githubusercontent.com/38294198/178245713-deb054a1-c391-4760-9005-f8d37f056518.png" width="500" /></p>
+
+<h3 id="code-8">Code</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">collections</span>
+
+<span class="k">def</span> <span class="nf">bfs</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
+    <span class="n">visited</span><span class="p">,</span> <span class="n">queue</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">root</span><span class="p">]),</span> <span class="n">collections</span><span class="p">.</span><span class="n">deque</span><span class="p">([</span><span class="n">root</span><span class="p">])</span>
+    <span class="k">while</span> <span class="n">queue</span><span class="p">:</span>
+        <span class="n">vertex</span> <span class="o">=</span> <span class="n">queue</span><span class="p">.</span><span class="n">popleft</span><span class="p">()</span>
+        <span class="n">visit</span><span class="p">(</span><span class="n">vertex</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">[</span><span class="n">vertex</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">node</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">visited</span><span class="p">:</span>
+                <span class="n">visited</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+                <span class="n">queue</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">visit</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">graph</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">1</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">:</span> <span class="p">[]}</span> 
+    <span class="n">bfs</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h1 id="bloom-filters">Bloom Filters</h1>
+<h2 id="principle-9">Principle</h2>
+<ul>
+  <li>probabilistic data structure</li>
+  <li>tells that the element either definitely is not in the set or may be in the set</li>
+  <li>algorithm:
+    <ul>
+      <li>the base is a bit vector</li>
+      <li>to add an element to the Bloom filter, the element is hashed few times and bits in the bit vector are set to <code class="language-plaintext highlighter-rouge">1</code></li>
+      <li>to test for membership, you hash the test string and see if those values are set in the bit vector</li>
+    </ul>
+  </li>
+  <li>used for example for checking, if URL is malicious - stored in browser, if URL might be malicious, then a request to a remote server is sent</li>
+  <li>doesn’t store the elements themselves, this is the crucial point</li>
+  <li>you don’t use a bloom filter to test if an element is present, you use it to test whether it’s certainly not present, since it guarantees no false negatives</li>
+</ul>
+
+<p><img src="https://user-images.githubusercontent.com/38294198/184173762-46957757-8ff2-480c-9c84-b789c5589e52.png" alt="image" /></p>
+
+<p><img src="https://user-images.githubusercontent.com/38294198/184173811-604b4026-f053-496a-a962-971c2edfddd3.png" alt="image" /></p>
+
+<p><img src="https://user-images.githubusercontent.com/38294198/184173846-f6dcfd25-7bf4-4e84-bb97-f99c8ccacb41.png" alt="image" /></p>
+
+<p><img src="https://user-images.githubusercontent.com/38294198/184173911-95c2c1ef-cc1f-4d90-a04b-2f4a026cbc14.png" alt="image" /></p>
+
+<h1 id="dijkstra-algorithm">Dijkstra Algorithm</h1>
+<h2 id="principle-10">Principle</h2>
+<ul>
+  <li>terminology:
+    <ul>
+      <li>weight - number associate to every edge, makes weighted graph</li>
+      <li>undirected graph - both nodes point to each other, a cycle</li>
+    </ul>
+  </li>
+  <li>Dijkstra works only with directs acyclic grapgs (DAG)</li>
+  <li>Dijkstra works when all weights are positive - if they’re negative, use Bellman-Ford algorithm</li>
+</ul>
+
+<h3 id="pseudocode-1">Pseudocode</h3>
+<ul>
+  <li>find the cheapest node (the node you can get in the least amount of time)</li>
+  <li>update the costs of the neigbvors of this node</li>
+  <li>repeat until you’ve done this for every node in the graph</li>
+  <li>calculate the final path</li>
+</ul>
+
+<h3 id="code-9">Code</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">find_lowest_cost_node</span><span class="p">(</span><span class="n">costs</span><span class="p">):</span>
+    <span class="n">lowest_cost</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="err">“</span><span class="n">inf</span><span class="err">”</span><span class="p">)</span>
+    <span class="n">lowest_cost_node</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">costs</span><span class="p">:</span> <span class="c1"># go through each node
+</span>        <span class="n">cost</span> <span class="o">=</span> <span class="n">costs</span><span class="p">[</span><span class="n">node</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">cost</span> <span class="o">&lt;</span> <span class="n">lowest_cost</span> <span class="ow">and</span> <span class="n">node</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">processed</span><span class="p">:</span> <span class="c1"># if it's the lowest so far and hasn't been processed
+</span>            <span class="n">lowest_cost</span> <span class="o">=</span> <span class="n">cost</span> <span class="c1"># set it as the new lowest-cost node.
+</span>            <span class="n">lowest_cost_node</span> <span class="o">=</span> <span class="n">node</span>
+    <span class="k">return</span> <span class="n">lowest_cost_node</span>
+
+<span class="n">node</span> <span class="o">=</span> <span class="n">find_lowest_cost_node</span><span class="p">(</span><span class="n">costs</span><span class="p">)</span> 
+<span class="k">while</span> <span class="n">node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="n">cost</span> <span class="o">=</span> <span class="n">costs</span><span class="p">[</span><span class="n">node</span><span class="p">]</span>
+    <span class="n">neighbors</span> <span class="o">=</span> <span class="n">graph</span><span class="p">[</span><span class="n">node</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">neighbors</span><span class="p">.</span><span class="n">keys</span><span class="p">():</span> <span class="c1"># go through the neighbours of this node
+</span>        <span class="n">new_cost</span> <span class="o">=</span> <span class="n">cost</span> <span class="o">+</span> <span class="n">neighbors</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> 
+        <span class="k">if</span> <span class="n">costs</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">new_cost</span><span class="p">:</span> <span class="c1"># if it's cheaper to get to this neighbour by going through this node
+</span>            <span class="n">costs</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_cost</span> <span class="c1"># update the cost for this node
+</span>            <span class="n">parents</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span> <span class="c1"># this node becomes the new parent for this neighbour
+</span>    <span class="n">processed</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="c1"># mark the node as processed 
+</span>    <span class="n">node</span> <span class="o">=</span> <span class="n">find_lowest_cost_node</span><span class="p">(</span><span class="n">costs</span><span class="p">)</span> <span class="c1"># find the next node to process and loop 
+</span></code></pre></div></div>
+
+<h1 id="dynamic-programming">Dynamic Programming</h1>
+<h3 id="principle-11">Principle</h3>
+<ul>
+  <li>technique to solve a hard problem by breaking it up into subproblems and solving those subproblems first</li>
+  <li>every dynamic programming solution involves a grid</li>
+  <li>the values in the cells are usually what you’re trying to optimize</li>
+  <li>each cell is a subproblem, so think about how you can divide your problem into subproblems</li>
+</ul>
+
+<h4 id="example">Example</h4>
+<p>You’re a thief with a knapsack that can carry 4 lb of goods. You have three items that you can put into the knapsack.</p>
+
+<p><img src="https://user-images.githubusercontent.com/38294198/179278920-c2849d63-64d3-4702-9dcf-c7c45b7c8a47.png" alt="obrazek" /></p>
+
+<p><img src="https://user-images.githubusercontent.com/38294198/179279101-eeb2dfca-df1c-4dd4-a591-080fdb425263.png" alt="obrazek" /></p>
+
+<p><img src="https://user-images.githubusercontent.com/38294198/179279217-0dcec6da-d98e-4774-a5a2-a3c3dd29997c.png" alt="obrazek" /></p>
+
+<p><img src="https://user-images.githubusercontent.com/38294198/179279305-fd8cd52a-3257-426e-a945-9570c242716a.png" alt="obrazek" /></p>
+
+<p><img src="https://user-images.githubusercontent.com/38294198/179279647-8a869f89-de79-46be-bba7-2a0d7d098c3f.png" alt="obrazek" /></p>
+
+<p><img src="https://user-images.githubusercontent.com/38294198/179280276-b58dded6-6554-40d3-96b8-5c09bce563bf.png" alt="obrazek" /></p>
+
+<p><img src="https://user-images.githubusercontent.com/38294198/179280431-21d4e978-c3c3-4ec6-90de-f4d331b36eab.png" alt="obrazek" /></p>
+
+<h1 id="greedy-algorithms">Greedy Algorithms</h1>
+<h2 id="principle-12">Principle</h2>
+<ul>
+  <li>simple to write</li>
+  <li>get pretty close</li>
+  <li>NP-complete problems
+    <ul>
+      <li>hard to solve</li>
+      <li>better to use approximation algorithms</li>
+      <li>example: travelling salesperson</li>
+    </ul>
+  </li>
+  <li>how to know if a problem is NP-complete:
+    <ul>
+      <li>algorithm slows down with more items</li>
+      <li>‘all combination of x’ kind of problems</li>
+      <li>if you have to calculate every possible version of x, because you can’t break it down into smaller subproblems</li>
+      <li>if it involves a set or sequence and it’s hard to solve</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="example-problem">Example Problem</h3>
+<p>Suppose you’re starting a radio show. You want to reach listeners in all 50 states. You have to decide what stations to play on to reach all those listeners.</p>
+
+<p>It costs money to be on each station, so you’re trying to minimize the number of stations you play on. You have a list of stations. Each station covers a region, and there’s overlap.</p>
+
+<p>How do you figure out the smallest set of stations you can play on to cover all 50 states?</p>
+
+<h4 id="greedy-algorithm-principle">Greedy Algorithm Principle</h4>
+<ol>
+  <li>Pick the station that covers the most states that haven’t been covered yet. It’s OK if the station covers some states that have been covered already.</li>
+  <li>Repeat until all the states are covered.</li>
+</ol>
+
+<h4 id="greedy-algorithm-code">Greedy Algorithm Code</h4>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1"># You pass an array in, and it gets converted to a set.
+</span><span class="n">states_needed</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s">"mt"</span><span class="p">,</span> <span class="s">"wa"</span><span class="p">,</span> <span class="s">"or"</span><span class="p">,</span> <span class="s">"id"</span><span class="p">,</span> <span class="s">"nv"</span><span class="p">,</span> <span class="s">"ut"</span><span class="p">,</span> <span class="s">"ca"</span><span class="p">,</span> <span class="s">"az"</span><span class="p">])</span>
+
+<span class="n">stations</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">stations</span><span class="p">[</span><span class="s">"kone"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s">"id"</span><span class="p">,</span> <span class="s">"nv"</span><span class="p">,</span> <span class="s">"ut"</span><span class="p">])</span>
+<span class="n">stations</span><span class="p">[</span><span class="s">"ktwo"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s">"wa"</span><span class="p">,</span> <span class="s">"id"</span><span class="p">,</span> <span class="s">"mt"</span><span class="p">])</span>
+<span class="n">stations</span><span class="p">[</span><span class="s">"kthree"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s">"or"</span><span class="p">,</span> <span class="s">"nv"</span><span class="p">,</span> <span class="s">"ca"</span><span class="p">])</span>
+<span class="n">stations</span><span class="p">[</span><span class="s">"kfour"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s">"nv"</span><span class="p">,</span> <span class="s">"ut"</span><span class="p">])</span>
+<span class="n">stations</span><span class="p">[</span><span class="s">"kfive"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s">"ca"</span><span class="p">,</span> <span class="s">"az"</span><span class="p">])</span>
+
+<span class="n">final_stations</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+<span class="k">while</span> <span class="n">states_needed</span><span class="p">:</span>
+  <span class="n">best_station</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">states_covered</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+  <span class="k">for</span> <span class="n">station</span><span class="p">,</span> <span class="n">states_for_station</span> <span class="ow">in</span> <span class="n">stations</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">covered</span> <span class="o">=</span> <span class="n">states_needed</span> <span class="o">&amp;</span> <span class="n">states_for_station</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">covered</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">states_covered</span><span class="p">):</span>
+      <span class="n">best_station</span> <span class="o">=</span> <span class="n">station</span>
+      <span class="n">states_covered</span> <span class="o">=</span> <span class="n">covered</span>
+
+  <span class="n">states_needed</span> <span class="o">-=</span> <span class="n">states_covered</span>
+  <span class="n">final_stations</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">best_station</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">final_stations</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h1 id="knn-neighbors">Knn Neighbors</h1>
+<h2 id="principle-13">Principle</h2>
+<ul>
+  <li>can do two basic things with KNN
+    <ul>
+      <li>classification - categorisation into a group</li>
+      <li>regression - predicting a response (like a number)</li>
+    </ul>
+  </li>
+  <li>the most important is to pick rights features:
+    <ul>
+      <li>features that directly correlate (example: movies - features related to movies)</li>
+      <li>features that don’t have bias (movies - if you ask users to only rate comedy movies, that desn’t tell you whether they like action movies)
+<img src="https://user-images.githubusercontent.com/38294198/179393465-18e0ba87-87df-436e-acd1-f740220e737d.png" alt="image" /></li>
+    </ul>
+  </li>
+  <li>classifying objects by similarity
+    <ul>
+      <li>Pythagora’s theorem</li>
+      <li>cosine similarity</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="linear-programming">Linear Programming</h1>
+<h2 id="principle-14">Principle</h2>
+<ul>
+  <li>the basic principle is to maximize or minimize some function</li>
+  <li>small example - feasible solutions are in the gray area, where all three are satisfied
+    <ul>
+      <li><img src="https://user-images.githubusercontent.com/38294198/184233679-292f1b49-6488-49dd-8347-94f794ae8c6d.png" alt="image" /></li>
+      <li><img src="https://user-images.githubusercontent.com/38294198/184233751-6b187f02-2365-454f-889c-d8789ea4173a.png" alt="image" /></li>
+      <li>added green one - equality constraint</li>
+      <li><img src="https://user-images.githubusercontent.com/38294198/184234123-2203d2a0-fecb-47db-989f-ae38a09ff313.png" alt="image" /></li>
+      <li>integers only</li>
+      <li><img src="https://user-images.githubusercontent.com/38294198/184234193-9ba34ddb-a1b8-45d5-8af9-ef783efca05e.png" alt="image" /></li>
+      <li>the solution is the highest green spot, i.e. the closest one to the red area</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="linked-lists">Linked Lists</h1>
+<h2 id="creation">Creation</h2>
+<h3 id="principle-15">Principle:</h3>
+<ul>
+  <li>in C it’s represented by using structures, in Python or C++ by class</li>
+  <li>classes
+    <ul>
+      <li>three important things:
+        <ul>
+          <li>node -&gt; node object</li>
+          <li>data -&gt; data assigned to the given node</li>
+          <li>head -&gt; first node</li>
+        </ul>
+      </li>
+      <li>first class is a node, which consists of data and pointer to the next one (pointer is intialized as null)</li>
+      <li>second class is Linked List, which consist of head, which is also initiaulized as None</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="code-10">Code</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Node</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="bp">self</span><span class="p">.</span><span class="nb">next</span> <span class="o">=</span> <span class="bp">None</span>
+
+<span class="k">class</span> <span class="nc">LinkedList</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">head</span> <span class="o">=</span> <span class="bp">None</span>
+</code></pre></div></div>
+
+<h1 id="recursion">Recursion</h1>
+<ul>
+  <li>every recursive function has two parts:
+    <ul>
+      <li>the base case - condition, when to stop the loop</li>
+      <li>the recursive case - when the function calls itself</li>
+    </ul>
+  </li>
+  <li>tail recursion
+    <ul>
+      <li>tail - the last thing</li>
+      <li>tail recursion = recursion is the last thing that happens</li>
+      <li>some compilers optimize the tail recursion - it’s space complexity is O(n), sometimes it’s better to use loops</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="example-1">Example</h3>
+<p>Factorial calculation:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">factorial</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">factorial</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div></div>
+<p>fac n = n * fac (n - 1)</p>
+
+<p>Example: 
+fac 4 = 4 * fac3
+      = 4 * (3 * fac2)
+      = 4 * (3 * (2 * fac1))
+      = 4 * (3 * (2 * 1))
+      = 4 * (3 * 2)
+      = 4 * 6
+      = 24</p>
+
+<p>Tail-recursive (takes number &amp; variable, which accumulates factorials):</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">factorial</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">a</span>
+    <span class="k">return</span> <span class="n">factorial</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">x</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span>
+</code></pre></div></div>
+<p>fac n = go n 1
+go 1 a = a
+go n a = go (n - 1)</p>
+
+<p>Example: 
+fac 4 = go 4 1
+      = go (4 - 1) (1 * 4)
+      = go 3 4
+      = go 2 12
+      = go 1 24
+      = 24</p>
+
+<h1 id="ocr">OCR</h1>
+<h2 id="principle-16">Principle</h2>
+<ul>
+  <li>OCR = optical character recoginition</li>
+  <li>you take a photo of a page of text and computer automatically reads text for you</li>
+  <li>you can use KNN for it - example how to figure out which number it is:
+    <ul>
+      <li>go through a lot of images of numbers and extract features of numbers</li>
+      <li>when you get a new image, extract the features of that image and see what its nearest neighbours are</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="https://user-images.githubusercontent.com/38294198/179393512-4d515327-31ac-4484-8a31-3fecd25121ee.png" alt="image" /></p>
+
+<h1 id="parallel-algorithms">Parallel Algorithms</h1>
+<h2 id="principle-17">Principle</h2>
+<h3 id="mapreduce">MapReduce</h3>
+<ul>
+  <li>distributed algorithm, it’s possible to use it through Apache Hadoop 
+<img src="https://user-images.githubusercontent.com/38294198/179539159-03330ef0-2a9e-4cb5-8d46-9ec29dc06452.png" alt="image" />
+<img src="https://user-images.githubusercontent.com/38294198/179540117-f94970b6-f4b2-4eb5-846a-e853ecddec28.png" alt="image" /></li>
+</ul>
+
+    </div><!-- .post-content -->
+    <div class="author-box">
+      
+      <div class="author-avatar" style="background-image: url('images/author.png')"><span class="screen-reader-text">Mia Bajić's Picture</span></div>
+      
+      <div class="author-details">
+        <h2 class="author-title">About Mia Bajić</h2>
+        <div class="author-bio"><p>Software engineer and community events organizer.</p>
+</div>
+        
+        
+      </div><!-- .author-details -->
+    </div><!-- .author-box -->
+  </article><!-- .post -->
+
+  
+
+</main><!-- .main-content -->
+
+      <footer class="site-footer">
+  <div class="offsite-links">
+    
+      
+<a href="https://github.com/clytaemnestra" target="_blank" rel="noopener">
+  <span class="fa-github" aria-hidden="true"></span>
+  <span class="screen-reader-text">GitHub</span>
+</a>
+
+<a href="https://www.linkedin.com/in/mia-bajic/" target="_blank" rel="noopener">
+  <span class="fa-linkedin" aria-hidden="true"></span>
+  <span class="screen-reader-text">LinkedIn</span>
+</a>
+
+<a href="https://bsky.app/profile/clytaemnestra.bsky.social" target="_blank" rel="noopener">
+  <span class="fa-bsky" aria-hidden="true"></span>
+  <span class="screen-reader-text">bsky</span>
+</a>
+
+    
+  </div><!-- .offsite-links -->
+  <div class="footer-bottom">
+    <div class="site-info">
+      
+
+    </div><!-- .site-info -->
+    <a href="#page" id="back-to-top" class="back-to-top"><span class="screen-reader-text">Back to the top </span>&#8593;</a>
+  </div><!-- .footer-bottom -->
+</footer><!-- .site-footer -->
+
+    </div><!-- .inner -->
+  </div><!-- .site -->
+
+
+  <script src="/tech-blog/assets/js/plugins.js"></script>
+  <script src="/tech-blog/assets/js/custom.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,1787 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>TIL</title>
+        <description>Hi there! Welcome to my TIL blog. I write about my tech learnings and community work. Subscribe &lt;a href=&quot;https://forms.gle/kwXcWp9qSiMcY1nU9&quot;&gt;here.&lt;/a&gt;</description>
+        <link>https://clytaemnestra.github.io/tech-blog/</link>
+        <atom:link href="https://clytaemnestra.github.io/tech-blog/feed.xml" rel="self" type="application/rss+xml"/>
+        <pubDate>Mon, 15 Dec 2025 14:20:48 +0000</pubDate>
+        <lastBuildDate>Mon, 15 Dec 2025 14:20:48 +0000</lastBuildDate>
+        <generator>Jekyll v3.10.0</generator>
+        
+            <item>
+                <title>A Year on the EuroPython Society Board</title>
+                <description>&lt;p&gt;Last year I announced that I’d be running for the EuroPython Society board in &lt;a href=&quot;https://clytaemnestra.github.io/tech-blog/eps-elections&quot;&gt;this article&lt;/a&gt;. My main goals were simple: to learn, to grow, and to give back to the community that gave me so much.&lt;/p&gt;
+
+&lt;p&gt;Most of what happened this year was the result of many people contributing their time, ideas, and energy, so this is as much a reflection on working together as it is on my own role.&lt;/p&gt;
+
+&lt;h2 id=&quot;time&quot;&gt;Time&lt;/h2&gt;
+
+&lt;p&gt;Over the past year, I took on two major roles: leading the design and comms team, and vice-chairing the non-profit itself. I tracked my time in my calendar, which is open to the whole EuroPython Society organization. Below is a breakdown of my time.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/timesheet.svg&quot; alt=&quot;&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;As you can see, there are a few clear peaks:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;March was by far the busiest month. Most of the website work happened then, we opened ticket sales, and there was a lot of logistics, comms, and design work, as well as coordination with sponsors.&lt;/li&gt;
+  &lt;li&gt;July was the second biggest peak, which is expected since that’s when the conference took place.&lt;/li&gt;
+  &lt;li&gt;January was busy with opening the Call for Proposals, design and comms work, conference promotion, and my own onboarding.&lt;/li&gt;
+  &lt;li&gt;June was also intense, as it was the final stretch before the conference. A lot of work focused on comms and design, along with finalizing sponsor deals.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;design&quot;&gt;Design&lt;/h2&gt;
+
+&lt;p&gt;I had never been part of a design team before, and picking up something completely new was a challenge. Luckily, several people from the community were happy to jump in, especially Raquel who helped with defining the list of items that need to be designed, which I’m very grateful for.&lt;/p&gt;
+
+&lt;p&gt;I enjoy being creative, throughout the whole process I learned a lot, and the overall experience was so positive that I’m happy to lead design next year as well!&lt;/p&gt;
+
+&lt;p&gt;I also had the opportunity to hire a designer, Adriana, who helped as a volunteer a year before, and she created lots of assets that were later on reused for different designs. I learned tremendously from our collaboration.&lt;/p&gt;
+
+&lt;p&gt;Here’s a list of some of the things that I’ve accomplished:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;We often talk about what to do, but what’s even more important is what not to do. My first task was to decide what not to design. Sustainability matters, so it doesn’t make sense to spend time designing things that don’t actually need custom design. Many things can also be moved to the website, and it’s easier to do that in Astro than to draw them in Figma.&lt;/li&gt;
+  &lt;li&gt;When we do need to design items, it’s important to know what to focus on and what to simplify.  This year, we simplified a lot of things to preserve time, money, and energy. For example, after more colorful t-shirt design in 2023 and 2024, we returned to a monochromatic version for 2025. This made production cheaper and easier.&lt;/li&gt;
+  &lt;li&gt;I reviewed all the tools we use for design. Canva was recommended to me because it has tons of templates and is very easy to work with. I created a project there and imported our assets. This turned out to be a great decision, because it unblocks people from other teams to create their own materials. Canva also has a special tier for non-profits, so if you’re running one, I definitely recommend checking it out.&lt;/li&gt;
+  &lt;li&gt;I also automated a lot of things. I wrote a small banner generator so others wouldn’t have to manually recreate assets every time. The goal was to make it easier for anyone in the team to produce visuals without having to figure out dimensions and safe areas for different social media platforms. If you use multiple platforms and need banners, feel free to reuse it! Here’s the link: &lt;a href=&quot;https://clytaemnestra.github.io/social-banner-generator/&quot;&gt;https://clytaemnestra.github.io/social-banner-generator/&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;This year, for the first time, we had speaker cards on social media. These were generated automatically from the website, all with a single command!&lt;/li&gt;
+  &lt;li&gt;We reused the same code to create sponsor cards as well. Since all logos and sponsorship tiers already live on the website, using it as the source felt like the obvious choice.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For next year, I want to focus even more on design and hire a local designer from the 2026 location. I already have mockups and ideas for a design system that’s very close to my heart, and I’m incredibly excited to start working on it!&lt;/p&gt;
+
+&lt;h2 id=&quot;comms&quot;&gt;Comms&lt;/h2&gt;
+
+&lt;p&gt;The biggest chunk of my time went into comms. That includes social media, newsletters, emails, YouTube, basically everything public-facing.&lt;/p&gt;
+
+&lt;p&gt;Some of the things I improved:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;We have a new website. The previous one was missing some important information, especially when preparing lightning talks. Daksh, a community member and professional web designer, created the initial mockups, and Marcin, who’s skilled in front-end development, helped bring the new site to life. My role was mostly about coordination: thinking through what we needed, giving feedback, and reviewing pull requests. I’m not a front-end developer, but I learned a lot about both web development and marketing along the way. I especially enjoy working at the intersection of tech, creativity, and design, and collaborating with people who care deeply about what they’re building.&lt;/li&gt;
+  &lt;li&gt;We worked on it mainly as a team of two, together with Marcin, with regular input from occasional contributors and people actively using the site. Waking up to new commits every morning was great, but even more rewarding was seeing the site finally reflect what participants and speakers actually need. The momentum of building something continuously and watching it evolve day by day gave me a lot of energy and genuine joy!&lt;/li&gt;
+  &lt;li&gt;We continued producing shorts on our YT channel. I strongly believe that if we want to attract more young people, and we should, we have to be on the platforms they use, like Instagram, TikTok, and YouTube. While we were at PyCon US, we recorded  shorts with EuroPython speakers who were there. It was super fun! What made this possible was how generous speakers were with their time. Many were happy to record a short on the spot, even in the middle of a busy conference! And if someone had told me I’d end up having a short with Guido, I wouldn’t have believed them. Yet here we are! &lt;a href=&quot;https://www.youtube.com/shorts/cgKZG5EfWdI&quot;&gt;https://www.youtube.com/shorts/cgKZG5EfWdI&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Automation played a big role in comms as well. I already mentioned automated speaker and sponsor cards, but scheduling social media posts was automated too. We used the website together with Zapier and Buffer to programmatically schedule around 120 speaker posts and 20 sponsor posts. That kept our social media channels active for months.&lt;/li&gt;
+  &lt;li&gt;Another big automation project was generating shorts from long YouTube videos. I vibe-coded a &lt;a href=&quot;https://github.com/clytaemnestra/tiktok-shorts-maker&quot;&gt;script&lt;/a&gt; that takes a full video, transcribes it, finds interesting moments, cuts the video, zooms in on the speaker’s face, and adds TikTok-style subtitles. We already have a few of these on our YouTube channel. For example, here’s one with Savannah, generated by running a command and waiting about 15 minutes: &lt;a href=&quot;https://www.youtube.com/shorts/uqLc-vNkbKA&quot;&gt;https://www.youtube.com/shorts/uqLc-vNkbKA&lt;/a&gt;. The script still produces a lot of clips that aren’t very interesting, but it’s good enough. It usually generates around 20 shorts, out of which 5 or 6 are usable, and that’s already a big win.&lt;/li&gt;
+  &lt;li&gt;Media partnerships. I think media partners are extremely important. We have limited capacity, and the more people we have helping to spread the word, the easier it gets. This year I secured a few  media partnerships and we ended up collaborating together. Fun fact: if you were listening to Radio Rock Beat in the Czech Republic, you might have heard my voice starting with &lt;em&gt;Ahoj bíťáci&lt;/em&gt; (I know, super cringe) and promoting EuroPython. Super random, but definitely fun! I was on a rock radio, woohoo!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;board&quot;&gt;Board&lt;/h2&gt;
+
+&lt;p&gt;Being on the board and vice-chairing was challenging, mostly because most of the board, except for two people, was new. That meant a lot of learning and sometimes building processes from scratch.&lt;/p&gt;
+
+&lt;p&gt;Some of the things I worked on that I’m proud of:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;We hired an event manager. This was a big win. Our event manager, Anežka, is the most amazing event manager we could have, and it also proved that hiring part-time or full-time help completely makes sense. I was involved in the hiring process and in weekly coordination calls, which taught me a lot, not only about hiring and working with contractors and suppliers, but also about event management itself.&lt;/li&gt;
+  &lt;li&gt;For the first time ever, we had a booth at PyCon US, which was honestly super cool. It gave us the opportunity to talk to many community members in one place, gather feedback, and promote EuroPython. We also managed to close some sponsorship deals along the way.&lt;/li&gt;
+  &lt;li&gt;Monthly reports. We started producing reports about the work we do. Even though we’re an organization run by volunteers, I think it’s important to be accountable and transparent. We paused during conference season because things got busy, but it’s a step in the right direction and I hope we can resume it in January.&lt;/li&gt;
+  &lt;li&gt;Board wiki. We documented processes and workflows, which was especially useful since almost everyone needed onboarding. The documentation has a lot of room for improvement and is definitely not perfect, but having everything in one place is still much better than having nothing at all.&lt;/li&gt;
+  &lt;li&gt;Finance. I also did some finance work and finally gained a better understanding of how things actually work. Going through all the processes myself was painful at times, but very useful. Next year, I’d like to offload more of this to paid staff.&lt;/li&gt;
+  &lt;li&gt;I was also part of the sponsorship team. The board usually acts as a backup for teams and steps in when help is needed, and the sponsorship team needed extra support, so I joined in. Fundraising doesn’t really spark joy for me, but it was still useful to understand how it works and see that side of the organization.&lt;/li&gt;
+  &lt;li&gt;UX research with open source contributors. We ran UX research calls where we talked to open source contributors about how we could make the conference better for them. This was mostly about listening. People were very open about what they’re missing at conferences, and a lot of the direction we took came directly from those conversations. The idea is that if we attract more OSS contributors, they can collaborate with each other, work on their tools, and also create workshops and talks for developers, who are our main audience. More OSS contributors also means richer and better content for everyone. We also launched an open-ended questionnaire to collect ideas from the community. One clear theme that came out of the research was interest in more core CPython topics and more open spaces. Based on this, the chair and I decided to gently push the conference in that direction. We asked the program team to aim for CPython-related keynotes and proactively worked on reaching out to interesting speakers asking them to submit a proposal. We received feedback from attendees after the conference that they were very happy with the technical keynotes. We also had a screening of a documentary featuring core developers and other community members, which was super cool.&lt;/li&gt;
+  &lt;li&gt;I’m especially happy that after so many years, &lt;a href=&quot;https://discuss.python.org/t/poll-alternating-the-language-summit-between-pycon-us-and-europython/104527&quot;&gt;it looks like the CPython Language Summit will take place at EuroPython instead of PyCon US&lt;/a&gt;. The idea is to alternate between the two events and give people a chance to attend if traveling to the US is difficult.&lt;/li&gt;
+  &lt;li&gt;Last but not least, we had the biggest conference ever, and it took the least effort to put together. I’m incredibly proud of what the team managed to pull off together.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;looking-ahead&quot;&gt;Looking ahead&lt;/h2&gt;
+
+&lt;p&gt;Here are a few things I’d like to focus on for next year.&lt;/p&gt;
+
+&lt;h3 id=&quot;design-1&quot;&gt;Design&lt;/h3&gt;
+
+&lt;p&gt;We definitely need a new local design. I already have a mockup of the new logo and can’t wait to start working on it and eventually show it to the world! The design process last year was very smooth, so if everything goes as well again, I’ll be more than happy!&lt;/p&gt;
+
+&lt;h3 id=&quot;comms-1&quot;&gt;Comms&lt;/h3&gt;
+
+&lt;p&gt;My main goal for 2026 is to build a proper comms team. This year, I ended up doing most of the comms work myself, which was a great learning experience, but also showed me that having a team would be much more sustainable. We have plenty of ideas and if you’d like to join me next year, please reach out 🙂&lt;/p&gt;
+
+&lt;p&gt;On top of that, I have a few ideas I’d like to try. I want to grow our reach through “influencer marketing”, so we rely less on ourselves and more on community amplification. For example, we could invite people to promote EuroPython on their social media, blogs, or podcasts. Social platforms are accessible to almost everyone, so we could also run a campaign where people share conference promos, with some rewards&lt;/p&gt;
+
+&lt;p&gt;We should also expand our media partnerships. Last year was more of a pilot, so we only had a few. Next year, I’d like to build a larger program with more local partners.&lt;/p&gt;
+
+&lt;p&gt;Overall, my goal is to build a strong internal team while also relying more on external partners. This would make the setup more resilient and less dependent on any single person.&lt;/p&gt;
+
+&lt;h3 id=&quot;board-1&quot;&gt;Board&lt;/h3&gt;
+
+&lt;p&gt;I firmly believe we should hire a second, local, event manager to better distribute the workload and improve sustainability.&lt;/p&gt;
+
+&lt;p&gt;Finance is another area I want to improve. I’d like to outsource more of it this year and streamline our processes.&lt;/p&gt;
+
+&lt;p&gt;The big thing is obviously the new location. There’s VAT setup, contracts, team building, logistics, and everything that comes with it. I’m really looking forward to it. EuroPython has been in Prague for the last three years, so I haven’t had the chance to see the full setup process from start to finish.&lt;/p&gt;
+
+&lt;p&gt;With all that said, I’ll be running for the vice-chair position again!&lt;/p&gt;
+
+&lt;p&gt;If you’d like to reuse some of my tools, need help organizing an event, or just have feedback or comments, feel free to reach out to me at mia@europython.eu or on any of the social platforms I’m on!&lt;/p&gt;
+
+&lt;p&gt;At the end, I want to explicitly thank everyone who contributed this year, from board members and volunteers to speakers, media partners, and participants. None of this would exist without people showing up, often quietly and unpaid, and that’s something I don’t take for granted.&lt;/p&gt;
+</description>
+                <pubDate>Sat, 13 Dec 2025 00:00:00 +0000</pubDate>
+                <link>https://clytaemnestra.github.io/tech-blog/eps-reflection</link>
+                <guid isPermaLink="true">https://clytaemnestra.github.io/tech-blog/eps-reflection</guid>
+                
+                <category>community</category>
+                
+                
+            </item>
+        
+            <item>
+                <title>Keynoting DjangoCon EU</title>
+                <description>&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;./images/posts/djangocon2/talk1.png&quot; alt=&quot;Large mural depicting historical scenes in Wrocław&quot; style=&quot;max-width: 99%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;dublin&quot;&gt;Dublin&lt;/h1&gt;
+&lt;p&gt;I landed in Dublin the day before the conference. It rained all afternoon. I went to the nearest gas station to grab something quick and thought I’d head to the city, but after a few minutes outside, I was completely soaked, water literally dripping off me. I gave up and stayed in the hotel.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/djangocon2/rain.jpg&quot; alt=&quot;&quot; style=&quot;max-width: 50%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The rest of the week was much better! No rain, just lively evenings and packed pubs. What I love about Dublin is how it feels cosy yet alive, with people spilling out of pubs, laughing and chatting late into the night.&lt;/p&gt;
+
+&lt;style&gt;
+  .image-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px; /* Adjust spacing between rows */
+  }
+
+  .image-row img {
+    height: auto;
+  }
+&lt;/style&gt;
+
+&lt;div class=&quot;image-row&quot;&gt;
+  &lt;img src=&quot;./images/posts/djangocon2/dublin2.jpg&quot; alt=&quot;Wrocław at night with fog and illuminated streets&quot; style=&quot;max-width: 64%;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/djangocon2/dublin.jpg&quot; alt=&quot;A bridge in Wrocław lit up at night&quot; style=&quot;max-width: 35%;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;guinness&quot;&gt;Guinness&lt;/h2&gt;
+&lt;p&gt;The first time I tried Guinness was years ago in Bratislava. We were wandering around with old colleagues, and the only open place after midnight was a shabby pub filled with old men shouting at football players on a TV. They served maybe three kinds of beer. A colleague told me to try Guinness. Worst. Beer. Of. My. Life. And I’ve tried many. (Not exactly proud of that.)&lt;/p&gt;
+
+&lt;p&gt;I tried a few in Dublin, and they were completely different! Very creamy and tasty. Apparently, they use nitrogen instead of CO₂ in Ireland, and that’s why they taste so different.&lt;/p&gt;
+
+&lt;p&gt;Whenever I was out, I mostly drank Guinness. Even now, I’m writing this post while sipping my last pint at the airport. Definitely leaving on a high note.&lt;/p&gt;
+
+&lt;div class=&quot;image-row&quot;&gt;
+  &lt;img src=&quot;./images/posts/djangocon2/guinness2.jpg&quot; alt=&quot;Wrocław at night with fog and illuminated streets&quot; style=&quot;max-width: 45%;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/djangocon2/guinness.jpg&quot; alt=&quot;A bridge in Wrocław lit up at night&quot; style=&quot;max-width: 45%;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;djangocon&quot;&gt;DjangoCon&lt;/h1&gt;
+&lt;h2 id=&quot;my-keynote-talk&quot;&gt;My Keynote Talk&lt;/h2&gt;
+&lt;p&gt;One day, I got an email invitation from &lt;a href=&quot;https://www.mariuszfelisiak.org/&quot;&gt;Mariusz Felisiak&lt;/a&gt; to give a keynote talk at DjangoCon. Since it’s my favorite community conference and I love giving talks, I couldn’t say no!&lt;/p&gt;
+
+&lt;p&gt;So I started thinking about the topic. I wanted something technical but also fun and engaging. One night, lying in bed, the idea hit me: bizarre software bugs! The weird ones, the tragic ones, the funny ones. Bugs that teach something and entertain. Perfect keynote material!&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;./images/posts/djangocon2/rmrf.png&quot; alt=&quot;Large mural depicting historical scenes in Wrocław&quot; style=&quot;max-width: 99%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Working on the talk was so much fun! I’ve always loved the arts (and even have some formal education in it), and I really enjoy how public speaking brings together technical research, storytelling, visuals, and performance all in one.&lt;/p&gt;
+
+&lt;p&gt;Some examples were space-themed, and I love reading more about spacecraft or planes, like NASA’s Mars Climate Orbiter crash or the Boeing Max disaster (hint: yes, it was software!).&lt;/p&gt;
+
+&lt;p&gt;During the preparation, I learned many fascinating things. For example, do you know why planes don’t have square windows? If you don’t, check it out!&lt;/p&gt;
+
+&lt;h2 id=&quot;speakers-dinner&quot;&gt;Speakers’ Dinner&lt;/h2&gt;
+&lt;p&gt;The night before the conference, we had the speakers’ dinner at a classic Irish pub. They were serving burgers only, but luckily there was a veggie option for me.&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;./images/posts/djangocon2/burger.jpg&quot; alt=&quot;Large mural depicting historical scenes in Wrocław&quot; style=&quot;max-width: 99%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;After dinner, we went to a nearby pub for a pint of Guinness. Paolo took a photo of me around 9 pm, and you can clearly see how exhausted I looked the night before my talk.&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;./images/posts/djangocon2/paolo.jpg&quot; alt=&quot;Large mural depicting historical scenes in Wrocław&quot; style=&quot;max-width: 99%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;the-talk-day&quot;&gt;The Talk Day&lt;/h2&gt;
+&lt;p&gt;I fell asleep at 3 am and woke up at 6. I went to the auditorium expecting maybe ten people to show up, since it was 9 am after all. To my biggest surprise, the room was so packed that people were standing, with no empty seats left!&lt;/p&gt;
+
+&lt;p&gt;I thought a few of my slides might be funny, but the audience laughed and followed my stories the whole way. It felt amazing!&lt;/p&gt;
+
+&lt;p&gt;Afterwards, many folks came up and shared more bizarre bug stories with me. Might have to do a second part next year! Big thanks to everyone for sharing your stories with me!&lt;/p&gt;
+
+&lt;div class=&quot;image-row&quot;&gt;
+  &lt;img src=&quot;./images/posts/djangocon2/talk2.png&quot; alt=&quot;Wrocław at night with fog and illuminated streets&quot; style=&quot;max-width: 64%;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/djangocon2/talk-side2.jpg&quot; alt=&quot;A bridge in Wrocław lit up at night&quot; style=&quot;max-width: 35%;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;./images/posts/djangocon2/talk3.png&quot; alt=&quot;Large mural depicting historical scenes in Wrocław&quot; style=&quot;max-width: 99%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;other-talks&quot;&gt;Other Talks&lt;/h2&gt;
+&lt;h3 id=&quot;haki-benita&quot;&gt;Haki Benita&lt;/h3&gt;
+&lt;p&gt;I loved &lt;a href=&quot;https://hakibenita.com/&quot;&gt;Haki Benita’s&lt;/a&gt; talk. He spent half an hour talking about foreign keys only.&lt;/p&gt;
+
+&lt;p&gt;Turns out I’d read his articles on Django and concurrency before and hadn’t even made the connection. He used to work as a DBA and brings a super unique angle to his talks, especially things Django sometimes does less efficiently.&lt;/p&gt;
+
+&lt;p&gt;Once the video is out, I want to go through it step by step and take notes, as there were so many practical takeaways. Highly recommend!&lt;/p&gt;
+
+&lt;h3 id=&quot;sarah-boyce&quot;&gt;Sarah Boyce&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/sarahboyce&quot;&gt;Sarah&lt;/a&gt;, one of the Django Fellows, gave a keynote on contributing to Django through code reviews.&lt;/p&gt;
+
+&lt;p&gt;I like doing reviews and usually do them before sleep (weird, I know), so it made me think about getting more involved with open source. A lot of projects don’t lack PRs. They lack reviewers. PRs pile up and reviewing is often the bottleneck.&lt;/p&gt;
+
+&lt;h3 id=&quot;karen-jex&quot;&gt;Karen Jex&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://karenjex.blogspot.com/&quot;&gt;Karen&lt;/a&gt; always gives great talks! This year, she asked for ideas on what to cover, and I suggested “how databases work under the hood.” She opened her talk with a slide quoting me!&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;./images/posts/djangocon2/karen.jpg&quot; alt=&quot;Large mural depicting historical scenes in Wrocław&quot; style=&quot;max-width: 99%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Loved her talk! I’ve read Designing Data-Intensive Applications and PostgreSQL Internals, but still learned something new. If you’re into databases, don’t miss her talk once it’s out!&lt;/p&gt;
+
+&lt;h2 id=&quot;swimming-in-the-ocean&quot;&gt;Swimming in the Ocean&lt;/h2&gt;
+&lt;p&gt;After day one of sprints, there’s a tradition: swim in the ocean. I totally forgot about it. I didn’t have any swimwear, towel, or anything with me.&lt;/p&gt;
+
+&lt;p&gt;I went with &lt;a href=&quot;https://thib.me/about/&quot;&gt;Thibaud&lt;/a&gt; and &lt;a href=&quot;https://carrick.eu/&quot;&gt;Tom&lt;/a&gt; who did go in, and standing there watching them made me want to join. I walked into the ocean up to my knees. It was so cold that my legs went instantly numb. Which is good, because then you don’t feel the pain.&lt;/p&gt;
+
+&lt;p&gt;Next year, I’m bringing swimwear and going in for the full challenge!&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;./images/posts/djangocon2/ocean.jpg&quot; alt=&quot;Large mural depicting historical scenes in Wrocław&quot; style=&quot;max-width: 99%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;./images/posts/djangocon2/ocean2.jpg&quot; alt=&quot;Large mural depicting historical scenes in Wrocław&quot; style=&quot;max-width: 99%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;djangos-birthdays&quot;&gt;Django’s Birthdays&lt;/h1&gt;
+&lt;p&gt;Did you know Django turns 20 this year? On July 14, the same day EuroPython starts!&lt;/p&gt;
+
+&lt;p&gt;Thibaud made these adorable DIY photo frames and stickers, including a Django pony wearing the EuroPython Society logo. Super cute!&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;./images/posts/djangocon2/photobooth.png&quot; alt=&quot;Large mural depicting historical scenes in Wrocław&quot; style=&quot;max-width: 99%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;./images/posts/djangocon2/sticker.jpg&quot; alt=&quot;Large mural depicting historical scenes in Wrocław&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;The Django Software Foundation will have a booth at EuroPython again this year, alongside EPS. I can’t wait to see what fun stuff they bring!&lt;/p&gt;
+
+&lt;h1 id=&quot;summary&quot;&gt;Summary&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;DjangoCon EU 2025 was one of the best conference experiences I’ve had!&lt;/li&gt;
+  &lt;li&gt;Guinness has officially earned its place as my second favorite beer (first is still sour ale!).&lt;/li&gt;
+  &lt;li&gt;Preparing and giving my keynote was so much fun!&lt;/li&gt;
+  &lt;li&gt;Next DjangoCon, I’m packing swimwear!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;thank-you-organizers&quot;&gt;Thank You, Organizers!&lt;/h1&gt;
+&lt;p&gt;As a fellow community organizer, I want to thank the organizers for the time and effort they put into making this event happen!&lt;/p&gt;
+</description>
+                <pubDate>Thu, 01 May 2025 00:00:00 +0000</pubDate>
+                <link>https://clytaemnestra.github.io/tech-blog/djangocon</link>
+                <guid isPermaLink="true">https://clytaemnestra.github.io/tech-blog/djangocon</guid>
+                
+                <category>conferences</category>
+                
+                
+            </item>
+        
+            <item>
+                <title>My First-Ever FOSDEM and First Time in Brussels</title>
+                <description>&lt;p&gt;Last weekend, I went to FOSDEM for the first time—and it was also my first time in Belgium!&lt;/p&gt;
+
+&lt;h1 id=&quot;brussels&quot;&gt;Brussels&lt;/h1&gt;
+&lt;p&gt;Brussels is small but full of character. On my first night, I went for a walk around the city. It’s pretty flat and wide, with a beautiful historic center, stunning gothic churches, and tons of bars.&lt;/p&gt;
+
+&lt;div class=&quot;image-row&quot;&gt;
+  &lt;img src=&quot;./images/posts/fosdem/square.jpg&quot; alt=&quot;A dwarf statue lounging on the ground in Wrocław&quot; style=&quot;max-width: 49.5%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/fosdem/building1.jpg&quot; alt=&quot;A dwarf statue climbing up a lamppost in Wrocław&quot; style=&quot;max-width: 49.5%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;div class=&quot;image-row&quot;&gt;
+  &lt;img src=&quot;./images/posts/fosdem/street2.jpg&quot; alt=&quot;A dwarf statue staring at you with arms crossed&quot; style=&quot;max-width: 33%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/fosdem/street1.jpg&quot; alt=&quot;A dwarf statue with a camera taking photos&quot; style=&quot;max-width: 33%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/fosdem/street3.jpg&quot; alt=&quot;A dwarf statue playing an instrument in Wrocław&quot; style=&quot;max-width: 33%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;beer&quot;&gt;Beer&lt;/h2&gt;
+&lt;p&gt;First mission upon arrival: find sour beer. I stopped by a place near my hotel, and they had amazing cherry beers! I spent the next few days trying all sorts of Belgian beers: Leffe (their typical lager) and plenty of delicious sour ones.&lt;/p&gt;
+
+&lt;div class=&quot;image-row&quot;&gt;
+  &lt;img src=&quot;./images/posts/fosdem/beer1.jpg&quot; alt=&quot;A dwarf statue with a camera taking photos&quot; style=&quot;max-width: 33%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/fosdem/beer3.jpg&quot; alt=&quot;A dwarf statue playing an instrument in Wrocław&quot; style=&quot;max-width: 33%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/fosdem/beer2.jpg&quot; alt=&quot;A dwarf statue staring at you with arms crossed&quot; style=&quot;max-width: 33%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;peeing-peeing-peeing-everywhere&quot;&gt;Peeing, Peeing, Peeing Everywhere&lt;/h2&gt;
+&lt;p&gt;The next day, I went to check out Brussels’ famous peeing statues: the peeing boy, the peeing girl, and, yes, even a peeing dog! I was surprised by how small they were! I expected massive two-meter-tall statues, but they were twenty centimeters tall! Still, pretty funny to see many souvenirs with the peeing boy everywhere in the city.&lt;/p&gt;
+
+&lt;div class=&quot;image-row&quot;&gt;
+  &lt;img src=&quot;./images/posts/fosdem/peeing-boy.jpg&quot; alt=&quot;A dwarf statue with a camera taking photos&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/fosdem/peeing-girl.jpg&quot; alt=&quot;A dwarf statue staring at you with arms crossed&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/fosdem/peeing-dog.jpg&quot; alt=&quot;Marijka&apos;s Lightning Talk&quot; style=&quot;max-width: 60%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;atomium&quot;&gt;Atomium&lt;/h2&gt;
+&lt;p&gt;I visited the Atomium, and it was pretty cool! From the top, you get an amazing view of the whole city.&lt;/p&gt;
+
+&lt;p&gt;In the middle sections, there was a design museum. The most interesting part of it were the dimmed windows. They made the outside world look like a scene straight out of a post-apocalyptic movie.&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between; align-items: flex-start;&quot;&gt;
+  &lt;!-- First Image on the Left --&gt;
+  &lt;div style=&quot;flex: 0.9; margin-right: 10px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/fosdem/atomium3.jpg&quot; alt=&quot;Colorful mural of abstract faces in Wrocław&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Three Images Stacked on the Right --&gt;
+  &lt;div style=&quot;display: flex; flex-direction: column; gap: 12px; flex: 0.5;&quot;&gt;
+    &lt;img src=&quot;./images/posts/fosdem/atomium2.jpg&quot; alt=&quot;Graffiti of a woman&apos;s face in Wrocław&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+    &lt;img src=&quot;./images/posts/fosdem/atomium5.jpg&quot; alt=&quot;Street art of animals painted on a wall&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+    &lt;img src=&quot;./images/posts/fosdem/atomium4.jpg&quot; alt=&quot;Street art of animals painted on a wall&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;./images/posts/fosdem/atomium1.jpg&quot; alt=&quot;A Christmas market in Wrocław with lights and wooden stalls&quot; style=&quot;max-width: 49.5%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/fosdem/atomium6.jpg&quot; alt=&quot;Christmas decorations and lights in Wrocław market square&quot; style=&quot;max-width: 49.5%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;about-fosdem&quot;&gt;About FOSDEM&lt;/h1&gt;
+&lt;p&gt;FOSDEM is Europe’s biggest free and open-source conference with around 15,000 participants. Everyone kept saying it’s a unique experience that you have to try at least once, and I totally agree! I’m so glad I went because it felt completely different from other conferences I’ve attended.&lt;/p&gt;
+
+&lt;p&gt;There were people everywhere and queues for everything. Even the number of speakers was wild—1,082 in total! There weren’t any official social events or spaces for networking, so it’s definitely better if you already know people before coming.&lt;/p&gt;
+
+&lt;p&gt;The whole conference had a super nerdy vibe. I even bought myself a little LED badge that displays my name for 25 euros and it felt it fits right there.&lt;/p&gt;
+
+&lt;p&gt;Fun fact: A girl came up to me and asked if I program in Rust. I said no, why? She replied that due to my hair I look like a Rust programmer and she’s advertising a Rust event. Maybe this is a sign from the universe that I should finally start learning Rust…&lt;/p&gt;
+
+&lt;h2 id=&quot;my-talk&quot;&gt;My Talk&lt;/h2&gt;
+&lt;p&gt;My talk was going well… until I tried to play a video. I hit play, and of course no audio. Great. I figured, okay, at least there are subtitles. But then people said they couldn’t read them and asked me to read them out loud. Have you ever tried reading subtitles in sync with a video? It’s impossible. You’re either too fast or too slow. It felt so awkward! Luckily, I ran out of time within a minute, and they kicked me out. I quickly wrapped up, thanked everyone, and let them know I’d be available for questions afterward. A few people stayed around and we chatted a bit about communities. That was very nice!&lt;/p&gt;
+
+&lt;h2 id=&quot;lightning-talks&quot;&gt;Lightning Talks&lt;/h2&gt;
+&lt;p&gt;At the last minute, I saw an open slot in the Python devroom, so I signed up for a lightning talk. My talk was called “A week of all things &lt;del&gt;peeing&lt;/del&gt; Python.” I talked about differences between Brussels and Prague. And guess what? There aren’t so many! Both have beautiful churches, great beer, and… peeing sculptures. Beer in Prague is six times cheaper, though. And EuroPython is more fun.&lt;/p&gt;
+
+&lt;h2 id=&quot;other-talks&quot;&gt;Other Talks&lt;/h2&gt;
+&lt;p&gt;I didn’t get to see many other talks because the whole event was huge and kind of overwhelming. I did catch a talk on the current state of Django by Thibaud Colas (Chair of the Django Software Foundation), which I really enjoyed. I also watched one keynote from the organization Let’s Encrypt and stayed for the closing session since I was curious about the final stats.&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, I didn’t manage to attend as many talks as I wanted, but maybe next time!&lt;/p&gt;
+</description>
+                <pubDate>Thu, 06 Feb 2025 00:00:00 +0000</pubDate>
+                <link>https://clytaemnestra.github.io/tech-blog/fosdem</link>
+                <guid isPermaLink="true">https://clytaemnestra.github.io/tech-blog/fosdem</guid>
+                
+                <category>community</category>
+                
+                <category>conferences</category>
+                
+                
+            </item>
+        
+            <item>
+                <title>Reflecting on 2024: My Year in Books</title>
+                <description>&lt;p&gt;I’ve always liked to read. Over the years, it became a habit. Every month, I visit local bookstores to check out what’s new.&lt;/p&gt;
+
+&lt;p&gt;The other day, I noticed a growing pile of books on my table, which got me thinking: it would be a nice idea to reflect on all the books I read in 2024.&lt;/p&gt;
+
+&lt;p&gt;I read 28 books in total. Some about life, some about career, and some on completely random topics. I didn’t have any specific reading goals. I simply read whenever I felt like it, and I’m honestly surprised that last year I managed to read so much!&lt;/p&gt;
+
+&lt;p&gt;I decided to list all the books I read in 2024 below, starting with my absolute favorites. For each one, I shared what stood out to me the most.&lt;/p&gt;
+
+&lt;p&gt;At the end of this article, you can find out what my favorite book was, which one I disliked the most, and which surprised me in an unexpected way.&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between; align-items: flex-start;&quot;&gt;
+
+  &lt;div style=&quot;display: flex; flex-direction: column; gap: 12px; flex: 0.5;&quot;&gt;
+    &lt;img src=&quot;./images/books1.jpg&quot; alt=&quot;Graffiti of a woman&apos;s face in Wrocław&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+    &lt;img src=&quot;./images/books2.jpg&quot; alt=&quot;Street art of animals painted on a wall&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;my-list-of-books&quot;&gt;My List of Books&lt;/h2&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot; /&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+    &lt;title&gt;Collapsible Book List&lt;/title&gt;
+    &lt;style&gt;
+        .collapsible {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 10px 0;
+            padding: 8px;
+            border-radius: 5px;
+        }
+
+        .chevron {
+            transition: transform 0.3s ease;
+        }
+
+        .content {
+            display: none;
+            margin-top: 5px;
+            padding: 10px;
+        }
+
+        .active .chevron {
+            transform: rotate(90deg);
+        }
+
+        ol {
+            padding-left: 20px;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;ol&gt;
+    &lt;li&gt;
+        &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+            &lt;span&gt;How to Win Friends and Influence People by Carnegie&lt;/span&gt;
+            &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;content&quot;&gt;
+            &lt;p&gt;I read this book two years ago and was impressed by how many things were new to me. Because I learned so much from it, I decided to read it again. The book explains the core of human psychology—why we like some people and some we don&apos;t.&lt;/p&gt;
+            &lt;p&gt;One of the things that stood out to me the most is how important and powerful it is in human relationships to give honest appreciation. I was raised in an environment, both at home and school, where people were always quick to complain and criticize others. Unfortunately, this left its mark even in my adulthood. It’s easy for me to suggest improvements, but it doesn’t come naturally to stop, think about what’s working well, and appreciate people just because. This isn’t a common part of Eastern or Southeastern European culture either. I remember being in the U.S. and quite liking how people around me would comment on my clothes, hair, or random things they liked. I’m trying to work on this consciously and tell people when I notice something good or nice about them.&lt;/p&gt;
+            &lt;p&gt;Another big takeaway is how important it is to listen. I’m naturally not a great listener, and sometimes I tend to talk too much. But the truth is, no one really cares about me in that moment. Most people you talk to do so because they need to fill their own social needs—they enjoy talking—rather than because they’re deeply interested in you. This is important to remember. I’m trying to focus more on listening and asking questions when meeting someone new and, overall, toning down how much I talk about myself.&lt;/p&gt;
+            &lt;p&gt;The last key point that stood out to me is how to handle disagreements. We’ve all been in situations where we disagree with someone. The educational system taught me that discussions should be rational and focus on the arguments, so if I suggest &lt;em&gt;x&lt;/em&gt; and you say it’s a bad idea and suggest &lt;em&gt;y&lt;/em&gt;, we should write down the pros and cons of both approaches and figure out which one is best. However, human behavior has layers of subconscious demands, unspoken rules, and deep beliefs beneath the surface. The book suggests trying to understand people before disagreeing with them. Instead of focusing solely on facts, when I’m in disagreement with someone, I try to think about or ask what their core beliefs or values are. In other words, what they’re trying to convey beneath the thought we’re discussing.&lt;/p&gt;
+            &lt;p&gt;The book, overall, has many great insights into working with diverse people. I believe that knowing a lot about human nature while being honest, sincere, and authentic is what makes someone a great communicator and opens the door to better relationships in life.&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+            &lt;span&gt;So Good They Can&apos;t Ignore You by Newport&lt;/span&gt;
+            &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;content&quot;&gt;
+            &lt;p&gt;Why do some people enjoy their work, while for others it&apos;s just a 9-to-5 routine?&lt;/p&gt;
+            &lt;p&gt;There’s a myth that people are born with a passion for something. If you aren’t born with it, bad luck. However, Newport conducted research and found that it’s the other way round—when work makes someone happy, they become passionate about it. At that moment, it becomes a self-feeding loop that drives them forward.&lt;/p&gt;
+            &lt;p&gt;So, what makes people enjoy their work? He mentioned three key things:&lt;/p&gt;
+            &lt;ul&gt;
+                &lt;li&gt;Autonomy – having control and being able to make your own decisions&lt;/li&gt;
+                &lt;li&gt;Competence – being good at what you do&lt;/li&gt;
+                &lt;li&gt;Social connections – feeling connected to those around you&lt;/li&gt;
+            &lt;/ul&gt;
+            &lt;p&gt;I personally can confirm this theory. The better I am at what I do, the more I enjoy it. In 2024, after many years, I started to truly enjoy my work. I have the autonomy to make decisions and I can fully contribute in meaningful ways. Best of all, I get to work with amazing colleagues and a supportive manager.&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+            &lt;span&gt;Nonviolent Communication by Rosenberg&lt;/span&gt;
+            &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;content&quot;&gt;
+            &lt;p&gt;I found out about this book by listening to &lt;a href=&quot;https://nenasilnypodcast.cz/&quot;&gt;Nenásilní podcast&lt;/a&gt;. The basic idea behind nonviolent communication is pretty simple. There are four key components:&lt;/p&gt;
+            &lt;ul&gt;
+                &lt;li&gt;Observations – actions we observe around us&lt;/li&gt;
+                &lt;li&gt;Feelings – how we feel in relation to those observations&lt;/li&gt;
+                &lt;li&gt;Needs – all our feelings and human behavior are driven by our needs&lt;/li&gt;
+                &lt;li&gt;Requests – specific actions we can take to fulfill our needs&lt;/li&gt;
+            &lt;/ul&gt;
+            &lt;p&gt;The biggest lesson I took from the book is to avoid labeling, criticizing, or judging people. Saying things like &lt;em&gt;He&apos;s lazy&lt;/em&gt; or &lt;em&gt;She&apos;s selfish&lt;/em&gt; never helps but makes the situation worse.&lt;/p&gt;
+            &lt;p&gt;Another valuable takeaway is learning to recognize my needs and think about how to fulfill them. For example, if I feel angry because something didn’t happen, I ask myself: what need was that supposed to fulfill and what other ways could I fulfill that need at this moment?&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+            &lt;span&gt;Prostě vztahy by Vojtko&lt;/span&gt;
+            &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;content&quot;&gt;
+            &lt;p&gt;Honza Vojtko is a well-known therapist specializing in romantic relationships. I’ve read his previous two books, Vztahy a mýty and Vztahy a pasti, and I loved them! However, this book isn’t about romance. It’s about our relationships with all the other things in our lives: our family, work, friends, animals, money, own bodies, time, the world, spirituality, and even death.&lt;/p&gt;
+            &lt;p&gt;The book explains why these relationships matter and why it’s important to understand what your relationship is with these things and what previous life events shaped it.&lt;/p&gt;
+            &lt;p&gt;This book had me thinking for days.&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+            &lt;span&gt;TED Talks: The Official TED Guide to Public Speaking by Anderson&lt;/span&gt;
+            &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;content&quot;&gt;
+            &lt;p&gt;If you&apos;re interested in public speaking, there&apos;s no better material than this book! Its author is the head of TED - a non-profit organization known for hosting some of the most popular and highest-quality talks in the world.&lt;/p&gt;
+            &lt;p&gt;What surprised me most about TED Talks is how hard it is to get to the main stage. Even after their topic is selected, speakers must go through a trial rehearsal, and if their talks don’t meet the quality requirements, they aren’t allowed to proceed further. Some time ago, I considered buying a ticket for the main TED conference, but when I found out the cheapest one costs $6,250, I quickly lost interest.&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+            &lt;span&gt;The Culture Code by Coyle&lt;/span&gt;
+            &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;content&quot;&gt;
+            &lt;p&gt;Why do some groups work better than others? This book shared many fascinating stories about different groups and what made some of them successful.&lt;/p&gt;
+            &lt;p&gt;One concept that stood out to me the most was &lt;em&gt;bad apple&lt;/em&gt; behavior. We&apos;ve all been part of groups where there was that one person who needed to be managed by everyone else but was somehow tolerated. This is also known as the &lt;a href=&quot;https://en.wikipedia.org/wiki/Missing_stair&quot;&gt;missing stair&lt;/a&gt; metaphor—the idea of an issue everyone knows about but works around rather than fixing.&lt;/p&gt;
+            &lt;p&gt;The author referenced a study where researchers examined what happens when you place such a person in a successful group. The result? Productivity drops by 30-40%. The key difference between long-term successful groups and less effective ones is that successful groups openly call out this behavior and actively address it rather than letting it slide.&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+            &lt;span&gt;Wildlife of Africa by Hoberman&lt;/span&gt;
+            &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;content&quot;&gt;
+            &lt;p&gt;When I was in Namibia, I bought a book about wild animals in Africa. I love books with stunning photos! I enjoyed reading about the wild animals I encountered on my trip and admiring their vibrant colors.&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+            &lt;span&gt;Katutura&lt;/span&gt;
+            &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;content&quot;&gt;
+            &lt;p&gt;When I attended PyCon in Namibia last year, we spent a day teaching high-school students in Katutura. I wrote an article about my trip to Namibia here.&lt;/p&gt;
+            &lt;p&gt;Katutura is a township established in the 1960s when the South African colonial administration forcibly relocated Windhoek&apos;s Black population to the suburbs. In Herero, &lt;em&gt;Katutura&lt;/em&gt; means &lt;em&gt;The place where people do not want to live&lt;/em&gt;.&lt;/p&gt;
+            &lt;p&gt;The book is filled with photos and stories about life in Katutura, but one story from a resident really stood out to me. Life in Katutura is harsh and people live in difficult conditions. However, one resident shared an interesting observation: despite the hardships, people in Katutura live in a close-knit community where people help each other. In contrast, in areas predominantly inhabited by white Namibians, you often see large houses with fences, cameras, and guard dogs, and people rarely interact with each other.&lt;/p&gt;
+            &lt;p&gt;If you ever visit Namibia, I highly recommend attending PyCon and visiting Katutura with locals. It is a tough place to see, especially when you realize the extent of the injustices of the past, but it will shift your perspective on yourself and everything you have.&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+            &lt;span&gt;People Powered by Bacon&lt;/span&gt;
+            &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;content&quot;&gt;
+            &lt;p&gt;This is such a great book about communities! While some parts felt obvious, as I&apos;ve been part of communities from the age of nine, it provided a clear framework and introduced me to the concept of paid community management, which often works differently from volunteer-led communities. I learned about different types of communities, management strategies, how it works in large companies and the roles available in this field.&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+            &lt;span&gt;Together by Murthy&lt;/span&gt;
+            &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;content&quot;&gt;
+            &lt;p&gt;What would you guess is the epidemic causing declining health in the Western world today? Obesity? Opioids? Drugs?&lt;/p&gt;
+            &lt;p&gt;It’s loneliness! The author explains why it’s such a significant issue and how it affects human health. According to him, humans need three types of connections:&lt;/p&gt;
+            &lt;ul&gt;
+                &lt;li&gt;The inner circle, core relationships – family, partner(s) and closest friends&lt;/li&gt;
+                &lt;li&gt;The middle circle, close relationships – friends, colleagues and extended family members&lt;/li&gt;
+                &lt;li&gt;The outer circle, casual relationships – broader community, acquaintances&lt;/li&gt;
+            &lt;/ul&gt;
+            &lt;p&gt;One fascinating point was how different cultures perceive human relationships. The author used the &lt;em&gt;bowl&lt;/em&gt; metaphor: in some cultures, like a deep bowl, you&apos;re born into many connections—it’s easy to form bonds, but there’s little freedom, and you’re expected to fit in. In contrast, shallow bowl cultures require you to create connections consciously; they don’t happen automatically, but there’s much more personal freedom.&lt;/p&gt;
+            &lt;p&gt;I’ve experienced both. Growing up in a small town in the Balkans, everyone knew everyone. It was a close-knit ecosystem where people helped each other and stayed connected, but there was immense pressure to conform—if you stood out, you felt it. Now, living in Prague, I can be whoever I want, but I don’t know a single neighbor, let alone to casually visit them for coffee.&lt;/p&gt;
+            &lt;p&gt;Another interesting point was the impact of loneliness on the elderly. The more developed a country is, the more individualistic its people tend to be. In places like Norway, elders often expect to live alone and are accustomed to it. But in countries like Italy, where older generations grew up in households with extended family, the shift toward individualism creates a painful gap. As the culture changes, their expectations remain, leaving them more vulnerable to loneliness.&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+            &lt;span&gt;Working in Public: The Making and Maintenance of Open Source Software by Eghbal&lt;/span&gt;
+            &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;content&quot;&gt;
+            &lt;p&gt;If you&apos;re interested in open-source, I highly recommend this book! One of the most interesting insights was that there are four types of open-source projects:&lt;/p&gt;
+            &lt;ul&gt;
+                &lt;li&gt;Federations – high user growth and high contributor growth (e.g., Kubernetes)&lt;/li&gt;
+                &lt;li&gt;Stadiums – high user growth but low contributor growth (e.g., Babel)&lt;/li&gt;
+                &lt;li&gt;Clubs – low user growth but high contributor growth (e.g., Astropy)&lt;/li&gt;
+                &lt;li&gt;Toys – low user growth and low contributor growth (e.g., ssh-chat)&lt;/li&gt;
+            &lt;/ul&gt;
+            &lt;p&gt;Each of these project types has different decision-making processes and ways of management.&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+            &lt;span&gt;Never Split the Difference: Negotiating As If Your Life Depended On It by Voss&lt;/span&gt;
+            &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;content&quot;&gt;
+            &lt;p&gt;This book is written by a professional FBI negotiator.&lt;/p&gt;
+            &lt;p&gt;One of the most fascinating points I remember is the importance of honesty and keeping promises. An interesting example is how the FBI ensures that if they promise someone a reduced prison sentence in exchange for releasing hostages, they follow through. The reason is surprising—it’s all about reputation! If the FBI fails to keep their word, the person they convinced could share that with others in prison, damaging the FBI’s credibility. Since many criminals spend time in prison, maintaining a consistent and trustworthy reputation is crucial for the FBI’s brand.&lt;/p&gt;
+            &lt;p&gt;Another interesting technique discussed in the book is the use of mirroring and voice control.&lt;/p&gt;
+            &lt;p&gt;Mirroring means labeling the other person’s emotions (e.g., &lt;em&gt;It sounds/feels/seems like you’re feeling xxx?&lt;/em&gt;) to encourage them to share more. The author says it&apos;s very important to actively listen (and not speak) during negotiations. It&apos;s because you need information to make good decisions, and the more you listen, the more you learn, therefore the better your chances of success.&lt;/p&gt;
+            &lt;p&gt;The author also explains that there are three types of voices used during negotiations:&lt;/p&gt;
+            &lt;ul&gt;
+                &lt;li&gt;The late-night DJ voice – calm, slow, and deep, used to make a strong point&lt;/li&gt;
+                &lt;li&gt;The positive/playful voice – the default voice, which you can create by smiling while you speak&lt;/li&gt;
+                &lt;li&gt;The assertive and direct voice – it should never be used, as it tends to create pushback&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/div&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+            &lt;span&gt;The Culture Map by Meyer&lt;/span&gt;
+            &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;content&quot;&gt;
+            &lt;p&gt;Cultural differences can be seen in many areas, such as:&lt;/p&gt;
+            &lt;ul&gt;
+                &lt;li&gt;Communication – low-context vs. high-context&lt;/li&gt;
+                &lt;li&gt;Evaluating – direct vs. indirect negative feedback&lt;/li&gt;
+                &lt;li&gt;Persuading – principles-first vs. applications-first&lt;/li&gt;
+                &lt;li&gt;Leading – egalitarian vs. hierarchical&lt;/li&gt;
+                &lt;li&gt;Decision-making – consensual vs. top-down&lt;/li&gt;
+                &lt;li&gt;Trusting – task-based vs. relationship-based&lt;/li&gt;
+                &lt;li&gt;Disagreeing – confrontational vs. avoids confrontation&lt;/li&gt;
+                &lt;li&gt;Scheduling – linear-time vs. flexible-time&lt;/li&gt;
+            &lt;/ul&gt;
+            &lt;p&gt;One example from the book really stood out to me. I was born into a high-context culture, where communication is indirect, and you’re expected to read between the lines. For instance, in these cultures, people may ask multiple times if you want coffee or even try to persuade you, because saying &lt;em&gt;no&lt;/em&gt; once isn’t enough. Responsibility for the exchange doesn’t lie solely with the person asking but with both people involved.&lt;/p&gt;
+            &lt;p&gt;I prefer direct communication, so not having to constantly read between the lines feels refreshing. However, my experience of living in a high-context culture has shaped me—I often find myself questioning the hidden motivations behind people’s actions, even when none exist.&lt;/p&gt;
+            &lt;p&gt;It’s fascinating how cultures differ in how they communicate, and this book helped me understand why.&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+            &lt;span&gt;Surrounded by Narcissists by Erikson&lt;/span&gt;
+            &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;content&quot;&gt;
+            &lt;p&gt;I read Surrounded by Idiots by Erikson a few years ago, and it was one of the best books I’ve ever read!&lt;/p&gt;
+            &lt;p&gt;This book focuses on understanding narcissism and how to protect yourself from narcissistic behavior.&lt;/p&gt;
+            &lt;p&gt;One of the things that stood out to me is how narcissists exploit people’s weaknesses, which is why it’s important to understand your own ones and be prepared. For example, a common tactic is to shift the focus of the conversation to you. If you’re impatient and start getting angry, they will steer the conversation toward your reaction rather than the issue at hand. The key is to stay calm and call them out. The author also suggests having witnesses present (since narcissists care about their image), pausing the conversation, setting clear boundaries, or, in some cases, cutting off contact altogether.&lt;/p&gt;
+            &lt;p&gt;Another surprising point is how society as a whole is becoming more narcissistic. Even people who don’t have narcissistic disorder often display narcissistic tendencies, and collective narcissism is on the rise. The author suggests that the self-help industry and social media may be contributing factors.&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+            &lt;span&gt;Four Thousand Weeks by Burkeman&lt;/span&gt;
+            &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;content&quot;&gt;
+            &lt;p&gt;This book was recommended to me by several people. It aims to explain why most productivity advice is useless because time controls our agenda instead of us embracing its limitations and accepting that we’re mortal. While I enjoyed reading it, my relationship with time is so complicated that no book at this point can fix it.&lt;/p&gt;
+            &lt;p&gt;It’s a great book, nonetheless.&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+            &lt;span&gt;Drummer and the Great Mountain by Ferguson&lt;/span&gt;
+            &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;content&quot;&gt;
+            &lt;p&gt;If you&apos;re interested in ADHD, this book is definitely worth a read.&lt;/p&gt;
+            &lt;p&gt;Right at the start, the author introduces an intriguing theory: that our hunter-gatherer ancestors had traits commonly associated with ADHD, and those traits were actually advantageous at the time. As hunters, they needed to be flexible, seek novelty, remain curious, stay active, and be hyperfocused when hunting. However, as society transitioned to agriculture, the traits that were beneficial for hunting became less relevant. Farmers, on the other hand, needed to focus on a single task for long periods each day: farming.&lt;/p&gt;
+            &lt;p&gt;The book also includes plenty of practical tools and techniques for managing daily life more effectively.&lt;/p&gt;
+            &lt;p&gt;One exercise stood out to me as particularly useful. The book explains how our needs drive our behavior and provides a long list of common human needs. The exercise asked readers to write down 5-6 situations where they lost their temper and identify which need was not met in each case. The next step was to list activities that could fulfill that need. Interestingly, I discovered that for me, all the situations traced back to the same unmet need, and now I have a better understanding of how to address it.&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+      &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+          &lt;span&gt;Feminist Fight Club: An Office Survival Manual for a Sexist Workplace by Bennett&lt;/span&gt;
+          &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;content&quot;&gt;
+          &lt;p&gt;When I was walking the streets of Manhattan last May, I accidentally stumbled upon a second-hand bookshop and bought this book for just one dollar. Then, I went to Central Park to enjoy some nature surrounded by skyscrapers (a very unique contrast!) and started reading it.&lt;/p&gt;
+          &lt;p&gt;The book explains how to handle sexist behavior in the workplace.&lt;/p&gt;
+          &lt;p&gt;My biggest takeaway was that how we speak is often more important than what we say. The author referenced studies showing that women tend to ask for permission more often than for forgiveness, which also shows up in language. For instance, women are more likely to end sentences with phrases like &lt;em&gt;Does that make sense?&lt;/em&gt; while men tend to say &lt;em&gt;Here’s what we’re going to do&lt;/em&gt;.&lt;/p&gt;
+          &lt;p&gt;A few times since reading it, when I caught myself wanting to seek confirmation for a decision I’d already made, I remembered that advice and held my ground.&lt;/p&gt;
+      &lt;/div&gt;
+  &lt;/li&gt;
+
+  &lt;li&gt;
+      &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+          &lt;span&gt;Honest Guide: Prague by Rubeš&lt;/span&gt;
+          &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;content&quot;&gt;
+          &lt;p&gt;Honest Guide is a YouTube channel where two guys from Prague show you hidden gems and non-touristy spots while warning you about common scams. Their book is just as great. Thanks to them I discovered so many wonderful places in the City of a Thousand Spires.&lt;/p&gt;
+      &lt;/div&gt;
+  &lt;/li&gt;
+
+  &lt;li&gt;
+      &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+          &lt;span&gt;Feministkou snadno a rychle by Jarkovská&lt;/span&gt;
+          &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;content&quot;&gt;
+          &lt;p&gt;This book debunks myths for anyone who claims that women and men have truly equal opportunities in the Czech Republic and beyond. It’s an important read, but seeing all the numbers and stories laid out at once left me feeling disheartened.&lt;/p&gt;
+      &lt;/div&gt;
+  &lt;/li&gt;
+
+  &lt;li&gt;
+      &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+          &lt;span&gt;The Psychology Book: Big Ideas Simply Explained by Benson&lt;/span&gt;
+          &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;content&quot;&gt;
+          &lt;p&gt;The whole history of psychology, simply explained! I really loved the visuals and how the information was presented. If you&apos;re interested in any subject, I highly recommend the &quot;Big Ideas Simply Explained&quot; series.&lt;/p&gt;
+          &lt;p&gt;It&apos;s also fascinating and disturbing how inhumane psychology was in the past. It makes me wonder what practices from today will be frowned upon 50 years from now?&lt;/p&gt;
+      &lt;/div&gt;
+  &lt;/li&gt;
+
+  &lt;li&gt;
+      &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+          &lt;span&gt;Objektivní nález by Šebek&lt;/span&gt;
+          &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;content&quot;&gt;
+          &lt;p&gt;Šebek is a Czech surgeon and entrepreneur who has participated in multiple missions with Doctors Without Borders. I’ve read all his previous books about these missions, and it’s always fascinating to learn about the challenging environments in which surgeons have to operate.&lt;/p&gt;
+          &lt;p&gt;Each chapter of this book is divided into three parts—Šebek’s upbringing, a story from one of his missions, and a story about his life with his wife and children. While Šebek is often seen as a hero, in this book, he tries to debunk that image by portraying himself honestly and openly. He talks about practices during missions that would land him in prison in the Czech Republic (like using candle wax to seal someone’s heart) or infidelity and complicated relationships with his children.&lt;/p&gt;
+          &lt;p&gt;Despite his efforts to show his mistakes and all his failures, I still admire Šebek’s achievements.&lt;/p&gt;
+          &lt;p&gt;The book motivated me to research more about Doctors Without Borders and consider joining a similar organization in the future.&lt;/p&gt;
+      &lt;/div&gt;
+  &lt;/li&gt;
+
+  &lt;li&gt;
+      &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+          &lt;span&gt;Attached by Levine&lt;/span&gt;
+          &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;content&quot;&gt;
+          &lt;p&gt;We all need relationships with others to live healthy and happy lives. Relationship attachment refers to the emotional bond between a child and their parents or, later in life, between a person and their romantic partner(s).&lt;/p&gt;
+          &lt;p&gt;There are three main types of attachment styles that explain how easily we connect with others:&lt;/p&gt;
+          &lt;ul&gt;
+              &lt;li&gt;Secure attachment – the ability to form strong bonds, care about others, and feel comfortable&lt;/li&gt;
+              &lt;li&gt;Anxious attachment – characterized by constant worry and a need for reassurance&lt;/li&gt;
+              &lt;li&gt;Avoidant attachment – difficulty sharing feelings and a tendency to distance oneself&lt;/li&gt;
+          &lt;/ul&gt;
+          &lt;p&gt;The good news is that, regardless of your attachment style, it can evolve with enough self-awareness, effort, and therapy.&lt;/p&gt;
+      &lt;/div&gt;
+  &lt;/li&gt;
+
+  &lt;li&gt;
+      &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+          &lt;span&gt;Is It You, Me, or Adult A.D.D by Pera&lt;/span&gt;
+          &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;content&quot;&gt;
+          &lt;p&gt;If you’d like to learn more about ADHD from the perspective of a neurotypical partner of someone with ADHD, I recommend this book. It explores the impact of untreated ADHD on loved ones in an honest way.&lt;/p&gt;
+          &lt;p&gt;What stood out to me the most was how often ADHD is misdiagnosed and the profound effect this has on people’s lives and their closest family members. The book also highlights how life can change—for both the person with ADHD and their loved ones—once they start managing it with medication and therapy.&lt;/p&gt;
+      &lt;/div&gt;
+  &lt;/li&gt;
+
+  &lt;li&gt;
+      &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+          &lt;span&gt;The End of Procrastination by Ludwig&lt;/span&gt;
+          &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;content&quot;&gt;
+          &lt;p&gt;This book contains great tools to help procrastinators become more productive and goal-oriented. While it didn’t resonate with me much since I’m not the target audience, I still recommend giving it a read.&lt;/p&gt;
+      &lt;/div&gt;
+  &lt;/li&gt;
+
+  &lt;li&gt;
+      &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+          &lt;span&gt;Overcoming Unwanted Intrusive Thoughts by Winston&lt;/span&gt;
+          &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;content&quot;&gt;
+          &lt;p&gt;If a book could embody the &lt;em&gt;this could have been an email&lt;/em&gt; meme, it would be this one. Great topic, but I didn’t really learn anything.&lt;/p&gt;
+      &lt;/div&gt;
+  &lt;/li&gt;
+
+  &lt;li&gt;
+      &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+          &lt;span&gt;The Obstacle Is The Way by Holiday&lt;/span&gt;
+          &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;content&quot;&gt;
+          &lt;p&gt;This book is about reframing obstacles as challenges and shifting your mindset to see them as opportunities for growth.&lt;/p&gt;
+          &lt;p&gt;One quote that really stuck with me is: &lt;em&gt;Every obstacle is an opportunity to practice some virtue: patience, courage, humility, resourcefulness, reason, justice, and creativity.&lt;/em&gt; As someone who’s naturally impatient, it helps me to remind myself, when something makes me angry, that it’s just a test of my patience, nothing more.&lt;/p&gt;
+          &lt;p&gt;That said, I didn’t quite enjoy the book because there was too much fluff for my taste.&lt;/p&gt;
+      &lt;/div&gt;
+  &lt;/li&gt;
+
+  &lt;li&gt;
+      &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+          &lt;span&gt;Mastery by Greene&lt;/span&gt;
+          &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;content&quot;&gt;
+          &lt;p&gt;I read about 100 pages, but I couldn’t continue—the writing style just isn’t my cup of tea.&lt;/p&gt;
+      &lt;/div&gt;
+  &lt;/li&gt;
+
+  &lt;li&gt;
+      &lt;div class=&quot;collapsible&quot; onclick=&quot;toggleSection(this)&quot;&gt;
+          &lt;span&gt;The Art of Seduction by Greene&lt;/span&gt;
+          &lt;span class=&quot;chevron&quot;&gt;▶️&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;content&quot;&gt;
+          &lt;p&gt;I read the entire book, but neither during nor after reading it was I sure what this book is about nor what to take away from it.&lt;/p&gt;
+      &lt;/div&gt;
+  &lt;/li&gt;
+
+&lt;/ol&gt;
+
+&lt;script&gt;
+    function toggleSection(element) {
+        const content = element.nextElementSibling;
+        content.style.display = content.style.display === &apos;none&apos; || !content.style.display ? &apos;block&apos; : &apos;none&apos;;
+        element.classList.toggle(&apos;active&apos;);
+    }
+&lt;/script&gt;
+
+&lt;/body&gt;
+
+&lt;h2&gt;My Favorite, Most Disliked, and The Most Surprising Book in 2024&lt;/h2&gt;
+&lt;p&gt;My favorite book in 2024 was Prostě vztahy (Just Relationships) by Honza Vojtko. I remember reading about the oldest Harvard study on happiness, which showed that what truly makes people happy is having meaningful relationships. I really enjoyed this book. Not only for the author’s style but also for how it made me reflect for days on things I usually don’t think much about, like how much time and energy I invest in friendships, my stance on spirituality, and my relationship with death. I also highly recommend the author’s other books and talks—they will challenge and change how you view relationships.&lt;/p&gt;
+&lt;p&gt;The book I disliked the most was Mastery by Robert Greene. It’s the only book I couldn’t finish. The author included many stories about evolution, trying to tie them to the concept of mastery, but I couldn’t see any meaningful connection. To me, the book felt full of survivorship bias, cherry-picked stories about famous people, and motivational claims that lacked evidence. I also found the writing overly verbose—it felt like he used ten pages to explain what could have been said in a single sentence. Unfortunately, whatever mastery the author has in writing remained lost on me.&lt;/p&gt;
+&lt;p&gt;The biggest surprise, however, was Never Split the Difference by Chris Voss. I expected it to be full of negotiation tactics for high-stakes meetings I’d never be part of, but instead, I learned so many practical tips for everyday life. I also really enjoyed the author’s writing style—engaging, clear, and memorable. After reading the book, I watched his &lt;a href=&quot;https://www.youtube.com/watch?v=MjhDkNmtjy0&quot;&gt;TED talk&lt;/a&gt;, which was both funny and fascinating. I highly recommend checking it out.&lt;/p&gt;
+&lt;p&gt;I hope this inspires you to pick up a book or two! What was your favorite book in 2024? Do you have any recommendations to share? Let me know!&lt;/p&gt;
+&lt;/html&gt;
+</description>
+                <pubDate>Sun, 05 Jan 2025 00:00:00 +0000</pubDate>
+                <link>https://clytaemnestra.github.io/tech-blog/reading-list</link>
+                <guid isPermaLink="true">https://clytaemnestra.github.io/tech-blog/reading-list</guid>
+                
+                <category>books</category>
+                
+                
+            </item>
+        
+            <item>
+                <title>PyCon in the City of One Hundred Bridges, I Am Remarkable Workshop, and EPS Election Results and First Board Meeting</title>
+                <description>&lt;p&gt;Last weekend, I had a chance to visit one of the most beautiful historic cities in Poland to participate in PyCon. I also held an IAmRemarkable workshop, and I was elected Vice Chair of the EuroPython Society. What a weekend!&lt;/p&gt;
+
+&lt;h1 id=&quot;wrocław&quot;&gt;Wrocław&lt;/h1&gt;
+&lt;p&gt;I arrived at night, and walking around Wrocław felt absolutely magical! They call it the city of a hundred bridges because it sits across several rivers. With its stunning historical buildings and a touch of evening fog, it looked like something straight out of Hogwarts.&lt;/p&gt;
+
+&lt;style&gt;
+  .image-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px; /* Adjust spacing between rows */
+  }
+
+  .image-row img {
+    height: auto;
+  }
+&lt;/style&gt;
+
+&lt;div class=&quot;image-row&quot;&gt;
+  &lt;img src=&quot;./images/posts/pycon-wro/city-night2.jpg&quot; alt=&quot;Wrocław at night with fog and illuminated streets&quot; style=&quot;max-width: 64%;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/pycon-wro/city-night4.jpg&quot; alt=&quot;A bridge in Wrocław lit up at night&quot; style=&quot;max-width: 35%;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;image-row&quot;&gt;
+  &lt;img src=&quot;./images/posts/pycon-wro/city-night5.jpg&quot; alt=&quot;Wrocław skyline reflecting in the river at night&quot; style=&quot;max-width: 64%;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/pycon-wro/city-night.jpg&quot; alt=&quot;Old town buildings illuminated in Wrocław&quot; style=&quot;max-width: 35%;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;dwarves&quot;&gt;Dwarves&lt;/h2&gt;
+&lt;p&gt;If you look down, you might spot small, adorable creatures reading a book, lounging, or even staring right at you. Yep, there are dwarves and they are everywhere! So cute!&lt;/p&gt;
+
+&lt;div class=&quot;image-row&quot;&gt;
+  &lt;img src=&quot;./images/posts/pycon-wro/dwarf7.jpg&quot; alt=&quot;A bronze dwarf statue reading a book in Wrocław&quot; style=&quot;max-width: 62.5%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/pycon-wro/dwarf2.jpg&quot; alt=&quot;A bronze dwarf statue sitting and smiling in Wrocław&quot; style=&quot;max-width: 36.5%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;image-row&quot;&gt;
+  &lt;img src=&quot;./images/posts/pycon-wro/dwarf6.jpg&quot; alt=&quot;A dwarf statue lounging on the ground in Wrocław&quot; style=&quot;max-width: 49.5%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/pycon-wro/dwarf1.jpg&quot; alt=&quot;A dwarf statue climbing up a lamppost in Wrocław&quot; style=&quot;max-width: 49.5%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;image-row&quot;&gt;
+  &lt;img src=&quot;./images/posts/pycon-wro/dwarf4.jpg&quot; alt=&quot;A dwarf statue with a camera taking photos&quot; style=&quot;max-width: 33%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/pycon-wro/dwarf3.jpg&quot; alt=&quot;A dwarf statue staring at you with arms crossed&quot; style=&quot;max-width: 33%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/pycon-wro/dwarf5.jpg&quot; alt=&quot;A dwarf statue playing an instrument in Wrocław&quot; style=&quot;max-width: 33%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;food&quot;&gt;Food&lt;/h2&gt;
+&lt;p&gt;The first quest upon arriving to Poland was to find pierogi! Pierogi are dumplings stuffed with things like spinach, cheese, mushrooms, or veggies, and you can find them around every corner. And they are so tasty!&lt;/p&gt;
+
+&lt;p&gt;The second quest was to find zapiekanka! Basically, a baked bread loaded with toppings. I got one with cheese, and it was so good! Wrocław is also home to Poland’s oldest vegan restaurant, there is lots of international cuisine and plenty of typical Polish spots serving mostly meat, but I was able to find cheese almost everywhere.&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;./images/posts/pycon-wro/food2.jpg&quot; alt=&quot;A plate of pierogi dumplings served with herbs&quot; style=&quot;max-width: 40%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/pycon-wro/food3.jpg&quot; alt=&quot;Zapiekanka topped with cheese and mushrooms&quot; style=&quot;max-width: 59%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;markets&quot;&gt;Markets&lt;/h2&gt;
+&lt;p&gt;I’m that annoying Christmas person who loves lights and holiday markets and Wrocław did not disappoint. The markets opened the day after I arrived and they’re so big and so shiny. Loved every bit of it.&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;./images/posts/pycon-wro/markets.jpg&quot; alt=&quot;A Christmas market in Wrocław with lights and wooden stalls&quot; style=&quot;max-width: 49.5%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/pycon-wro/markets2.jpg&quot; alt=&quot;Christmas decorations and lights in Wrocław market square&quot; style=&quot;max-width: 49.5%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;street-art&quot;&gt;Street art&lt;/h2&gt;
+&lt;p&gt;I spent most of my evenings wandering around. The city has incredible street art. Wrocław has this historic and yet in the same time modern-cool vibe. Walking along the rivers, and there are so many, felt very peaceful. You could walk around for hours.&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between; align-items: flex-start;&quot;&gt;
+  &lt;!-- First Image on the Left --&gt;
+  &lt;div style=&quot;flex: 0.9; margin-right: 10px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-wro/art4.jpg&quot; alt=&quot;Colorful mural of abstract faces in Wrocław&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Three Images Stacked on the Right --&gt;
+  &lt;div style=&quot;display: flex; flex-direction: column; gap: 12px; flex: 0.5;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-wro/art.jpg&quot; alt=&quot;Graffiti of a woman&apos;s face in Wrocław&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+    &lt;img src=&quot;./images/posts/pycon-wro/art2.jpg&quot; alt=&quot;Street art of animals painted on a wall&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+    &lt;img src=&quot;./images/posts/pycon-wro/art3.jpg&quot; alt=&quot;A mural with bold colors and geometric patterns&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;./images/posts/pycon-wro/art5.jpg&quot; alt=&quot;Large mural depicting historical scenes in Wrocław&quot; style=&quot;max-width: 99%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;pycon&quot;&gt;PyCon&lt;/h1&gt;
+&lt;p&gt;This was my first time participating in PyCon in December and the Christmas vibe added something extra special. The speaker’s dinner was the night before, and the main event had about 150 participants packed into one day.&lt;/p&gt;
+
+&lt;p&gt;At PyCon Wrocław I received the best speaker’s gift ever: a Santa Claus-style hat and a Christmas ornament with the Python logo that I can hang on my tree!&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;./images/posts/pycon-wro/me2.jpg&quot; alt=&quot;Me smiling at PyCon in Wrocław&quot; style=&quot;max-width: 30%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/pycon-wro/speakersdinner.jpg&quot; alt=&quot;Me at speaker&apos;s dinner&quot; style=&quot;max-width: 69%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;iamremarkable&quot;&gt;IAmRemarkable&lt;/h2&gt;
+&lt;p&gt;At EuroPython, I attended an I Am Remarkable workshop and immediately thought, “Why isn’t this everywhere?” It’s such a powerful way to break the stigma around self-promotion while giving you time to reflect on your own worth.&lt;/p&gt;
+
+&lt;p&gt;Facilitators for the workshop can be hard to find, so I decided to become one myself. I got my license in September, ran my first hybrid workshop at the company I work for in November, and just hosted my first fully onsite workshop at PyCon.&lt;/p&gt;
+
+&lt;p&gt;It’s been interesting to observe group dynamics during my workshops. In the hybrid workshop, the onsite participants were very active, while the online participants were mixed—some engaged and others not so much. For the onsite-only workshop, I expected everyone to be equally active, but the same pattern appeared: some participants were very active, while others were less so. I never want to call people out and make them uncomfortable, but I’d really like to learn how to create a space where everyone feels encouraged to participate in a comfortable, non-pushy way. If anyone reading this has ideas or tips on leading workshops, please reach out! I’d love to learn more.&lt;/p&gt;
+
+&lt;h2 id=&quot;talks&quot;&gt;Talks&lt;/h2&gt;
+&lt;p&gt;I didn’t get to see many talks because I was either chatting with people outside or busy with my workshop. One talk that was highly recommended to me was “Building Python CLIs in 2024 does not have to be painful (feat. Typer and uv)” by Mateusz Zaremba and Krzysztof Wilczyński. I heard it was super interesting and fun, so I’ll definitely check out the recording as soon as it’s released.&lt;/p&gt;
+
+&lt;p&gt;Antonio Cuni gave a talk about Python performance, which I had already seen at PyCon Italia. If you haven’t seen it yet, I highly recommend it.&lt;/p&gt;
+
+&lt;p&gt;Łukasz Langa gave a talk on visualizing audio. I play clarinet and piano, but I’ve never tried programming anything related to music, but maybe it’s time to start! I didn’t catch this talk, but Łukasz mentioned it will be presented at other conferences next year.&lt;/p&gt;
+
+&lt;h3 id=&quot;lightning-talks&quot;&gt;Lightning Talks&lt;/h3&gt;
+&lt;p&gt;Lightning talks are always the best part of any conference. I especially loved Marijka Romaniuk’s talk about her experience volunteering at EuroPython. It was so heartwarming to see someone take such joy in volunteering!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-wro/lt.jpg&quot; alt=&quot;Marijka&apos;s Lightning Talk&quot; style=&quot;max-width: 50%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;thank-you-organizers&quot;&gt;Thank You, Organizers!&lt;/h2&gt;
+&lt;p&gt;As a fellow community organizer, I want to thank the organizers for the time and effort they put into making this event happen.&lt;/p&gt;
+
+&lt;h1 id=&quot;europython-society-election-results&quot;&gt;EuroPython Society Election Results&lt;/h1&gt;
+&lt;p&gt;The next day after the conference, there were elections for the EuroPython Society Board, which I joined from my hotel room. In my previous &lt;a href=&quot;https://clytaemnestra.github.io/tech-blog/eps-elections&quot;&gt;blogpost&lt;/a&gt; I wrote about my motivation to run for the Board. Someone asked if I was considering running for Vice Chair. After some thinking, I said why not. There were two of us and we were both super supportive of each other and happy with whichever way it turned out. Transparency and democracy matter a lot to all of us involved, so we agreed to have open elections and let the members decide. I was elected with 63%!&lt;/p&gt;
+
+&lt;h2 id=&quot;progress&quot;&gt;Progress&lt;/h2&gt;
+&lt;p&gt;We’ve already started preparations for the conference and things are off to a wonderful start! We have a new logo, and I have to say, it’s the most beautiful EuroPython logo I’ve seen so far - huge thanks to Adriana Sánchez for the design elements and Panagiotis Kyrillos for bringing it all together. We’re already tackling our first tasks to keep things moving forward.&lt;/p&gt;
+
+&lt;p&gt;I truly believe we’ll create an amazing space for people to share knowledge and connect and we’ll also get to tackle topics important for the future of the Society. If you’d like to get involved, keep an eye on our web/socials or reach out to me!&lt;/p&gt;
+
+&lt;h2 id=&quot;a-thank-you-to-the-outgoing-board-members&quot;&gt;A Thank You To The Outgoing Board Members!&lt;/h2&gt;
+&lt;p&gt;Today I came across the following line in Paolo’s &lt;a href=&quot;https://www.paulox.net/2024/12/11/my-first-dsf-board-meeting/&quot;&gt;blog&lt;/a&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;We usually receive many congratulations at the time of elections, and none when a commitment, such as their mandate, comes to an end, so I say to them: congratulations!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;I’d also like to take a moment and express my thanks to all the outgoing board members: Alexander Hendorf, Artem Kisloskiy, Laís Carvalho, Sangarshanan Veera, Sebastiaan Zeeff, Theofanis Petkos, and Vaibhav Srivastav.&lt;/p&gt;
+</description>
+                <pubDate>Thu, 12 Dec 2024 00:00:00 +0000</pubDate>
+                <link>https://clytaemnestra.github.io/tech-blog/pycon-wro</link>
+                <guid isPermaLink="true">https://clytaemnestra.github.io/tech-blog/pycon-wro</guid>
+                
+                <category>community</category>
+                
+                <category>conferences</category>
+                
+                
+            </item>
+        
+            <item>
+                <title>EuroPython Society Board Nomination 2025</title>
+                <description>&lt;p&gt;Inspired by the folks from the Django Software Foundation, namely &lt;a href=&quot;https://www.paulox.net/2024/10/29/2025-django-software-foundation-board-nomination/&quot;&gt;Paulo&lt;/a&gt;, I decided to share more about my background, my motivations for running for the EuroPython Society Board, and the small improvements I’d like to see implemented this year.&lt;/p&gt;
+
+&lt;h2 id=&quot;my-involvement-in-the-python-community&quot;&gt;My Involvement in the Python Community&lt;/h2&gt;
+
+&lt;p&gt;Volunteering has been a big part of my life since I was 16. It all started when I attended a summer school on human rights and joined the Youth Initiative for Human Rights as a volunteer. Over time, I got involved with the Red Cross, a local feminist and LGBT-focused NGO during university, and later worked as a PR and business development manager for AIESEC.&lt;/p&gt;
+
+&lt;p&gt;When I moved to Prague and after a few years got enrolled into master studies in computer science, I was happy to find a way to volunteer in my field. The local Python community turned out to be incredibly helpful, welcoming and supportive, and I learned a lot throughout the years!&lt;/p&gt;
+
+&lt;p&gt;Here’s a quick summary of what I’ve been involved in so far:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Pyvo (local Python meetups): At the end of 2021, I became the main organizer. Now, more people are helping, which has been great.&lt;/li&gt;
+  &lt;li&gt;EuroPython 2023: I started volunteering in late 2022, first advising on local matters and then organizing a one-day workshop.&lt;/li&gt;
+  &lt;li&gt;PyCon CZ 23: I worked on speaker management, media, and web development.&lt;/li&gt;
+  &lt;li&gt;Python Pizza: In 2024, I brought this event to the Czech Republic and was the main organizer.&lt;/li&gt;
+  &lt;li&gt;EuroPython 2024: I helped with the program, workshops, and events like the speaker’s dinner, evening drinks, and boat ride.&lt;/li&gt;
+  &lt;li&gt;I’ve spoken on technical topics at 8 Python conferences across three continents, including PyCon US, DjangoCon, EuroPython, PyCon Namibia, and European PyCons. I’ve also spoken at 4 events on general software engineering topics.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;why-i-volunteer&quot;&gt;Why I Volunteer&lt;/h2&gt;
+
+&lt;p&gt;There are a few reasons why volunteering matters so much to me:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Belonging. I’ve always wanted to be part of a group of people who come together, full of creative energy, to make the world a better place.&lt;/li&gt;
+  &lt;li&gt;Meeting people. I love connecting with new people, especially at conferences!&lt;/li&gt;
+  &lt;li&gt;Learning. Volunteering is a great way to try new things and pick up skills like marketing, web development, or writing. Participating in conferences also keeps me up to date about current trends in software engineering.&lt;/li&gt;
+  &lt;li&gt;Meaning. I’ve worked in many environments, from small local businesses to big international corporations. While I enjoy solving problems by writing code, I’ve never felt like it truly made a difference in people’s lives. Volunteering gives me that sense of purpose, because I can directly help, influence and inspire.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;about-the-europython-society-board&quot;&gt;About the EuroPython Society Board&lt;/h2&gt;
+
+&lt;p&gt;The EuroPython Society is led by a board of directors responsible for the EuroPython conference, the grants program, and more.&lt;/p&gt;
+
+&lt;p&gt;Organizing the EuroPython conference has given me so much in the last two years. I’ve made great connections, learned a lot, and had a wonderful time, especially in my first year.&lt;/p&gt;
+
+&lt;p&gt;But I’m also concerned about the future of the Society, particularly sustainability. Organizing the conference takes a lot of time and energy, and it’s hard to avoid burnout among board members.&lt;/p&gt;
+
+&lt;p&gt;The current board has recommended four key topics that are important for the Society’s future and sustainability:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Hiring an Event Manager/Coordinator for EuroPython 2025&lt;/li&gt;
+  &lt;li&gt;Selecting a location for EuroPython 2026 and possibly 2027&lt;/li&gt;
+  &lt;li&gt;Enhancing community outreach towards European local Python communities&lt;/li&gt;
+  &lt;li&gt;Improving the fiscal and legal framework within the EuroPython Society&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;When it comes to conference organization, the idea is to have a separate conference team. While we’re still not there, there’s still some work from the board required.&lt;/p&gt;
+
+&lt;h2 id=&quot;why-am-i-running-for-the-board&quot;&gt;Why Am I Running for the Board?&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;To learn. I’ve been involved in non-profits for 13 years and want to understand more about how European non-profits work, especially on the legal and financial side. This could help me one day if I start my own non-profit or business.&lt;/li&gt;
+  &lt;li&gt;To grow. Volunteering has taught me a lot about working with people, and I think this role will help me improve even more.&lt;/li&gt;
+  &lt;li&gt;To give back. The Society has given me so much, and I’d like to contribute in return. I’ve seen small changes in other communities that could make a big difference here, and I’d love to help make them happen!&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;what-changes-would-i-like-to-see&quot;&gt;What Changes Would I Like to See?&lt;/h2&gt;
+
+&lt;p&gt;I don’t have big, revolutionary ideas to propose. Instead, the biggest thing I’d like to bring is focus. There have been many amazing ideas in the past, but we should focus on implementing one thing at a time. And that one thing should be the topics recommended by the previous Board, prioritized in the same order.&lt;/p&gt;
+
+&lt;p&gt;Clear goals, delivering measurable results, and transparency are the key.&lt;/p&gt;
+
+&lt;p&gt;There are also a few smaller but meaningful changes I’d like to see implemented. These are not the priority, nor are they something I personally commit to working on, but rather my Christmas wishlist to Santa.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Yearly impact report. The PSF creates one each year (example &lt;a href=&quot;https://www.python.org/psf/annual-report/2023/&quot;&gt;here&lt;/a&gt;), and it is very inspiring to see what they have achieved and how many people they have reached in just one year! I believe the EPS is very impactful, but there are no reports nor data yet. I’d really like to see similar reports at the EPS.&lt;/li&gt;
+  &lt;li&gt;Open board notes. The PSF has an &lt;a href=&quot;https://www.python.org/psf/records/board/minutes/&quot;&gt;open board archive&lt;/a&gt; where you can browse previous notes and check them out. Making board meeting notes accessible could help build trust and make the board feel closer to its members.&lt;/li&gt;
+  &lt;li&gt;Data-driven decisions. There’s lots of data in the Society, but it’s unused. I’d love to see a warehouse with beautiful visualizations built on top of it, used by people to make data-driven decisions.&lt;/li&gt;
+  &lt;li&gt;Documentation, documentation, and more documentation. The Czech Python community has fantastic &lt;a href=&quot;https://docs.pyvec.org/index.html&quot;&gt;documentation&lt;/a&gt; on everything from how to run meetups to how to handle finances. It’s a great example of how we could improve.&lt;/li&gt;
+  &lt;li&gt;Explore what EPS can do for other open-source projects. Python is special because of its huge and amazing ecosystem. While the Python Software Foundation sponsors and supports the development of the Python language - i.e., its main product is technical - and the Django Software Foundation sponsors Django, which is also technical, the EuroPython Society’s main product is the conference, i.e., an educational one. I think the EuroPython Society could also explore whether it could help European Python open-source developers and offer something beyond the conference - for example, fiscal sponsorship or know-how about European open-source laws and taxes.&lt;/li&gt;
+  &lt;li&gt;Bringing in new participants by focusing on the educational value. There are two aspects of the EuroPython conference: its amazing community and its top-tier content. It’s one of the biggest and best conferences in Europe, if you want to learn about Python. However, if you visit our &lt;a href=&quot;https://ep2024.europython.eu/&quot;&gt;website&lt;/a&gt;, you’ll mostly see community-focused content. While I love the community spirit and want to keep it, I’d also want to highlight and promote the value of the educational content the conference offers.&lt;/li&gt;
+  &lt;li&gt;Bringing EuroPython to Southeastern Europe. I believe EuroPython brings so much to every place it visits and I saw it myself from both sides in the Czech Republic. If you look at the map of previous events, the conference was mostly held in Southern or Western Europe. Being originally from the Balkans, I would love to see EuroPython enrich a city like Zagreb, Ljubljana or Sofia.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;what-about-my-local-involvement&quot;&gt;What About My Local Involvement?&lt;/h2&gt;
+
+&lt;p&gt;For the past three years, I’ve been actively involved with Pyvo. Recently, I’ve focused on bringing in new organizers, and a few people have started stepping up. I plan to take on more of a backup role and let others shine.&lt;/p&gt;
+
+&lt;p&gt;Python Pizza is now being organized in Brno by a new team consisting of &lt;a href=&quot;https://linkedin.com/in/moisesguimaraes&quot;&gt;Moisés&lt;/a&gt;,  &lt;a href=&quot;https://linkedin.com/in/anezkamll&quot;&gt;Anežka&lt;/a&gt; and &lt;a href=&quot;https://linkedin.com/in/jakub-balas-07a88a3a&quot;&gt;Jake&lt;/a&gt;, and I’m really happy that we created the &lt;a href=&quot;https://docs.python.pizza/&quot;&gt;documentation&lt;/a&gt; (and it’s called Python Pizza Recipe!), so others can take over.&lt;/p&gt;
+
+&lt;p&gt;As for PyCon CZ, it’s taking a break in 2025. Instead, there will be PyCamp, organized by &lt;a href=&quot;https://linkedin.com/in/hroncok&quot;&gt;Miro&lt;/a&gt;, &lt;a href=&quot;https://linkedin.com/in/anezkamll&quot;&gt;Anežka&lt;/a&gt;, and &lt;a href=&quot;https://linkedin.com/in/lum%C3%ADr-balhar-b173833a&quot;&gt;Lumír&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;While I’m always happy to help locally if needed, my focus is shifting to global initiatives, where I can learn more and make a greater impact.&lt;/p&gt;
+
+&lt;p&gt;I love the art of public speaking and am always happy to share my knowledge by giving talks on technical topics. I plan to continue doing so!&lt;/p&gt;
+
+&lt;p&gt;No matter the outcome of the elections, I’m excited about EuroPython 2025 and I know it’s going to be an amazing event!&lt;/p&gt;
+
+&lt;h2 id=&quot;get-in-touch&quot;&gt;Get in Touch&lt;/h2&gt;
+
+&lt;p&gt;If you’d like to meet me in person, you can catch me at &lt;a href=&quot;https://www.meetup.com/pyvo-prague-python-meetup/events/&quot;&gt;Pyvo&lt;/a&gt; in Prague every third Wednesday of the month. I often attend conferences around Europe and the Czech Republic.&lt;/p&gt;
+
+&lt;p&gt;If you have any feedback or are interested in collaborating with the EPS, feel free to reach out to me on &lt;a href=&quot;https://www.linkedin.com/in/mia-bajic/&quot;&gt;LinkedIn&lt;/a&gt;, &lt;a href=&quot;https://discordapp.com/users/614870427931770900&quot;&gt;Discord&lt;/a&gt;, or via email at mia@europython.eu.&lt;/p&gt;
+
+&lt;h2 id=&quot;links&quot;&gt;Links&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;My nomination: &lt;a href=&quot;https://europython-society.org/list-of-eps-board-candidates-for-2024-2025/&quot;&gt;https://europython-society.org/list-of-eps-board-candidates-for-2024-2025/&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Call for Candidates &amp;amp; General Assembly announcement: &lt;a href=&quot;https://www.europython-society.org/2024-general-assembly-announcement/&quot;&gt;https://www.europython-society.org/2024-general-assembly-announcement/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure&gt;
+  &lt;img src=&quot;./images/conferences.png&quot; alt=&quot;Conferences collage&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+</description>
+                <pubDate>Sat, 23 Nov 2024 00:00:00 +0000</pubDate>
+                <link>https://clytaemnestra.github.io/tech-blog/eps-elections</link>
+                <guid isPermaLink="true">https://clytaemnestra.github.io/tech-blog/eps-elections</guid>
+                
+                <category>community</category>
+                
+                
+            </item>
+        
+            <item>
+                <title>PostgreSQL: About Internals &amp; Tuning</title>
+                <description>&lt;p&gt;I attended Karen Jex’s &lt;a href=&quot;https://www.youtube.com/watch?v=7CnqVoMxoeo&quot;&gt;talk on databases&lt;/a&gt; at DjangoCon in Edinburgh 2023. That sparked my curiousity. I find databases fascinating—they don’t change as fast and as much as other software, such as frameworks, yet they’re used in nearly every system we rely on.&lt;/p&gt;
+
+&lt;p&gt;I decided to spend this rainy weekend in Prague exploring the internals of PostgreSQL and writing down some notes from my learnings.&lt;/p&gt;
+
+&lt;h2 id=&quot;how-is-data-stored&quot;&gt;How Is Data Stored?&lt;/h2&gt;
+&lt;p&gt;As someone who regularly works with databases, I know data is stored in tables, but how exactly are these tables stored?&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Tables&lt;/strong&gt;: Stored as heap files on disk.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Heap Files&lt;/strong&gt;: Consist of data pages (also called blocks), each typically 8 KB in size.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Data Pages&lt;/strong&gt;: The basic unit of storage in PostgreSQL, containing tuples (rows) and header information.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Tuples&lt;/strong&gt;: Each tuple consists of a header (metadata) and the actual data (column values). Tuples are not stored in any particular order.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;structure-of-a-data-page&quot;&gt;Structure of a Data Page&lt;/h3&gt;
+
+&lt;p&gt;A data page has the following components:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;Page Header:&lt;/strong&gt; Contains metadata about the page.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Line Pointer (Item Identifier) Array:&lt;/strong&gt; An array of pointers to the tuples stored within the page.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Tuple Data Area:&lt;/strong&gt; The actual storage area where tuples (rows) are stored.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Free Space:&lt;/strong&gt; Unused space available for new tuples.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;figure&gt;
+  &lt;img src=&quot;./images/posts/postgres/page.png&quot; alt=&quot;Page architecture&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;
+  &lt;figcaption style=&quot;text-align: center;&quot;&gt;Page architecture. Source: interdb.jp/pg&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;figure&gt;
+&lt;img src=&quot;./images/posts/postgres/tuple.png&quot; alt=&quot;Tuple architecture&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;
+  &lt;figcaption style=&quot;text-align: center;&quot;&gt;Tuple architecture. Source: interdb.jp/pg&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h3 id=&quot;line-pointer-array&quot;&gt;Line Pointer Array&lt;/h3&gt;
+&lt;p&gt;Now that we’ve introduced data pages, we can explain the &lt;strong&gt;line pointer array&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;An array of pointers located immediately after the page header in each data page.&lt;/li&gt;
+  &lt;li&gt;Each entry in this array is called a “line pointer.”&lt;/li&gt;
+  &lt;li&gt;Each line pointer corresponds to a tuple (row) stored within the data range.&lt;/li&gt;
+  &lt;li&gt;It points to the offset within the page where a tuple starts.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;what-happens-when-a-new-row-is-inserted&quot;&gt;What Happens When a New Row is Inserted?&lt;/h4&gt;
+&lt;ol&gt;
+  &lt;li&gt;PostgreSQL places the new row into a data page.&lt;/li&gt;
+  &lt;li&gt;The tuple for this row has a header (metadata) and the data itself (column values).&lt;/li&gt;
+  &lt;li&gt;The line pointer array contains a pointer to this tuple’s location within the page.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;figure&gt;
+  &lt;img src=&quot;./images/posts/postgres/tuple-insertion.png&quot; alt=&quot;Tuple insertion&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;
+  &lt;figcaption style=&quot;text-align: center;&quot;&gt;Tuple insertion. Source: interdb.jp/pg&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h4 id=&quot;what-happens-when-a-row-is-deleted&quot;&gt;What Happens When a Row is Deleted?&lt;/h4&gt;
+&lt;ol&gt;
+  &lt;li&gt;The row is marked as logically deleted (dead) by updating its metadata.&lt;/li&gt;
+  &lt;li&gt;Its visibility is changed so future transactions cannot see it.&lt;/li&gt;
+  &lt;li&gt;The line pointer still points to the row’s location, but it is marked as ‘dead.’&lt;/li&gt;
+  &lt;li&gt;The data remains on the page until a cleanup process (VACUUM) occurs.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&quot;what-happens-when-a-row-is-updated&quot;&gt;What Happens When a Row is Updated?&lt;/h4&gt;
+&lt;ol&gt;
+  &lt;li&gt;A new version of the tuple is created and may be placed in a different part of the page or even a different page.&lt;/li&gt;
+  &lt;li&gt;The line pointer array is updated to point to the new location of the tuple.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;internals&quot;&gt;Internals&lt;/h2&gt;
+&lt;p&gt;With an understanding of how data is stored, let’s check out other key concepts of PostgreSQL internals.&lt;/p&gt;
+
+&lt;p&gt;PostgreSQL follows a client-server architecture where each client connection is handled by a separate backend process. The database consists of various subsystems responsible for processing queries, managing memory, storing data, and many more.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;img src=&quot;./images/posts/postgres/process-architecture.png&quot; alt=&quot;Process architecture&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;
+  &lt;figcaption style=&quot;text-align: center;&quot;&gt;Process architecture. Source: interdb.jp/pg&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;memory-architecture&quot;&gt;Memory Architecture&lt;/h3&gt;
+&lt;p&gt;PostgreSQL’s memory architecture consists of:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Local Memory:&lt;/strong&gt; Allocated by each backend process for its own use.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Shared Memory:&lt;/strong&gt; Used by all processes.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure&gt;
+  &lt;img src=&quot;./images/posts/postgres/memory-architecture.png&quot; alt=&quot;Memory architecture&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;
+  &lt;figcaption style=&quot;text-align: center;&quot;&gt;Memory architecture. Source: interdb.jp/pg&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;indexes&quot;&gt;Indexes&lt;/h3&gt;
+&lt;p&gt;Indexes improve data retrieval speed by providing quick access paths to data. The most commonly used underlying structure is a B-Tree.&lt;/p&gt;
+
+&lt;p&gt;Index Lookup Process:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;Search Index:&lt;/strong&gt; Find matching keys.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Retrieve CTIDs:&lt;/strong&gt; Get the physical locations.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Access Data Pages:&lt;/strong&gt; Use CTIDs to fetch tuples directly.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Without an index, PostgreSQL performs a sequential scan, checking each row in every page.&lt;/p&gt;
+
+&lt;h4 id=&quot;difference-between-an-index-and-a-line-pointer&quot;&gt;Difference Between an Index and a Line Pointer&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;Index is an external structure to the table while a line pointer is internal to each data page.&lt;/li&gt;
+  &lt;li&gt;Index provides a mapping from column values to CTIDs, while line pointer points to the physical offset of tuples within the page&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;query-path&quot;&gt;Query Path&lt;/h3&gt;
+&lt;p&gt;Let’s see how a query is processed:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;Connection Established:&lt;/strong&gt; A process is created per user.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Query Sent:&lt;/strong&gt; The client sends a plain text query to the backend.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Parsing:&lt;/strong&gt; The parser checks the query syntax and creates a query tree. It performs semantic analysis to understand the tables, functions, and operators referenced.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Rewrite System:&lt;/strong&gt; Applies rules to the query tree.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Planning:&lt;/strong&gt; The planner generates a query plan, choosing the optimal execution path.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Execution:&lt;/strong&gt; The executor steps through the plan tree and retrieves rows in the way represented by the plan.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;vacuum&quot;&gt;VACUUM&lt;/h2&gt;
+&lt;p&gt;Maintains database health by:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Removing dead tuples.&lt;/li&gt;
+  &lt;li&gt;Freezing transaction IDs.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Two types of VACUUM:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;Concurrent VACUUM:&lt;/strong&gt; Removes dead tuples while allowing other transactions to read the table.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Full VACUUM:&lt;/strong&gt; Removes dead tuples and defragments live tuples in the entire file, blocking access to the table during the process.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;write-ahead-logging-wal&quot;&gt;Write-Ahead Logging (WAL)&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Ensures no data is lost even in case of system failure.&lt;/li&gt;
+  &lt;li&gt;WAL records (XLOG records) are written to in-memory buffers and then immediately to a WAL segment file upon transaction commit or abort.&lt;/li&gt;
+  &lt;li&gt;PostgreSQL starts recovery from the &lt;strong&gt;REDO point&lt;/strong&gt;, the location of the latest checkpoint.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;how-does-replication-work&quot;&gt;How Does Replication Work?&lt;/h3&gt;
+&lt;p&gt;The primary server continuously sends WAL data to standby servers, which then replay the received data.&lt;/p&gt;
+
+&lt;h2 id=&quot;how-to-tune-postgres&quot;&gt;How to Tune Postgres?&lt;/h2&gt;
+&lt;p&gt;Now that you know the basics, you might be wondering if there’s anything you need to tune or if PostgreSQL just works as is. If you look at the documentation, you’ll find over 300 parameters, which can be pretty overwhelming. I came across &lt;a href=&quot;https://www.youtube.com/watch?v=7CnqVoMxoeo&quot;&gt;Karen’s talk&lt;/a&gt; at DjangoCon, where she shared a list of the most important parameters to change from their default values. Here are my notes from her talk. If you’re interested in tuning PostgreSQL, I recommend watching the full talk!&lt;/p&gt;
+
+&lt;h3 id=&quot;setting-parameters&quot;&gt;Setting Parameters&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Cluster level:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;postgresql.conf&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ALTER SYSTEM SET parameter=value;&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Database level:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ALTER DATABASE db1 SET parameter=value;&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;User/Role level:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ALTER ROLE bob SET parameter=value;&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Session level:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SET parameter=value;&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Transaction level:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SET LOCAL parameter=value;&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;contexts&quot;&gt;Contexts&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Internal:&lt;/strong&gt; Set during cluster creation, can’t be changed.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Postmaster:&lt;/strong&gt; Requires server restart.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;SIGHUP:&lt;/strong&gt; Requires config file reload.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Superuser-backend:&lt;/strong&gt; Affects only new connections.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Backend:&lt;/strong&gt; Affects existing connections.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Superuser/User:&lt;/strong&gt; Can be set in the session.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;where-to-find-information-about-parameters&quot;&gt;Where to Find Information About Parameters?&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Documentation.&lt;/li&gt;
+  &lt;li&gt;Default &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;postgresql.conf&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pg_settings&lt;/code&gt; view. Example query: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SELECT * FROM pg_settings WHERE name=’max_connections’;&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;connection-and-session-parameters&quot;&gt;Connection and Session Parameters&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;listen_addresses:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Addresses allowed to connect.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;localhost&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;*&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0.0.0.0&lt;/code&gt; (all IPv4), &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;::&lt;/code&gt; (all IPv6)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;max_connections:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Maximum concurrent connections.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;100&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; No more than &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;500&lt;/code&gt;. Use connection pooling if you have over hundreds of connections.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;idle_in_transaction_session_timeout:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Max idle time between queries in a transaction.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0&lt;/code&gt; (disabled)&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;30 minutes&lt;/code&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;memory-parameters&quot;&gt;Memory Parameters&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;shared_buffers:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Memory for caching data.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;128MB&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;25-40%&lt;/code&gt; of available memory.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;work_mem:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Max memory per operation before spilling to disk.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;4MB&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;10MB&lt;/code&gt;. Adjust per session for large operations.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;maintenance_work_mem:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Memory for maintenance tasks like VACUUM.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;64MB&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~5%&lt;/code&gt; of total RAM.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;logging-parameters&quot;&gt;Logging Parameters&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;log_min_duration_statement:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Logs statements exceeding a duration.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-1&lt;/code&gt; (disabled)&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1s&lt;/code&gt; or as per system needs.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;log_line_prefix:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Information prefixed to each log line.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;%m [%p]&lt;/code&gt; (timestamp and process ID)&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;%t:%r:%u@%d:[%p]:&lt;/code&gt; (timestamp, host, user, database, process ID).&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;wal-parameters&quot;&gt;WAL Parameters&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;wal_buffers:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Memory for WAL before syncing to disk.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-1&lt;/code&gt; (auto-calculated)&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;32MB&lt;/code&gt; for many concurrent connections.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;checkpoint_timeout:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Max time between automatic WAL checkpoints.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;5 minutes&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;10-30 minutes&lt;/code&gt; to balance crash recovery and IO intensity.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;max_wal_size:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Sets WAL size that triggers a checkpoint.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1GB&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;½ to ⅔&lt;/code&gt; of disk space in the WAL directory.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;query-tuning&quot;&gt;Query Tuning&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;effective_cache_size:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Approximate memory available for operations.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;4GB&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;50-70%&lt;/code&gt; of total memory.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;random_page_cost:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Description:&lt;/strong&gt; Cost estimate for fetching a disk page.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Default:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;4&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Suggested:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1.1&lt;/code&gt; for SSDs, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;2.0&lt;/code&gt; for fast spinning disks.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;parameters-to-avoid-changing&quot;&gt;Parameters to Avoid Changing&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;fsync:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Can cause database corruption if disabled.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;synchronous_commit:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Risk of data loss.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;autovacuum:&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Essential for cleaning up dead tuples. Monitor with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;log_autovacuum_min_duration=0&lt;/code&gt;.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;what-more-to-pay-attention-to&quot;&gt;What More to Pay Attention to?&lt;/h2&gt;
+&lt;p&gt;I recently attended &lt;a href=&quot;https://www.youtube.com/watch?v=G7glaoEa9WQ&quot;&gt;another one of Karen’s talks&lt;/a&gt; at PyCon UK called “How to Make Your Database Happy.” In addition to the parameters from above, she mentioned the importance of backups and high availability. Here are my notes from the talk.&lt;/p&gt;
+
+&lt;h3 id=&quot;backups&quot;&gt;Backups&lt;/h3&gt;
+&lt;p&gt;If your data is important and you want to be able to recover it, you need:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Somewhere to store it:&lt;/strong&gt; A backup repository (preferably on a different server).&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Backup tool:&lt;/strong&gt; Use tools like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pgBackRest&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Barman&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Scheduling:&lt;/strong&gt; Ensure regular backups.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Online backups:&lt;/strong&gt; Implement WAL archiving to save WAL files in a separate location.
+    &lt;ul&gt;
+      &lt;li&gt;Enable archive mode and set up an archive command.&lt;/li&gt;
+      &lt;li&gt;Use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pgBackRest&lt;/code&gt; to take regular backups.&lt;/li&gt;
+      &lt;li&gt;Backup = Copy of data + WAL.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;high-availability&quot;&gt;High Availability&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Streaming Replication:&lt;/strong&gt; Use PostgreSQL streaming replication to push data from the primary to replicas.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Failover Management:&lt;/strong&gt; Use tools like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Patroni&lt;/code&gt; to monitor your cluster. If the primary fails, a standby can take over as the new primary.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;sources&quot;&gt;Sources&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;How to make you database happy?, Karen Jex: &lt;a href=&quot;https://www.youtube.com/watch?v=G7glaoEa9WQ&quot;&gt;https://www.youtube.com/watch?v=G7glaoEa9WQ&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Tuning PostgreSQL to work even better, Karen Jex: &lt;a href=&quot;https://www.youtube.com/watch?v=7CnqVoMxoeo&quot;&gt;https://www.youtube.com/watch?v=7CnqVoMxoeo&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;The internals of PostgreSQL, Hironobu Suzuki: &lt;a href=&quot;https://www.interdb.jp/pg/index.html&quot;&gt;https://www.interdb.jp/pg/index.html&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;PostgreSQL documentation: &lt;a href=&quot;https://www.postgresql.org/docs/current/index.html&quot;&gt;https://www.postgresql.org/docs/current/index.html&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+                <pubDate>Sun, 15 Sep 2024 00:00:00 +0000</pubDate>
+                <link>https://clytaemnestra.github.io/tech-blog/postgres</link>
+                <guid isPermaLink="true">https://clytaemnestra.github.io/tech-blog/postgres</guid>
+                
+                <category>conferences</category>
+                
+                <category>system-design</category>
+                
+                
+            </item>
+        
+            <item>
+                <title>Djangocon: Sunny Spain, My Talk &amp; Some Thoughts About Public Speaking</title>
+                <description>&lt;h1 id=&quot;spain&quot;&gt;Spain&lt;/h1&gt;
+&lt;p&gt;Djangocon was held this year in the charming city of Vigo, in Northern Spain, just above Portugal. Vigo is a small, picturesque city full of cute streets and passages.&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; flex-wrap: wrap; justify-content: space-between;&quot;&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;images/posts/djangocon/sculpture.jpg&quot; alt=&quot;Burger&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;images/posts/djangocon/vigo-night.jpg&quot; alt=&quot;Bagel 1&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;images/posts/djangocon/vigo-night3.jpg&quot; alt=&quot;Burrito&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 20%; margin: 20px;&quot;&gt;
+    &lt;img src=&quot;images/posts/djangocon/vigo-night2.jpg&quot; alt=&quot;Bagel 2&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 20%; margin: 20px;&quot;&gt;
+    &lt;img src=&quot;images/posts/djangocon/vigo-night4.jpg&quot; alt=&quot;Sushi&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;What I love about Spain is its vibrant, outdoor culture. As night falls, everyone heads out to dine together. Everything I ate was delicious. I tried potato pancakes and salty chili peppers for the first time and loved them!&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;images/posts/djangocon/food1.jpg&quot; alt=&quot;Delicious pizza&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;images/posts/djangocon/food2.jpg&quot; alt=&quot;Another delicious pizza&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;djangocon&quot;&gt;Djangocon&lt;/h1&gt;
+&lt;p&gt;Djangocon is one of my favorite conferences. It’s single-track, meaning everyone is together. It’s very community-oriented, and I see many familiar faces each year. Unlike big conferences where people stick to their groups, at Djangocon, whether I go with colleagues or alone, I always enjoy it because everyone is so nice, friendly, and open.&lt;/p&gt;
+
+&lt;h1 id=&quot;about-public-speaking&quot;&gt;About Public Speaking&lt;/h1&gt;
+&lt;p&gt;As a logical, analytical, and facts-oriented person, I’m fascinated by storytelling and how it can be more impactful than mere facts.&lt;/p&gt;
+
+&lt;p&gt;I remember &lt;a href=&quot;https://ntoll.org/&quot;&gt;Nicholas&lt;/a&gt; once told me that the best speakers are those who are vulnerable on stage. This requires experience and self-confidence. I didn’t fully grasp this until I delivered my talk at Djangocon.&lt;/p&gt;
+
+&lt;h2 id=&quot;my-talk&quot;&gt;My Talk&lt;/h2&gt;
+&lt;p&gt;I spent months taking public speaking lessons, reading books, and preparing perfect notes and slides for my talk. However, I decided to take a risk: I grabbed the microphone, stood in front of the audience, and spoke without prepared notes, choosing to be vulnerable. It was incredible! Although I delivered the same talk in the US and Italy, I never felt as connected to the audience as I did at Djangocon. In the US, the bright lights and echo made it hard to see the audience, and in Italy, a guy slept through my entire talk, which was distracting.&lt;/p&gt;
+
+&lt;p&gt;Instead of sticking to general facts, I shared personal stories. The feedback was overwhelmingly positive—three people mentioned my talk as one of their favorites! I worried about pauses, grammar mistakes, and mispronunciations, but what truly matters is engagement, which is easier to create when you’re not hidden behind the podium. While I don’t plan to repeat this talk, I’m grateful for the experience and will keep it in mind for future presentations.&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between; margin: 5px;&quot;&gt;
+  &lt;img src=&quot;./images/posts/djangocon/djangocon-cropped.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/djangocon/djangocon2-cropped2.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;./images/posts/djangocon/djangocon1.jpg&quot; alt=&quot;A person smiling on Times Square&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;my-lightning-talk&quot;&gt;My Lightning Talk&lt;/h2&gt;
+&lt;p&gt;For the second year in a row, EuroPython was held in Prague, and I delivered a lightning talk announcing it. I enjoy making fun performances and I always put a lot of effort into them. In Edinburgh I gave a lightning talk about what do Prague and Edinburgh have in common - if you think nothing, you’d be surprised!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/djangocon/lt2.png&quot; alt=&quot;A person smiling on Times Square&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This year, I decided to create a game for my lightning talk. My colleague from the EuroPython Society Artur and I spent the entire day figuring out the best way to present it. We decided to show three cities, ask the audience to guess them, and reward those who guessed what they had in common with a Python cookie cutter I brought with me. I showed the first photo of a city that had nothing in common with Prague, and guess what everyone said—Prague! No spoilers for the game, but I just want to say that the lightning talk was SO much fun, and a lucky person got a cookie cutter!&lt;/p&gt;
+
+&lt;p&gt;If EuroPython happens in Prague again and I’m doing another announcement at Djangocon, I might just stand on stage for five minutes—everyone will know what it’s about.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/djangocon/djangocon-lt.jpg&quot; alt=&quot;A person smiling on Times Square&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;talks-url&quot;&gt;Talks URL&lt;/h2&gt;
+&lt;p&gt;My talk is already online! Check it out here: &lt;a href=&quot;https://www.youtube.com/watch?v=AERuDe9YxWE&quot;&gt;https://www.youtube.com/watch?v=AERuDe9YxWE&lt;/a&gt;. Slides are available here: &lt;a href=&quot;https://github.com/clytaemnestra/talks/blob/main/django-orm-fast-api-djangocon.pdf&quot;&gt;https://github.com/clytaemnestra/talks/blob/main/django-orm-fast-api-djangocon.pdf&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;My lightning talk is also available! If you want to play a game, check it out here: &lt;a href=&quot;https://youtu.be/Fpdm0g9v6YU?t=1436&quot;&gt;https://youtu.be/Fpdm0g9v6YU?t=1436&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;And here’s my previous lightning talk about what do Prague &amp;amp; Edinburgh have in common: &lt;a href=&quot;https://youtu.be/Zc0W3L1tIZM?t=2343&quot;&gt;https://youtu.be/Zc0W3L1tIZM?t=2343&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1 id=&quot;thank-you&quot;&gt;Thank you!&lt;/h1&gt;
+&lt;p&gt;I’d like to thank everyone who supported me throughout my talk:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;My ex-manager &lt;a href=&quot;https://www.linkedin.com/in/tomasbartal&quot;&gt;Tomáš Bartál&lt;/a&gt; for his support and allowing me preparation time during work hours.&lt;/li&gt;
+  &lt;li&gt;My friend and colleague from the &lt;a href=&quot;https://pl.linkedin.com/in/arturczepiel&quot;&gt;EuroPython Society&lt;/a&gt; &lt;a href=&quot;https://www.linkedin.com/in/arturczepiel&quot;&gt;Artur Czepiel&lt;/a&gt; for support and reviewing Django-related content.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.ataccama.com/&quot;&gt;Ataccama&lt;/a&gt; for their support and allowing me to share my experiences, some of which were work-related.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.linkedin.com/in/nicolejadelmanhtbh&quot;&gt;Nicole Adelman&lt;/a&gt; for support and providing public speaking lessons.&lt;/li&gt;
+  &lt;li&gt;And to all the people at various tech events I attended in the last few months, who provided their insights on Python frameworks that helped shape my talk.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;A big thanks to all the volunteer organizers for their effort in making this amazing event happen. Can’t wait for next year in Dublin!&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between; margin: 5px;&quot;&gt;
+  &lt;img src=&quot;./images/posts/djangocon/vigo-day2.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/djangocon/vigo-day.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;./images/posts/djangocon/sea.jpg&quot; alt=&quot;A person smiling on Times Square&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
+</description>
+                <pubDate>Mon, 29 Jul 2024 00:00:00 +0000</pubDate>
+                <link>https://clytaemnestra.github.io/tech-blog/djangocon</link>
+                <guid isPermaLink="true">https://clytaemnestra.github.io/tech-blog/djangocon</guid>
+                
+                <category>conferences</category>
+                
+                
+            </item>
+        
+            <item>
+                <title>PyCon Italia: The Beauty of Florence, My Talk &amp; Public Speaking Workshop</title>
+                <description>&lt;p&gt;If you ask me which PyCon in Europe takes place in the most beautiful location, has the best food, great social events, and offers high-quality talks, I’d say without hesitation—PyCon Italia! I flew to Italy directly from PyCon US, which was in total a 25-hour journey, but it was totally worth it!&lt;/p&gt;
+
+&lt;h1 id=&quot;florence&quot;&gt;Florence&lt;/h1&gt;
+&lt;p&gt;Florence is an incredibly charming city filled with sculptures, cute streets, and lovely natural surroundings. You can wander around for hours and find beautiful sculptures or artistic sights around every corner.&lt;/p&gt;
+&lt;div style=&quot;display: flex; flex-wrap: wrap; justify-content: space-between;&quot;&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-ita/street.jpg&quot; alt=&quot;Street in Florence&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-ita/street4.jpg&quot; alt=&quot;Another street in Florence&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt; 
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-ita/cathedral.jpg&quot; alt=&quot;Florence Cathedral&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-ita/night-view.jpg&quot; alt=&quot;Florence night view&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-ita/sculpture.jpg&quot; alt=&quot;Sculpture in Florence&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;The city is safe and super clean. As a huge plant lover, I appreciated seeing so many plants around.&lt;/p&gt;
+&lt;div style=&quot;display: flex; flex-wrap: wrap; justify-content: space-between;&quot;&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-ita/nature1.jpg&quot; alt=&quot;Nature in Florence&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-ita/night-street.jpg&quot; alt=&quot;Night street in Florence&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-ita/street3.jpg&quot; alt=&quot;Street in Florence&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 90%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-ita/nature2.jpg&quot; alt=&quot;More nature in Florence&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;food&quot;&gt;Food&lt;/h2&gt;
+&lt;p&gt;My first quest upon arriving in Italy was to eat pizza! I went to random places, and every single spot I visited had such delicious food! I had no issues finding vegetarian options in Florence.&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;./images/posts/pycon-ita/pizza.jpg&quot; alt=&quot;Delicious pizza&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/pycon-ita/pizza2.jpg&quot; alt=&quot;Another delicious pizza&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;public-speaking-workshop&quot;&gt;Public Speaking Workshop&lt;/h2&gt;
+&lt;p&gt;The biggest highlight of the conference was a public speaking workshop with &lt;a href=&quot;https://lorenzobarbieri.info/&quot;&gt;Lorenzo&lt;/a&gt;. The main takeaway from the workshop was to remove from your presentation anything that doesn’t add value to the end user. He also highlighted the importance of storytelling and how people don’t care much about facts.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-ita/workshop.jpg&quot; alt=&quot;Public speaking workshop&quot; style=&quot;max-width: 65%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Lorenzo inspired me to remove my ‘About Me’ slide—the audience doesn’t care about the speaker; they care about the value they receive. When I think about the best speakers I’ve ever seen, none of them spent a minute of their valuable time talking about themselves—they jumped straight into the topic.&lt;/p&gt;
+
+&lt;p&gt;The most important tip I remember is this: after every presentation, decide to improve one single thing. If you constantly improve after each of 10 talks, you’ll be better than 95% of the speakers.&lt;/p&gt;
+
+&lt;p&gt;When I got home, I read both of his e-books and can totally recommend them! You can find the link &lt;a href=&quot;https://publicspeaking.dev/&quot;&gt;here&lt;/a&gt;. They offer lots of practical advice on putting slides together, understanding accessibility, and more.&lt;/p&gt;
+
+&lt;p&gt;In one of the books, Lorenzo shares a story where he asked his mentor for one piece of advice to improve as a public speaker. The mentor told him to start writing. This story inspired me to write more as well! Thank you, Lorenzo!&lt;/p&gt;
+
+&lt;h2 id=&quot;my-talk&quot;&gt;My talk&lt;/h2&gt;
+&lt;p&gt;It was fun! I enjoyed talking to people afterward and received very valuable feedback on what to improve. I learned a lot and can’t wait for the final run of my talk at DjangoCon, where I’ll incorporate even more changes to make it even better!&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;./images/posts/pycon-ita/pycon-ita-talk2.png&quot; alt=&quot;Giving a talk at PyCon Italia&quot; style=&quot;max-width: 30%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/pycon-ita/pyconita.png&quot; alt=&quot;Giving a talk at PyCon Italia2&quot; style=&quot;max-width: 65%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;talks&quot;&gt;Talks&lt;/h2&gt;
+&lt;p&gt;I greatly enjoyed the keynote talk about Python performance &amp;amp; myths by &lt;a href=&quot;http://antocuni.eu/&quot;&gt;Antonio Cuni&lt;/a&gt;, the author of CPy and core developer of MyPy. He mentioned an interesting point: if you have a program where 80% is slow and 20% is fast, you can speed up the 80% part, but then the 20% part becomes the bottleneck. So, you end up at the same place. The reason Python is slow is because it’s dynamic - the interpreter has to do a lot of guesswork, which takes time. I highly recommend watching the talk!&lt;/p&gt;
+
+&lt;p&gt;If you’ve ever wondered where the line is between humans and LLMs, I highly recommend &lt;a href=&quot;https://www.linkedin.com/in/jodieburchell&quot;&gt;Jodie Burchell’s&lt;/a&gt; keynote talk! She also discusses the phenomenon of LLMs hallucinating, explaining how they work and why. Beyond the content, I was really impressed by her presentation skills—she speaks clearly and articulately, making her easy to listen to.&lt;/p&gt;
+
+&lt;p&gt;I also loved &lt;a href=&quot;https://vurt.org/&quot;&gt;Daniele Procida’s&lt;/a&gt; keynote talk about attention and details. He showed the following photograph and asked what we see in it.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-ita/photograph.jpg&quot; alt=&quot;Interesting photograph discussed in keynote&quot; style=&quot;max-width: 65%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The longer you look at it, the more details you notice, like the perfect alignment of elbows or knees, or the two thirds rule. It’s so nice to hear someone talk about art at a technical conference!&lt;/p&gt;
+
+&lt;h1 id=&quot;thank-you-organizers&quot;&gt;Thank You, Organizers!&lt;/h1&gt;
+&lt;p&gt;As a fellow community organizer, I want to thank the organizers for the time and effort they put into making this event happen!&lt;/p&gt;
+
+&lt;p&gt;Arrivederci until next year!&lt;/p&gt;
+</description>
+                <pubDate>Sun, 02 Jun 2024 00:00:00 +0000</pubDate>
+                <link>https://clytaemnestra.github.io/tech-blog/pycon-ita</link>
+                <guid isPermaLink="true">https://clytaemnestra.github.io/tech-blog/pycon-ita</guid>
+                
+                <category>conferences</category>
+                
+                
+            </item>
+        
+            <item>
+                <title>Speaking at PyCon &amp; My First Time in the US</title>
+                <description>&lt;p&gt;I always wanted to visit the US. When I got accepted to PyCon US and PyCon Italia, I decided to spend a week in New York, then fly to Pittsburgh for PyCon, and afterward head to Florence via Rome for PyCon Italia. This blog covers the first part of my adventure: New York and Pittsburgh.&lt;/p&gt;
+
+&lt;h1 id=&quot;first-stop-new-york&quot;&gt;First Stop: New York&lt;/h1&gt;
+&lt;p&gt;New York is the coolest city I’ve ever visited! It felt so European – it’s perfectly walkable, the public transportation is great, it’s clean, there are lots of trees around, and Central Park is a huge forest with enormous skyscrapers in the background. The city is so diverse that walking down the streets made me feel at home.&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;./images/posts/pycon-us/times-square.jpg&quot; alt=&quot;A person smiling on Times Square&quot; style=&quot;max-width: 30%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/pycon-us/brooklyn2.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 30%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/pycon-us/ny-street.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 30%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;skyline&quot;&gt;Skyline&lt;/h2&gt;
+&lt;p&gt;The New York skyline is one of the most famous in the world, and once you see it from a distance, you’ll understand why!&lt;/p&gt;
+
+&lt;p&gt;At the Empire State Building:&lt;/p&gt;
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;./images/posts/pycon-us/esb.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/pycon-us/esb2.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;View from Brooklyn on Manhattan (left) and view from my Manhattan hotel room on Brooklyn (right):&lt;/p&gt;
+&lt;div style=&quot;display: flex; justify-content: space-between;&quot;&gt;
+  &lt;img src=&quot;./images/posts/pycon-us/brooklyn3.jpg&quot; alt=&quot;New York Skyline from Brooklyn&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/pycon-us/skyline-hotel.jpg&quot; alt=&quot;New York Skyline from hotel&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;time-square&quot;&gt;Time Square&lt;/h2&gt;
+&lt;p&gt;The shiniest place I’ve ever seen. It felt super cool to be in the middle of all the buzz!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-us/times-square3.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 50%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;broadway&quot;&gt;Broadway&lt;/h2&gt;
+&lt;p&gt;I went to Broadway to watch “The Book of Mormon.” I had never seen it before, so I had no idea what it was about. I don’t usually like theater, as I’m more of a visual and movie person, but that experience was visually stunning and the actors were singing so well that I enjoyed it a lot! The storyline was funny as well!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-us/broadway.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 50%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;live-jazz-in-harlem&quot;&gt;Live Jazz in Harlem&lt;/h2&gt;
+&lt;p&gt;I love jazz, and I couldn’t miss the chance to visit one of its historic hubs! Situated in Upper Manhattan, Harlem is a neighborhood with lots of cozy bars offering live jazz every night and fancy cocktails. I spent a few hours there, listening to great music and sipping cocktails.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-us/cocktail.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 30%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;food&quot;&gt;Food&lt;/h2&gt;
+&lt;p&gt;New York City is a haven for delicious and affordable food, especially if you’re a vegetarian. While I’m not usually a fan of burgers, I was pleasantly surprised by the wide range of vegetarian options available everywhere. Bagels are another highlight – they’re like tasty sandwiches with endless possibilities, and you can find them on nearly every street corner.&lt;/p&gt;
+
+&lt;p&gt;As a lover of Mexican cuisine, I was thrilled to discover authentic Mexican restaurants all around the city.&lt;/p&gt;
+
+&lt;p&gt;Have you ever wondered how to recognize good-quality food? For me, it’s when the taste of all the ingredients is present yet subtle. That’s exactly how the sushi felt – a perfect blend of flavors, nothing overpowering, just as it should be.&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; flex-wrap: wrap; justify-content: space-between;&quot;&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-us/burger.jpg&quot; alt=&quot;Burger&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-us/bagel1.jpg&quot; alt=&quot;Bagel 1&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-us/bagel2.jpg&quot; alt=&quot;Bagel 2&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-us/burrito.jpg&quot; alt=&quot;Burrito&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;flex: 1 1 30%; margin: 5px;&quot;&gt;
+    &lt;img src=&quot;./images/posts/pycon-us/sushi.jpg&quot; alt=&quot;Sushi&quot; style=&quot;width: 100%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;pycon&quot;&gt;PyCon&lt;/h1&gt;
+&lt;p&gt;This was my first time at PyCon US, the biggest Python conference on the planet, held this year in Pittsburgh. While Pittsburgh is small with not much happening, the PyCon venue was huge.&lt;/p&gt;
+
+&lt;p&gt;Most events are related to sprints, special summits, or open spaces where you can discuss anything (there was even a juggling workshop!). There were also many interesting talks! My favorites were about removing the GIL and sub-interpreters in Python 3.13. I’ll share my notes in a future blog post.&lt;/p&gt;
+
+&lt;p&gt;I participated in a JetBrains data science quiz and won a one-year PyCharm Professional subscription! Funny enough, I’m not a data scientist, but I still remember a lot from university.&lt;/p&gt;
+
+&lt;p&gt;One of the most impactful experiences was the PyLadies lunch. After eating, everyone who wanted to went on stage to share a personal achievement. The idea was for us, as women, to proudly share our achievements and empower each other. It was wholesome, with people sharing personal stories like being cancer-free, being inspired by other women, or big accomplishments like obtaining a degree or a promotion. I felt very touched for hours after the session.&lt;/p&gt;
+
+&lt;p&gt;Part of the conference included interviews with speakers, organized by JetBrains, where they asked me about the hottest trends in the Python ecosystem in 2024. I have no idea how I looked on camera, and I don’t even remember what I said, but I can’t wait for it to be released!&lt;/p&gt;
+
+&lt;p&gt;Fun fact: I attended a talk where Guido was sitting right in front of me and a CPython core developer was next to me. One of the biggest benefits of PyCon US is talking to people. I spoke with &lt;a href=&quot;https://github.com/willingc&quot;&gt;Carol Willing&lt;/a&gt;, a CPython core developer, and it was empowering to hear her say that even its creators don’t know everything. She described it as learning to break things into smaller, manageable chunks, moving forward, and unblocking yourself when stuck. Carol was very kind, welcoming, and inspiring, and I can’t wait to listen to her keynote at the next EuroPython!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-us/badge.jpg&quot; alt=&quot;A person smiling on Times Square&quot; style=&quot;max-width: 65%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;div style=&quot;display: flex; justify-content: space-between; margin: 5px;&quot;&gt;
+  &lt;img src=&quot;./images/posts/pycon-us/map.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+  &lt;img src=&quot;./images/posts/pycon-us/psf.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;my-talk&quot;&gt;My Talk&lt;/h2&gt;
+&lt;p&gt;I’m happy with how my talk went. There were some technical issues with my presentation, but no one noticed. The room was big, with a lot of echo, so I could hear my voice from all sides. The lights were very strong, and I couldn’t see the audience. It was my first time presenting in such conditions, so I spoke slowly and carefully enunciated each word. It was a new experience for me, and even though I prefer more interaction with the audience and smaller rooms, I enjoyed it a lot!&lt;/p&gt;
+
+&lt;p&gt;Presenting in front of a huge audience and sharing my personal experience with Python frameworks was very empowering.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-us/talk1.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;There were three questions during the Q&amp;amp;A session, and after the talk, many people approached me to say they liked it and to share their experiences with Python frameworks. I even met someone else using FastAPI &amp;amp; Django ORM, the first person I’ve ever met who uses this combo!&lt;/p&gt;
+
+&lt;p&gt;Overall, it went well, and I’m super happy I got to talk to so many people!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./images/posts/pycon-us/talk2.jpg&quot; alt=&quot;New York Skyline from ESB&quot; style=&quot;max-width: 100%; max-height: 100%; display: block;&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;thank-you-organizers&quot;&gt;Thank You, Organizers!&lt;/h1&gt;
+&lt;p&gt;PyCon US is a community conference organized by the community, for the community. As a fellow community organizer, I want to thank the organizers for the time and effort they put into making this event happen!&lt;/p&gt;
+
+&lt;h1 id=&quot;travel-tips-and-things-i-wish-someone-told-me-before&quot;&gt;Travel Tips And Things I Wish Someone Told Me Before&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;Evenings in New York are cold! Take a warm jacket.&lt;/li&gt;
+  &lt;li&gt;Some rooms at the venue in Pittsburgh were very cold as well. Bring layers to stay comfortable.&lt;/li&gt;
+  &lt;li&gt;Finding healthy veggies: Go to Whole Foods in big cities or Giant Eagle in Pittsburgh. Keep in mind that healthy food in the US is quite expensive.&lt;/li&gt;
+  &lt;li&gt;Airports in big cities are huge. It can take an hour to get from one part to another. You might also get stuck in traffic on your way to the airport. Be there 3 hours before your flight.&lt;/li&gt;
+  &lt;li&gt;Immigration queues can be long. Once you arrive, you might wait for hours for the immigration office to process your request.&lt;/li&gt;
+  &lt;li&gt;Get involved at PyCon US: I recommend volunteering or organizing something (even an open space informal discussion), as the conference felt pretty busy with people focused on their work.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;tldr&quot;&gt;TL;DR:&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;Attend the conference if you can! If you can’t, check the PSF grants. It’s a great opportunity to learn about Python from its developers.&lt;/li&gt;
+  &lt;li&gt;Speaking at PyCon US is a unique experience, as most smaller PyCons don’t host as many people in regular rooms (unless it’s a keynote).&lt;/li&gt;
+  &lt;li&gt;PyLadies lunch was very wholesome. If you’re a woman or non-binary, I totally recommend attending it!&lt;/li&gt;
+  &lt;li&gt;New York is super cool!&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+                <pubDate>Sun, 26 May 2024 00:00:00 +0000</pubDate>
+                <link>https://clytaemnestra.github.io/tech-blog/pycon-us</link>
+                <guid isPermaLink="true">https://clytaemnestra.github.io/tech-blog/pycon-us</guid>
+                
+                <category>conferences</category>
+                
+                
+            </item>
+        
+    </channel>
+</rss>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="kZa86zQaQuJ1ICcmj-NforLCR2TS6_ftskPHLy8mjqw"/>
+  <title>Notes from Conferences: Run your tests in hundreds of different environments fast. I mean really fast</title>
+  <meta name="description" content="Mia Bajic TIL today I learned tech blog">
+  <link rel="canonical" href="https://clytaemnestra.github.io/tech-blog/run-your-tests">
+  <link rel="alternate" type="application/rss+xml" title="TIL Feed"
+    href="https://clytaemnestra.github.io/tech-blog/feed.xml">
+  <!-- Styles -->
+  <link href="https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i%7CNoto+Serif:400,400i,700,700i&display=swap" rel="stylesheet">
+  <link href="/tech-blog/assets/css/style.css" rel="stylesheet">
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Mia Bajic",
+    "url": "https://clytaemnestra.github.io/tech-blog/",
+    "sameAs": [
+      "https://www.linkedin.com/in/mia-bajic",
+      "https://github.com/clytaemnestra"
+    ]
+  }
+  </script>
+  
+  
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9873VJPWX5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9873VJPWX5');
+</script>
+
+</head>
+<body>
+
+
+  <div id="page" class="site">
+    <div class="inner">
+      <header class="site-header">
+  
+  <p class="site-title"><a class="logo-text" href="/tech-blog/">TIL</a></p>
+  
+  <nav class="site-navigation">
+    <div class="site-navigation-wrap">
+      <h2 class="screen-reader-text">Main navigation</h2>
+      <ul class="menu">
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- External URL -->
+            <a class="" href="https://forms.gle/kwXcWp9qSiMcY1nU9" target="_blank" rel="noopener noreferrer">Subscribe</a>
+          
+        </li>
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- Internal URL -->
+            <a class="" href="/tech-blog/">Home</a>
+          
+        </li>
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- Internal URL -->
+            <a class="" href="/tech-blog/about">About</a>
+          
+        </li>
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- Internal URL -->
+            <a class="" href="/tech-blog/tags">Tags</a>
+          
+        </li>
+        
+      </ul><!-- .menu -->
+      <button id="menu-close" class="menu-toggle">
+        <span class="screen-reader-text">Close Menu</span>
+        <span class="icon-close" aria-hidden="true"></span>
+      </button>
+    </div><!-- .site-navigation-wrap -->
+    </nav><!-- .site-navigation -->    
+  <button id="menu-open" class="menu-toggle"><span class="screen-reader-text">Open Menu</span><span class="icon-menu" aria-hidden="true"></span></button>
+</header>
+
+
+
+      <main class="main-content fadeInDown delay_075s">
+
+  <article class="post">
+    <header class="post-header">
+      <time class="post-date" datetime="2022-10-25">October 25, 2022</time>
+      <h1 class="post-title">Notes from Conferences: Run your tests in hundreds of different environments fast. I mean really fast</h1>
+      <div class="post-meta">
+        By <span class="post-author">Mia Bajić</span><span class="post-tags"> in <a href="/tech-blog/tags/#conferences" rel="tag">conferences</a>, <a href="/tech-blog/tags/#django" rel="tag">django</a></span>
+      </div><!-- .post-meta -->
+      
+    </header><!-- .post-header -->
+    <div class="post-content">
+      <p>Talk: https://www.youtube.com/watch?v=cLptIbomkoM</p>
+
+<h3 id="problem">Problem</h3>
+<ul>
+  <li>large amount of tests: ~450 tests in test suite</li>
+  <li>large amount of environments to run test suite in: &gt; 400</li>
+  <li>7 Python versions</li>
+  <li>20 Python web frameworks</li>
+  <li>2-9 versions of each web framework</li>
+  <li>total duration: 38 min 51 sec</li>
+</ul>
+
+<p>The aim is to reduce the total duration of tests running time.</p>
+
+<p>Testing stack:</p>
+<ul>
+  <li>Pytest</li>
+  <li>Flake8, Black &amp; MyPy</li>
+  <li>Tox</li>
+  <li>Make</li>
+  <li>GitHub Actions</li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="refactoring-ideas">Refactoring Ideas</h3>
+
+<h4 id="running-tests-in-paralel">Running tests in paralel</h4>
+<h4 id="tox-parallel-auto">Tox parallel auto</h4>
+<ul>
+  <li>first idea was to use <code class="language-plaintext highlighter-rouge">tox --parallel auto</code></li>
+  <li>default:<br />
+<img src="https://user-images.githubusercontent.com/38294198/197529098-e7988789-b49d-45fe-8cda-d88f26a595c4.png" alt="image" /></li>
+  <li>with <code class="language-plaintext highlighter-rouge">tox --parallel auto</code>:
+<img src="https://user-images.githubusercontent.com/38294198/197529295-14249173-1a79-4dc3-8456-b25d70f54387.png" alt="image" /></li>
+  <li>improved speed from 40 to 25 minutes, but that was not good enough</li>
+</ul>
+
+<p><br /></p>
+
+<h4 id="splitting-it-up">Splitting it up</h4>
+<ul>
+  <li>design: <img src="https://user-images.githubusercontent.com/38294198/197529651-e291737d-6dd8-485e-9e39-6e9e67bc7560.png" alt="image" /></li>
+  <li>custom writted script to parse the tox file and create a yaml file for each configuration</li>
+  <li><img src="https://user-images.githubusercontent.com/38294198/197529899-cea9aa7d-2a0b-4dad-bd24-6e4533688ff3.png" alt="image" /></li>
+  <li>reality: <img src="https://user-images.githubusercontent.com/38294198/197530708-06d0d385-aa93-48e5-8343-baf2be248315.png" alt="image" /></li>
+  <li>there were only 15 concurrent runners, as there was limited amount of runners on the company level, so when someone else was running tests, there would be less runners available</li>
+</ul>
+
+<p><br /></p>
+
+<h4 id="a-bit-of-both-worlds---parallelize-cpu--parallelize-runners">A bit of both worlds - parallelize CPU + parallelize runners</h4>
+<ul>
+  <li>design: <img src="https://user-images.githubusercontent.com/38294198/197530906-707be83e-2da0-4a24-815f-7746a67f99ed.png" alt="image" /></li>
+  <li>saved 20-30 minutes</li>
+</ul>
+
+<p><br /></p>
+
+<h4 id="cleaning-up-yaml-file">Cleaning up YAML file</h4>
+<ul>
+  <li>removed node.js as it’s not used anymore</li>
+  <li>removed Redis and Postgres services, as Redis was not used anymore and Postgres was used only for testing</li>
+  <li>result: saved 2 minutes</li>
+</ul>
+
+<p><br /></p>
+
+<h4 id="github-actions-cache">GitHub Actions Cache</h4>
+<ul>
+  <li>cache is used for caching dependencies from <code class="language-plaintext highlighter-rouge">pypi</code></li>
+  <li>the idea was to cache the whole directory, so the dependencies are not installed over and over again</li>
+  <li>it works in a way that if any dependency is change, the cache is invalidated, but in the reality the cache didn’t refresh and they were running the tests against the old dependencies</li>
+  <li>they decided not to implement it, as it did not work correctly</li>
+</ul>
+
+<p><br /></p>
+
+<h4 id="ram-drives">RAM drives</h4>
+<ul>
+  <li>the basic idea was - if you can’t use the cache, use RAM drives</li>
+  <li>directories in your file system, which is not sitting on the disk but in the memory</li>
+  <li>memory is 50x faster than disk, therefore it might be the better to have virtual environments directly in the memory</li>
+  <li><img src="https://user-images.githubusercontent.com/38294198/197532516-0012739f-a9aa-43c2-ae02-f743801fc757.png" alt="image" /></li>
+  <li>saved 2 minutes</li>
+</ul>
+
+<p><br /></p>
+
+<h4 id="local-pypi-server">Local PyPI Server</h4>
+<ul>
+  <li>the virtual environments are in the memory now, but all dependencies still have to be downloaded from the PyPI server, before they’re installed, so the idea is to create a local PyPI server</li>
+  <li>it was not implemented</li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="total-results">Total Results</h3>
+<h4 id="ideas-considered">Ideas Considered</h4>
+<p><img src="https://user-images.githubusercontent.com/38294198/197533315-f9c8fca6-795e-41cf-8c1d-86245160118d.png" alt="image" /></p>
+
+<h4 id="tests-running-time">Tests Running Time</h4>
+<ul>
+  <li>from ~40 minutes to &lt;7 minutes</li>
+</ul>
+
+    </div><!-- .post-content -->
+    <div class="author-box">
+      
+      <div class="author-avatar" style="background-image: url('images/author.png')"><span class="screen-reader-text">Mia Bajić's Picture</span></div>
+      
+      <div class="author-details">
+        <h2 class="author-title">About Mia Bajić</h2>
+        <div class="author-bio"><p>Software engineer and community events organizer.</p>
+</div>
+        
+        
+      </div><!-- .author-details -->
+    </div><!-- .author-box -->
+  </article><!-- .post -->
+
+  
+
+</main><!-- .main-content -->
+
+      <footer class="site-footer">
+  <div class="offsite-links">
+    
+      
+<a href="https://github.com/clytaemnestra" target="_blank" rel="noopener">
+  <span class="fa-github" aria-hidden="true"></span>
+  <span class="screen-reader-text">GitHub</span>
+</a>
+
+<a href="https://www.linkedin.com/in/mia-bajic/" target="_blank" rel="noopener">
+  <span class="fa-linkedin" aria-hidden="true"></span>
+  <span class="screen-reader-text">LinkedIn</span>
+</a>
+
+<a href="https://bsky.app/profile/clytaemnestra.bsky.social" target="_blank" rel="noopener">
+  <span class="fa-bsky" aria-hidden="true"></span>
+  <span class="screen-reader-text">bsky</span>
+</a>
+
+    
+  </div><!-- .offsite-links -->
+  <div class="footer-bottom">
+    <div class="site-info">
+      
+
+    </div><!-- .site-info -->
+    <a href="#page" id="back-to-top" class="back-to-top"><span class="screen-reader-text">Back to the top </span>&#8593;</a>
+  </div><!-- .footer-bottom -->
+</footer><!-- .site-footer -->
+
+    </div><!-- .inner -->
+  </div><!-- .site -->
+
+
+  <script src="/tech-blog/assets/js/plugins.js"></script>
+  <script src="/tech-blog/assets/js/custom.js"></script>
+
+</body>
+</html>
