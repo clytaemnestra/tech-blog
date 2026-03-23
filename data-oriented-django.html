@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="kZa86zQaQuJ1ICcmj-NforLCR2TS6_ftskPHLy8mjqw"/>
+  <title>Notes from Conferences: Data-Oriented Design</title>
+  <meta name="description" content="Mia Bajic TIL today I learned tech blog">
+  <link rel="canonical" href="https://clytaemnestra.github.io/tech-blog/data-oriented-django">
+  <link rel="alternate" type="application/rss+xml" title="TIL Feed"
+    href="https://clytaemnestra.github.io/tech-blog/feed.xml">
+  <!-- Styles -->
+  <link href="https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i%7CNoto+Serif:400,400i,700,700i&display=swap" rel="stylesheet">
+  <link href="/tech-blog/assets/css/style.css" rel="stylesheet">
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Mia Bajic",
+    "url": "https://clytaemnestra.github.io/tech-blog/",
+    "sameAs": [
+      "https://www.linkedin.com/in/mia-bajic",
+      "https://github.com/clytaemnestra"
+    ]
+  }
+  </script>
+  
+  
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9873VJPWX5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9873VJPWX5');
+</script>
+
+</head>
+<body>
+
+
+  <div id="page" class="site">
+    <div class="inner">
+      <header class="site-header">
+  
+  <p class="site-title"><a class="logo-text" href="/tech-blog/">TIL</a></p>
+  
+  <nav class="site-navigation">
+    <div class="site-navigation-wrap">
+      <h2 class="screen-reader-text">Main navigation</h2>
+      <ul class="menu">
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- External URL -->
+            <a class="" href="https://forms.gle/kwXcWp9qSiMcY1nU9" target="_blank" rel="noopener noreferrer">Subscribe</a>
+          
+        </li>
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- Internal URL -->
+            <a class="" href="/tech-blog/">Home</a>
+          
+        </li>
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- Internal URL -->
+            <a class="" href="/tech-blog/about">About</a>
+          
+        </li>
+        
+        
+        
+        <li class="menu-item ">
+          
+            <!-- Internal URL -->
+            <a class="" href="/tech-blog/tags">Tags</a>
+          
+        </li>
+        
+      </ul><!-- .menu -->
+      <button id="menu-close" class="menu-toggle">
+        <span class="screen-reader-text">Close Menu</span>
+        <span class="icon-close" aria-hidden="true"></span>
+      </button>
+    </div><!-- .site-navigation-wrap -->
+    </nav><!-- .site-navigation -->    
+  <button id="menu-open" class="menu-toggle"><span class="screen-reader-text">Open Menu</span><span class="icon-menu" aria-hidden="true"></span></button>
+</header>
+
+
+
+      <main class="main-content fadeInDown delay_075s">
+
+  <article class="post">
+    <header class="post-header">
+      <time class="post-date" datetime="2022-10-25">October 25, 2022</time>
+      <h1 class="post-title">Notes from Conferences: Data-Oriented Design</h1>
+      <div class="post-meta">
+        By <span class="post-author">Mia Bajić</span><span class="post-tags"> in <a href="/tech-blog/tags/#conferences" rel="tag">conferences</a>, <a href="/tech-blog/tags/#django" rel="tag">django</a></span>
+      </div><!-- .post-meta -->
+      
+    </header><!-- .post-header -->
+    <div class="post-content">
+      <h1 id="data-oriented-design">Data-Oriented Design</h1>
+<p>Talk: https://www.youtube.com/watch?v=gfPNeQR1aSc</p>
+
+<p><br /></p>
+
+<h2 id="softwares-only-job-is-to-transform-data">Software’s Only Job is to <em>Transform Data</em></h2>
+<p><img src="https://user-images.githubusercontent.com/38294198/197749836-3679b739-e315-4fd9-9d5e-9bb9c4a7cfad.png" alt="image" /></p>
+
+<p><br /></p>
+
+<h3 id="what-do-users-care-about">What Do Users Care About?</h3>
+<ul>
+  <li>getting their output data -&gt; they don’t care about what do you do in the middle</li>
+</ul>
+
+<p><br /></p>
+
+<p>Data Characteristics:</p>
+<ul>
+  <li>format</li>
+  <li>volume</li>
+  <li>latency</li>
+  <li>throughput</li>
+  <li>statistical distribution</li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="context-is-everything">Context Is Everything</h3>
+<p>Example: check if a number exists in a given set</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">numbers</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">is_match</span><span class="p">(</span><span class="n">number</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">number</span> <span class="ow">in</span> <span class="n">numbers</span> 
+</code></pre></div></div>
+<p><br /></p>
+
+<p>But what is there’s just a single number in that set? In that case <code class="language-plaintext highlighter-rouge">in</code> operator is wasteful.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">is_match</span><span class="p">(</span><span class="n">number</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">number</span> <span class="o">==</span> <span class="mi">42</span>
+</code></pre></div></div>
+<p><br /></p>
+
+<p>What is a billion numbers? Building a set in this case would exhaust the memory.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">is_match</span><span class="p">(</span><span class="n">number</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">connection</span><span class="p">.</span><span class="n">cursor</span><span class="p">():</span>
+        <span class="n">cursor</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span>
+            <span class="s">"SELECT 1 FROM numbers WHERE n = %s"</span><span class="p">,</span>
+            <span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">cursor</span><span class="p">.</span><span class="n">fetchone</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> 
+</code></pre></div></div>
+
+<p><br /></p>
+
+<p>What is matching many numbers against few? Many functions aren’t called just once, they’re called repeatedly, which might not be efficient.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">numbers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">matches</span><span class="p">(</span><span class="n">sought</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">numbers</span><span class="p">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">sought</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<p>What is set is all off numbers between 1 and 1 million? In that case we could add more maths.</p>
+
+<p>What if false positives are acceptable? In that case the bloom filter would be a better data structure.</p>
+
+<p>…</p>
+
+<p>-&gt; the data that we use as the input will influence which function do we write and also the context</p>
+
+<p>-&gt; implementation depends on data characteristics and that is data-oriented design</p>
+
+<p><br /></p>
+
+<h2 id="softwares-only-job-is-to-transform-data-using-specific-hardware">Software’s only job is to transform data using <em>specific hardware</em></h2>
+<h3 id="general-purpose-cpu">General-purpose CPU</h3>
+<ul>
+  <li>Django is mostly run on general-purpose CPU 
+<img src="https://user-images.githubusercontent.com/38294198/197799408-0f21a876-2795-4d87-b313-24287fb2021e.png" alt="image" /></li>
+  <li>there’s a gap betweek processor and memory performance since 1980
+<img src="https://user-images.githubusercontent.com/38294198/197799609-a456a327-0499-4757-a5d8-75e4c1bc3725.png" alt="image" /></li>
+  <li>processor can do a lot of stuff fast, but it can’t get stuff from memory fast</li>
+  <li>the solution to this issue is CPU cache between CPU and memory, so the data is transferred into cache, so it can be fetched quickly
+<img src="https://user-images.githubusercontent.com/38294198/197799933-1031364d-77ef-49b2-910a-ac87432e5c2a.png" alt="image" /></li>
+  <li>modern CPU’s have 3 levels of cache (sometimes even 4)</li>
+  <li>each layer of cache is 3x faster than the previous one
+<img src="https://user-images.githubusercontent.com/38294198/197800235-5300e6e3-242c-467a-ae86-933e2d0f58a0.png" alt="image" /></li>
+  <li>how many cycles takes fetch from cache:
+<img src="https://user-images.githubusercontent.com/38294198/197800526-264f780d-3a5d-4583-a875-8c2563cd9f6e.png" alt="image" /></li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="implications-of-this-design">Implications of This Design</h3>
+<ul>
+  <li>use smaller representations</li>
+  <li>lay out data in access order</li>
+  <li>Python built-in types are big
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="mi">64</span> <span class="o">//</span> <span class="mi">8</span>
+<span class="n">Out</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="mi">8</span>
+  
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="kn">import</span> <span class="nn">sys</span>
+  
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">sys</span><span class="p">.</span><span class="n">getsizeof</span><span class="p">(</span><span class="mi">9001</span><span class="p">)</span>
+<span class="n">Out</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="mi">28</span>
+</code></pre></div>    </div>
+    <ul>
+      <li>8 bytes for an int + 20 bytes for another stuff (PyObject id, etc.)
+```python
+In [4]: numbers = list(range(1000))</li>
+    </ul>
+
+    <p>In [5]: len(numbers) * 8
+Out[5]: 8000</p>
+
+    <p>In [6]: (
+   …:    sys.getsizeof(numbers)
+   …:    + sum(sys.getsizeof(n) for n in numbers)
+   …: )
+Out[6]: 36052
+```</p>
+  </li>
+  <li>C data types are much slimmer
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">In</span> <span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="kn">import</span> <span class="nn">array</span>
+  
+<span class="n">In</span> <span class="p">[</span><span class="mi">8</span><span class="p">]:</span> <span class="n">numbers2</span> <span class="o">=</span> <span class="n">array</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="s">'Q'</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">))</span>
+  
+<span class="n">In</span> <span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="n">sys</span><span class="p">.</span><span class="n">getsizeof</span><span class="p">(</span><span class="n">numbers2</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="mi">8320</span>
+</code></pre></div>    </div>
+  </li>
+  <li>normally use NumPy or Pandas for arrays</li>
+</ul>
+
+<p><br /></p>
+
+<h2 id="data-oriented-design-for-the-web">Data-Oriented Design <em>for the Web</em></h2>
+<ul>
+  <li>typical website:
+<img src="https://user-images.githubusercontent.com/38294198/197803136-f4e66069-dfe3-4bf9-ac68-f2ae46c2cf12.png" alt="image" /></li>
+  <li>user &lt;-&gt; browser loop is already super optimized and quick
+<img src="https://user-images.githubusercontent.com/38294198/197803537-c333885f-69dc-4f09-ace5-6c35493291bb.png" alt="image" /></li>
+  <li>but what to put in the <em>something</em> part?
+<img src="https://user-images.githubusercontent.com/38294198/197803837-88131b4e-28e8-43c9-8c6d-2eb1fa3cbc3b.png" alt="image" /></li>
+  <li>one option is to put there Django &amp; Postgres 
+<img src="https://user-images.githubusercontent.com/38294198/197804051-b10fb606-742a-4e3f-9159-be8018c37417.png" alt="image" /></li>
+  <li>another possible architecture:
+<img src="https://user-images.githubusercontent.com/38294198/197808997-f3fa85e6-2384-4107-96f7-ce8c4cc8bd55.png" alt="image" /></li>
+  <li>how fast does the data transfer need to be?
+    <ul>
+      <li>&lt;100ms - great</li>
+      <li>&lt;1s - pretty good</li>
+      <li>&lt;3s - at 3s lose ~50% of visitors</li>
+      <li>
+        <blockquote>
+          <p>10s - users likely to retry or give up</p>
+        </blockquote>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="how-to-improve-the-flow-between-browser-and-django">How to Improve the Flow Between Browser and Django?</h3>
+<p><img src="https://user-images.githubusercontent.com/38294198/197809919-5d5b3095-66ab-4339-b2f2-2019e273ed38.png" alt="image" /></p>
+<ul>
+  <li>write minimal, performant HTML - if you get your CSS and JavaScript tags in the first kilobyte the browser will stop requesting those early on, don’t load HTML with loads of classes as some CSS frameworks to like to add etc.</li>
+  <li>introduce HTTP caching - tell browsers what to store forever, so for example images are loaded once only</li>
+  <li>get on the latest version of HTTP - 3, or at least 2</li>
+  <li>response compression (GZipMiddleware) - compresses requests, it’s a compression algorithm for text formats like HTML</li>
+  <li>HTML minification (django-minify-html) - saves around 1-3% of the request size</li>
+  <li>use a CDN (Content Delivery Network) - saving a lot of network time, as servers as closer to users</li>
+</ul>
+
+<p><br /></p>
+
+<h4 id="resources">Resources</h4>
+<ul>
+  <li>MDN: Web Performance</li>
+  <li>web.dev/learn</li>
+  <li>WebPageTest.org</li>
+  <li>web.dev/measure</li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="how-to-improve-the-flow-between-django-and-database">How to Improve the flow Between Django and Database?</h3>
+<p><img src="https://user-images.githubusercontent.com/38294198/197811897-20d5cf2b-1af4-468e-ab51-fb8e616429b5.png" alt="image" />
+<img src="https://user-images.githubusercontent.com/38294198/197813454-e2185398-78d0-4eb9-9995-d310fb5e7e61.png" alt="image" /></p>
+<ul>
+  <li>avoid N+1 queries
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">books</span> <span class="o">=</span> <span class="n">Book</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">"title"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">book</span> <span class="ow">in</span> <span class="n">books</span><span class="p">:</span>
+      <span class="k">print</span><span class="p">(</span><span class="n">book</span><span class="p">.</span><span class="n">title</span><span class="p">,</span> <span class="s">"by"</span><span class="p">,</span> <span class="n">book</span><span class="p">.</span><span class="n">author</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
+</code></pre></div>    </div>
+    <ul>
+      <li>iterate books + for each of N books fetch book.autor</li>
+      <li>instead you can use <code class="language-plaintext highlighter-rouge">select_related</code>
+        <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">books</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">Book</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">"title"</span><span class="p">)</span>
+        <span class="p">.</span><span class="n">select_related</span><span class="p">(</span><span class="s">"author"</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">book</span> <span class="ow">in</span> <span class="n">books</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">book</span><span class="p">.</span><span class="n">title</span><span class="p">,</span> <span class="s">"by"</span><span class="p">,</span> <span class="n">book</span><span class="p">.</span><span class="n">author</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
+</code></pre></div>        </div>
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">select_related</code> sends one query, where fetches books with author joined in</li>
+          <li>the drawback of <code class="language-plaintext highlighter-rouge">select_related</code>
+<img src="https://user-images.githubusercontent.com/38294198/197815074-f00f9b72-e242-4d36-bc2f-d50fe26dd9e5.png" alt="image" /></li>
+          <li>comes as single table of data</li>
+          <li>some values might be repetitive</li>
+        </ul>
+      </li>
+      <li>another solution is to use <code class="language-plaintext highlighter-rouge">prefetch_related</code>
+        <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">books</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">book</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">"title"</span><span class="p">)</span>
+        <span class="p">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s">"author"</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">book</span> <span class="ow">in</span> <span class="n">books</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">book</span><span class="p">.</span><span class="n">title</span><span class="p">,</span> <span class="s">"by"</span><span class="p">,</span> <span class="n">book</span><span class="p">.</span><span class="n">author</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
+</code></pre></div>        </div>
+        <ul>
+          <li>the first query fetches the books and the second query fetches related authors for the fetched books</li>
+          <li>so if there’s 5 authors, which have written 1000 of books it will pull back the 5 authors once, no repetition</li>
+          <li>depends n the data volumes, it can be faster than <code class="language-plaintext highlighter-rouge">select_related</code></li>
+        </ul>
+      </li>
+      <li>you can also use <code class="language-plaintext highlighter-rouge">django-auto-prefetch</code> which works in the following way:
+        <ul>
+          <li>fetch books</li>
+          <li>on first access of book.author fetch related authors for all books</li>
+          <li>solves N+1 problem for foreign keys and one-to-one fields (it doesn’t help with many-to-many)</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>split models
+    <ul>
+      <li>imagine the following model:
+        <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">AbstractUser</span><span class="p">):</span>
+      <span class="n">avatar</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">ImageField</span><span class="p">(...)</span>
+      <span class="p">...</span>
+</code></pre></div>        </div>
+      </li>
+      <li>you’re given the following task: store user’s ACME access token and refresh token</li>
+      <li>one solution:
+        <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">AbstractUser</span><span class="p">):</span>
+      <span class="n">avatar</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">ImageField</span><span class="p">(...)</span>
+      <span class="p">...</span>
+      <span class="n">acme_access_token</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">TextField</span><span class="p">()</span>
+      <span class="n">acme_access_expires</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">DateTimeField</span><span class="p">()</span>
+      <span class="n">acme_refresh_token</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">TextField</span><span class="p">()</span>
+</code></pre></div>        </div>
+      </li>
+      <li>the problem with this solution is that it’s going to slow down every place where users are queried</li>
+      <li>every time you update a row, Postgres creates a whole new copy of that data every time</li>
+      <li>better solution:
+        <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">AbstractUser</span><span class="p">):</span>
+      <span class="n">avatar</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">ImageField</span><span class="p">(...)</span>
+      <span class="p">...</span>
+            
+  <span class="k">class</span> <span class="nc">UserAcmeToken</span><span class="p">(</span><span class="n">models</span><span class="p">.</span><span class="n">Model</span><span class="p">):</span>
+      <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">OneToOneField</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+      <span class="n">acme_access_token</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">TextField</span><span class="p">()</span>
+      <span class="n">acme_access_expires</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">DateTimeField</span><span class="p">()</span>
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>multiple counts in one pass
+    <ul>
+      <li>example:
+        <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">published_count</span> <span class="o">=</span> <span class="p">(</span>
+      <span class="n">author</span><span class="p">.</span><span class="n">book_set</span><span class="p">.</span><span class="nb">filter</span><span class="p">(</span><span class="n">published</span><span class="o">=</span><span class="bp">True</span><span class="p">).</span><span class="n">count</span><span class="p">()</span>
+  <span class="p">)</span>
+  <span class="n">unpublished_count</span> <span class="o">=</span> <span class="p">(</span>
+      <span class="n">author</span><span class="p">.</span><span class="n">book_set</span><span class="p">.</span><span class="nb">filter</span><span class="p">(</span><span class="n">published</span><span class="o">=</span><span class="bp">False</span><span class="p">).</span><span class="n">count</span><span class="p">()</span>
+  <span class="p">)</span>
+</code></pre></div>        </div>
+      </li>
+      <li>we can use another way to ask for both parts at the same time:
+        <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">counts</span> <span class="o">=</span> <span class="p">(</span>
+      <span class="n">author</span><span class="p">.</span><span class="n">book_set</span><span class="p">.</span><span class="n">aggregate</span><span class="p">(</span>
+          <span class="n">published</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s">'pk'</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="n">Q</span><span class="p">(</span><span class="n">published</span><span class="o">=</span><span class="bp">True</span><span class="p">)),</span>
+          <span class="n">unpublished</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s">'pk'</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="n">Q</span><span class="p">(</span><span class="n">published</span><span class="o">=</span><span class="bp">False</span><span class="p">)),</span>
+      <span class="p">)</span>
+  <span class="p">)</span>
+</code></pre></div>        </div>
+      </li>
+      <li>in this way Postgres goes only ones over data</li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h4 id="resources-1">Resources</h4>
+<ul>
+  <li>Docs: Database access optimization</li>
+  <li>The Temple of Django Database Performance</li>
+  <li>Post: “Django and the N+1 Queries Problem”</li>
+  <li>django-debug-toolbar or Kolo</li>
+</ul>
+
+<p><br /></p>
+
+<h4 id="resources-for-data-oriented-design">Resources for Data-Oriented Design</h4>
+<ul>
+  <li>Mike Acton - Data-Oriented Design and C++</li>
+  <li>Andrew Kelley - Practical DOD</li>
+  <li>Andreas Fredriksson - Context is Everything</li>
+</ul>
+
+    </div><!-- .post-content -->
+    <div class="author-box">
+      
+      <div class="author-avatar" style="background-image: url('images/author.png')"><span class="screen-reader-text">Mia Bajić's Picture</span></div>
+      
+      <div class="author-details">
+        <h2 class="author-title">About Mia Bajić</h2>
+        <div class="author-bio"><p>Software engineer and community events organizer.</p>
+</div>
+        
+        
+      </div><!-- .author-details -->
+    </div><!-- .author-box -->
+  </article><!-- .post -->
+
+  
+
+</main><!-- .main-content -->
+
+      <footer class="site-footer">
+  <div class="offsite-links">
+    
+      
+<a href="https://github.com/clytaemnestra" target="_blank" rel="noopener">
+  <span class="fa-github" aria-hidden="true"></span>
+  <span class="screen-reader-text">GitHub</span>
+</a>
+
+<a href="https://www.linkedin.com/in/mia-bajic/" target="_blank" rel="noopener">
+  <span class="fa-linkedin" aria-hidden="true"></span>
+  <span class="screen-reader-text">LinkedIn</span>
+</a>
+
+<a href="https://bsky.app/profile/clytaemnestra.bsky.social" target="_blank" rel="noopener">
+  <span class="fa-bsky" aria-hidden="true"></span>
+  <span class="screen-reader-text">bsky</span>
+</a>
+
+    
+  </div><!-- .offsite-links -->
+  <div class="footer-bottom">
+    <div class="site-info">
+      
+
+    </div><!-- .site-info -->
+    <a href="#page" id="back-to-top" class="back-to-top"><span class="screen-reader-text">Back to the top </span>&#8593;</a>
+  </div><!-- .footer-bottom -->
+</footer><!-- .site-footer -->
+
+    </div><!-- .inner -->
+  </div><!-- .site -->
+
+
+  <script src="/tech-blog/assets/js/plugins.js"></script>
+  <script src="/tech-blog/assets/js/custom.js"></script>
+
+</body>
+</html>
